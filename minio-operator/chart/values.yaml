@@ -1,0 +1,125 @@
+# Default values for minio-operator.
+operator:
+  ## Setup environment variables for the Operator
+  env:
+    - name: MINIO_OPERATOR_TLS_ENABLE
+      value: "on"
+    - name: CLUSTER_DOMAIN
+      value: "cluster.local"
+    - name: WATCHED_NAMESPACE
+      value: ""
+  image:
+    repository: registry1.dso.mil/ironbank/opensource/minio/operator
+    tag: v5.0.5
+    pullPolicy: IfNotPresent
+  imagePullSecrets:
+    - name: regcred
+  initcontainers: [ ]
+  replicaCount: 1
+  securityContext: {}
+  containerSecurityContext:
+    runAsUser: 1001
+    runAsGroup: 1001
+    runAsNonRoot: true
+    capabilities:
+      drop:
+        - ALL
+  nodeSelector: { }
+  priorityClassName: ""
+  affinity:
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchExpressions:
+              - key: name
+                operator: In
+                values:
+                  - minio-operator
+          topologyKey: kubernetes.io/hostname
+  tolerations: [ ]
+  topologySpreadConstraints: [ ]
+  resources:
+    requests:
+      cpu: 200m
+      memory: 256Mi
+      ephemeral-storage: 500Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
+
+console:
+  enabled: false
+  image:
+    repository: registry1.dso.mil/ironbank/opensource/minio/console
+    tag: v0.30.0
+    pullPolicy: IfNotPresent
+  imagePullSecrets: [ ]
+  initcontainers: [ ]
+  replicaCount: 1
+  nodeSelector: { }
+  affinity: { }
+  tolerations: [ ]
+  topologySpreadConstraints: [ ]
+  resources: { }
+  securityContext: {}
+  containerSecurityContext:
+    runAsUser: 1001
+    runAsNonRoot: true
+    capabilities:
+      drop:
+        - ALL
+  ingress:
+    enabled: false
+    ingressClassName: ""
+    labels: { }
+    annotations: { }
+    tls: [ ]
+    host: console.local
+    path: /
+    pathType: Prefix
+  volumes: [ ]
+  volumeMounts: [ ]
+
+# Big Bang Added Values
+
+networkPolicies:
+  enabled: false
+  controlPlaneCidr: 0.0.0.0/0
+  ingressLabels:
+    app: istio-ingressgateway
+    istio: ingressgateway
+
+istio:
+  enabled: false
+  mtls:
+    # STRICT = Allow only mutual TLS traffic
+    # PERMISSIVE = Allow both plain text and mutual TLS traffic
+    mode: STRICT
+
+openshift: false
+
+monitoring:
+  enabled: false
+  namespace: monitoring
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+annotations: {}
+
+# Used in templates/bigbang/tenant-patch-job.yaml
+# Needed for operator upgrade.go logic to cleanly upgrade from bb v4.2.3 to v4.4.3
+tenantPatchJob:
+  enabled: false
+  image:
+    repository: registry1.dso.mil/ironbank/big-bang/base
+    tag: 2.0.0
+    pullSecrets:
+      - private-registry
+installCRDs: true
