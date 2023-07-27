@@ -91,7 +91,7 @@ tenant:
   ## Customize any private registry image pull secret.
   ## currently only one secret registry is supported
   imagePullSecret:
-    name: private-registry
+    name: regcred
   ## If a scheduler is specified here, Tenant pods will be dispatched by specified scheduler.
   ## If not specified, the Tenant pods will be dispatched by default scheduler.
   scheduler: { }
