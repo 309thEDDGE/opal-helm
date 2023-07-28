@@ -2,7 +2,7 @@
 ## Note: to enable upgrade of minio instance, then values file has a number of values that will be
 ## deprecated in the future. Deprecation candidates will have an annotation in comments regarding the timeframe for deprecation.
 
-domain: opalacceptance.dso.mil
+domain: minio-k8.10.96.30.9.nip.io
 
 # When true, upgradeTenants enables use of the V4.* Minio Operator CRD for creation of tenants is enabled.
 # The default will be made TRUE in a future release.
@@ -74,6 +74,10 @@ secrets:
   name: minio-creds-secret
   accessKey: minio
   secretKey: minio123
+
+## If you change this name be sure to change the value in tenant.certificate.external.externalCaCertSecret
+tls:
+  name: tls-certs
 
 apiVersion: apps\v1
 
@@ -405,12 +409,15 @@ tenant:
 
 ingress:
   api:
-    enabled: false
+    enabled: true
     ingressClassName: ""
     labels: { }
-    annotations: { }
+    annotations: {
+      traefik.ingress.kubernetes.io/router.entrypoints: websecure,
+      traefik.ingress.kubernetes.io/router.tls: "true"
+    }
     tls: [ ]
-    host: minio.local
+    host: opal-k8.10.96.30.9.nip.io
     path: /
     pathType: Prefix
   console:
@@ -422,7 +429,7 @@ ingress:
       traefik.ingress.kubernetes.io/router.tls: "true"
     }
     tls: [ ]
-    host: minio-k8s-prod.opalacceptance.dso.mil
+    host: opal-k8.10.96.30.9.nip.io
     path: /
     pathType: Prefix
 
