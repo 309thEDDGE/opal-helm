@@ -26,7 +26,7 @@ spec:
     {{- end }}
   {{- end }}
   rules:
-    - host: minio-tenant-minio-instance-console
+    - host: {{ .Values.console.ingress.host }}
       http:
         paths:
           - path: {{ .Values.console.ingress.path }}
