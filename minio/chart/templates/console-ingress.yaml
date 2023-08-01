@@ -31,7 +31,7 @@ spec:
             pathType: {{ .Values.ingress.console.pathType }}
             backend:
               service:
-                name: {{ .Values.tenant.name }}-console
+                name: minio-tenant-minio-instance-console
                 port:
                   {{- if or .Values.tenant.certificate.requestAutoCert (not (empty .Values.tenant.certificate.externalCertSecret)) }}
                   name: https-console
