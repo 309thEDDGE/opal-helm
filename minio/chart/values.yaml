@@ -2,7 +2,7 @@
 ## Note: to enable upgrade of minio instance, then values file has a number of values that will be
 ## deprecated in the future. Deprecation candidates will have an annotation in comments regarding the timeframe for deprecation.
 
-domain: minio-k8.10.96.30.9.nip.io
+domain: minio
 
 # When true, upgradeTenants enables use of the V4.* Minio Operator CRD for creation of tenants is enabled.
 # The default will be made TRUE in a future release.
@@ -72,8 +72,10 @@ openshift: false
 secrets:
   # create a kubernetes configuration secret object with the accessKey and secretKey as defined here.
   name: minio-creds-secret
-  accessKey: minio
-  secretKey: minio123
+  accessKey: opal-administrator
+  secretKey: 8g7Mkf&FgKS9SR
+  
+      
 
 ## If you change this name be sure to change the value in tenant.certificate.external.externalCaCertSecret
 tls:
@@ -174,7 +176,7 @@ tenant:
     ## Use this field to provide a list of Secrets with external certificates. This can be used to configure
     ## TLS for MinIO Tenant pods. Create secrets as explained here:
     ## https://github.com/minio/minio/tree/master/docs/tls/kubernetes#2-create-kubernetes-secret
-    externalCertSecret: [ ]
+    externalCertSecret: { }
     ## Enable automatic Kubernetes based certificate generation and signing as explained in
     ## https://kubernetes.io/docs/tasks/tls/managing-tls-in-a-cluster
     requestAutoCert: false
@@ -229,18 +231,20 @@ tenant:
   ## services created by the operator.
   serviceMetadata: { }
   ## Add environment variables to be set in MinIO container (https://github.com/minio/minio/tree/master/docs/config)
-  env:
-    - name: MINIO_IDENTITY_OPENID_CLIENT_ID
+  env: 
+    - name: MINIO_IDENTITY_OPENID_CONFIG_URL
+      value: https://keycloak-k8.10.96.30.9.nip.io/auth/realms/master/.well-known/openid-configuration 
+    - name: minio_browser_redirect_url
+      value: https://minio-k8.10.96.30.9.nip.io:9090/oauth_callback
+    - name: minio_identity_openid_client_secret
+      value: 371f9e873252af019dcdbacdae950e5717088c7918355c9ae3f8ba731ebc1091
+    - name: minio_identity_openid_client_id
       value: opal-jupyterhub
     - name: MINIO_IDENTITY_OPENID_CLAIM_NAME
       value: policy
-    - name: MINIO_IDENTITY_OPENID_CONFIG_URL 
-      value: https://keycloak-k8.10.96.30.9.nip.io/auth/realms/master/.well-known/openid-configuration
-    - name: MINIO_BROWSER_REDIRECT_URL
-      value: https://minio-k8.10.96.30.9.nip.io:9090/oauth_callback
-    - name: MINIO_IDENTITY_OPENID_CLIENT_SECRET
-      value: 0d972130c8c3c2eda38f11eb038ee6df01b975fec2999f1f669969d5d41c5c41
-      
+    - name: MINIO_IDENTITY_OPENID_REDIRECT_URI
+      value: https://minio-tenant-minio-instance-hl.minio-tenant:9000/oauth_callback/
+    
     
   ## PriorityClassName indicates the Pod priority and hence importance of a Pod relative to other Pods.
   ## This is applied to MinIO pods only.
@@ -425,7 +429,7 @@ ingress:
       traefik.ingress.kubernetes.io/router.tls: "true"
     }
     tls: [ ]
-    host: opal-k8.10.96.30.9.nip.io
+    host: minioapi-k8.10.96.30.9.nip.io
     path: /
     pathType: Prefix
   console:
@@ -437,7 +441,7 @@ ingress:
       traefik.ingress.kubernetes.io/router.tls: "true"
     }
     tls: [ ]
-    host: opal-k8.10.96.30.9.nip.io
+    host: minio-k8.10.96.30.9.nip.io
     path: /
     pathType: Prefix
 
