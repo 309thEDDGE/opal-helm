@@ -234,11 +234,11 @@ tenant:
   env: 
     - name: MINIO_IDENTITY_OPENID_CONFIG_URL
       value: https://keycloak-k8.10.96.30.9.nip.io/auth/realms/master/.well-known/openid-configuration 
-    - name: minio_browser_redirect_url
+    - name: MINIO_BROWSER_REDIRECT_URL
       value: https://minio-k8.10.96.30.9.nip.io:9090/oauth_callback
-    - name: minio_identity_openid_client_secret
-      value: 371f9e873252af019dcdbacdae950e5717088c7918355c9ae3f8ba731ebc1091
-    - name: minio_identity_openid_client_id
+    - name: MINIO_IDENTITY_OPENID_CLIENT_SECRET
+      value: 5a8b66636d70d6fa9439114791a8d0107660958a37755eb2a71bf62f29eed255
+    - name: MINIO_IDENTITY_OPENID_CLIENT_ID
       value: opal-jupyterhub
     - name: MINIO_IDENTITY_OPENID_CLAIM_NAME
       value: policy
