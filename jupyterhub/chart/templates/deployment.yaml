@@ -1,0 +1,91 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: {{ .Values.namespace }}
+  name: proxy
+  labels:
+    component: proxy
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      component: proxy
+  template:
+    metadata:
+      labels:
+        component: proxy
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        - name: regcred
+      {{- end }}
+      containers:
+        - name: chp
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+            - configurable-http-proxy
+            - --ip=0.0.0.0
+            - --api-ip=0.0.0.0
+            - --api-port=8001
+            - --default-target=http://$(HUB_SERVICE_HOST):$(HUB_SERVICE_PORT)
+            - --error-target=http://$(HUB_SERVICE_HOST):$(HUB_SERVICE_PORT)/hub/error
+            - --port=8000
+            - --log-level=debug
+          securityContext:
+            allowPrivilegeEscalation: {{ .Values.securityContext.allowPrivilegeEscalation }}
+          env: {{ toYaml .Values.env | nindent 12 }}
+          ports:
+            - name: proxy-public
+              containerPort: 8000
+            - name: api
+              containerPort: {{ .Values.serviceApi.port }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: {{ .Values.namespace }}
+  name: hub
+  labels:
+    component: jupyter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: jupyter
+  template:
+    metadata:
+      labels:
+        component: jupyter
+    spec:
+      serviceAccountName: hub
+      imagePullSecrets:
+        - name: regcred
+      containers:
+        - name: jupyter-hub
+          image: registry1.dso.mil/ironbank/opensource/metrostar/jupyterhub:2.1.1_v3
+          command: ["bash"]
+          args: ["-c", "source /opt/conda/bin/activate && conda activate jupyterhub && conda install -c conda-forge jupyterhub-kubespawner -y && jupyterhub -f /home/jovyan/jupyterhub_config.py"]
+          ports:
+            - containerPort: 8081
+          env: {{ toYaml .Values.env | nindent 12 }}
+          envFrom:
+            - configMapRef:
+                name: opal-env
+            - secretRef:
+                name: token-env
+            - configMapRef:
+                name: deployment-env-h8t2dhkgbf
+          resources:
+            requests: 
+              cpu: 500m
+          volumeMounts:
+            - name: jupyterhub-config-py-mnt
+              mountPath: /home/jovyan/jupyterhub_config.py
+              subPath: jupyterhub_config.py
+      volumes:
+      - name: jupyterhub-config-py-mnt
+        configMap:
+          name: jupyterhub-config-py
