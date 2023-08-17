@@ -360,29 +360,29 @@ ingress:
 #         - keycloak.example.com
 #       secretName: ""
 
-## Unlikely to be used, ignore for now
-#  # ingress for console only (/auth/admin)
-#  console:
-#    # If `true`, an Ingress is created for console path only
-#    enabled: false
-#    # The name of Ingress Class associated with the console ingress only
-#    ingressClassName: ""
-#    # Ingress annotations for console ingress only
-#    # Useful to set nginx.ingress.kubernetes.io/whitelist-source-range particularly
-#    annotations: {}
-#    rules:
-#      -
-#        # Ingress host
-#        host: '{{ .Release.Name }}.keycloak.example.com'
-#        # Paths for the host
-#        paths:
-#          - path: /auth/admin/
-#            pathType: Prefix
-#    # Console TLS configuration
-#    tls: []
-##      - hosts:
-##          - console.keycloak.example.com
-##        secretName: ""
+## Unlikely to be used, but the `enabled` variable is required for the chart
+  # ingress for console only (/auth/admin)
+  console:
+    # If `true`, an Ingress is created for console path only
+    enabled: false
+    # The name of Ingress Class associated with the console ingress only
+    ingressClassName: ""
+    # Ingress annotations for console ingress only
+    # Useful to set nginx.ingress.kubernetes.io/whitelist-source-range particularly
+    annotations: {}
+    rules:
+      -
+        # Ingress host
+        host: '{{ .Release.Name }}.keycloak.example.com'
+        # Paths for the host
+        paths:
+          - path: /auth/admin/
+            pathType: Prefix
+    # Console TLS configuration
+    tls: []
+#      - hosts:
+#          - console.keycloak.example.com
+#        secretName: ""
 
 keycloakSetup:
   enabled: true
