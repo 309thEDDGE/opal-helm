@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: {{ .Values.namespace}}
+  name: {{ include "traefik.fullname" . }}-service
+  labels:
+    {{- include "traefik.labels" . | nindent 4 }}
+    {{- range $key, $value := .Values.service.labels }}
+    {{- printf "%s: %s" $key (tpl $value $ | quote) | nindent 4 }}
+    {{- end }}
+    app.kubernetes.io/component: http
+spec:
+  type: LoadBalancer
+  selector:
+    app: {{ include "traefik.fullname" . }}
+  ports:
+    - protocol: TCP
+      port: 80
+      name: web
+      targetPort: web
+    - protocol: TCP
+      port: 8080
+      name: dashboard
+      targetPort: dashboard
+    - protocol: TCP
+      port: 443
+      name: websecure
+      targetPort: websecure
+  {{- if .Values.service.loadBalancerIP }}
+  clusterIP: {{ .Values.service.loadBalancerIP }}
+  {{- end }}

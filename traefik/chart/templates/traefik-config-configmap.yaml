@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: {{ .Values.namespace }}
+  name: {{ include "traefik.fullname" . }}-config
+data:
+  file-from-cfgmap: |
+    # TOML equivalent of ../docker-compose/traefik/traefik.yml
+    defaultEntryPoints = ["web","websecure"]
+
+    [providers.kubernetesIngress.ingressEndpoint]
+    publishedService = "{{- .Values.namespace }}/traefik"
+
+    [providers.file]
+    filename = "/etc/traefik/traefik_dynamic.yml"
+
+    [entryPoints.web.http.redirections.entryPoint]
+    to = ":443"
+    scheme = "https"
+
+    [entryPoints.web]
+    address = ":8000"
+
+    [entryPoints.websecure.http.tls]
+
+    [entryPoints.websecure]
+    address = ":8443"
+
+    [api]
+    insecure = true
+    dashboard = true
+
+    #[ping]
+
+    [log]
+    level = "DEBUG"
