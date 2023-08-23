@@ -415,7 +415,7 @@ ingress:
       traefik.ingress.kubernetes.io/router.tls: "true"
     }
     tls: [ ]
-    host: minioapi-k8.10.96.30.9.nip.io
+    host: ""
     path: /
     pathType: Prefix
   console:
@@ -427,7 +427,7 @@ ingress:
       traefik.ingress.kubernetes.io/router.tls: "true"
     }
     tls: [ ]
-    host: minio-k8.10.96.30.9.nip.io
+    host: ""
     path: /
     pathType: Prefix
 
