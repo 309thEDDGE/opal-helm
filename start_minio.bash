@@ -1,4 +1,6 @@
 
+bash minio/init.bash
+
 helm dependency build ./minio-operator/chart
 echo
 helm upgrade -i minio-operator minio-operator/chart --namespace opal --create-namespace
