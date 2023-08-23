@@ -231,21 +231,7 @@ tenant:
   ## services created by the operator.
   serviceMetadata: { }
   ## Add environment variables to be set in MinIO container (https://github.com/minio/minio/tree/master/docs/config)
-  env: 
-    - name: MINIO_IDENTITY_OPENID_CONFIG_URL
-      value: https://keycloak-k8.10.96.30.9.nip.io/auth/realms/master/.well-known/openid-configuration 
-    - name: MINIO_BROWSER_REDIRECT_URL
-      value: https://minio-k8.10.96.30.9.nip.io:9090/oauth_callback
-    - name: MINIO_IDENTITY_OPENID_CLIENT_SECRET
-      value: 5a8b66636d70d6fa9439114791a8d0107660958a37755eb2a71bf62f29eed255
-    - name: MINIO_IDENTITY_OPENID_CLIENT_ID
-      value: opal-jupyterhub
-    - name: MINIO_IDENTITY_OPENID_CLAIM_NAME
-      value: policy
-    - name: MINIO_IDENTITY_OPENID_REDIRECT_URI
-      value: https://minio-tenant-minio-instance-hl.minio-tenant:9000/oauth_callback/
-    
-    
+
   ## PriorityClassName indicates the Pod priority and hence importance of a Pod relative to other Pods.
   ## This is applied to MinIO pods only.
   ## Refer Kubernetes documentation for details https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/#priorityclass/
