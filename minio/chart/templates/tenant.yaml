@@ -1,3 +1,5 @@
+{{- $files := .Files -}}
+
 apiVersion: minio.min.io/v2
 kind: Tenant
 metadata:
@@ -149,9 +151,12 @@ spec:
   serviceMetadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- with (dig "env" (list) .) }}
+  {{- $file := $files.Get ".env" }}
   env:
-    {{- toYaml . | nindent 4 }}
+  {{- range $line := splitList "\n" $file }}
+  {{- $kv := splitList "=" $line }}
+    - name: {{ first $kv }}
+      value: {{ last $kv | quote }}
   {{- end }}
   {{- if dig "priorityClassName" "" . }}
   priorityClassName: {{ dig "priorityClassName" "" . }}
