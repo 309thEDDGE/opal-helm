@@ -158,6 +158,8 @@ spec:
     - name: {{ first $kv }}
       value: {{ last $kv | quote }}
   {{- end }}
+    - name: MINIO_IDENTITY_OPENID_CLIENT_SECRET
+      value: {{ $files.Get "openid_client_secret.crt" }}
   {{- if dig "priorityClassName" "" . }}
   priorityClassName: {{ dig "priorityClassName" "" . }}
   {{- end }}
