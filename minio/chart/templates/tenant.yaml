@@ -151,15 +151,12 @@ spec:
   serviceMetadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- $file := $files.Get ".env" }}
+  {{- with (dig "env" (list) .) }}
   env:
-  {{- range $line := splitList "\n" $file }}
-  {{- $kv := splitList "=" $line }}
-    - name: {{ first $kv }}
-      value: {{ last $kv | quote }}
-  {{- end }}
+    {{- toYaml . | nindent 4 }}
     - name: MINIO_IDENTITY_OPENID_CLIENT_SECRET
       value: {{ $files.Get "openid_client_secret.crt" }}
+  {{- end }}
   {{- if dig "priorityClassName" "" . }}
   priorityClassName: {{ dig "priorityClassName" "" . }}
   {{- end }}
