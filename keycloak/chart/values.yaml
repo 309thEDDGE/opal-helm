@@ -245,16 +245,8 @@ resources:
 # Add additional volumes, e.g. for custom themes
 extraVolumes: ""
 
-#### added by Big Bang ####
-# This values key is reserved for integration with BigBang chart
-extraVolumesBigBang: {}
-
 # Add additional volumes mounts, e.g. for custom themes
 extraVolumeMounts: ""
-
-#### added by Big Bang ####
-# This values key is reserved for integration with BigBang chart
-extraVolumeMountsBigBang: {}
 
 # Add additional ports, e.g. for admin console or exposing JGroups ports
 extraPorts: []
@@ -288,11 +280,12 @@ secrets:
       #JAVA_TOOL_OPTIONS: "-Dcom.redhat.fips=false"
       # default admin credentials. Override them for production deployments
       KEYCLOAK_ADMIN: "user"
-      KEYCLOAK_ADMIN_PASSWORD: "fill_this_in"
+      KEYCLOAK_ADMIN_PASSWORD: ""
       # java opts for jgroups required for infinispan distributed cache when using the kubernetes stack.
       # https://www.keycloak.org/server/caching
       JAVA_OPTS_APPEND: -Djgroups.dns.query={{ include "keycloak.fullname" . }}-headless
-      BOOTSTRAPPER_CLIENT_SECRET: "fill_this_in"
+      # Custom client secret to use if creating the pre-configured OPAL client
+      BOOTSTRAPPER_CLIENT_SECRET: ""
 
 service:
   # Annotations for headless and HTTP Services

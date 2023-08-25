@@ -4,13 +4,6 @@
 
 Open Source Identity and Access Management For Modern Applications and Services
 
-## Upstream References
-* <https://www.keycloak.org/>
-
-* <https://github.com/codecentric/helm-charts>
-* <https://github.com/jboss-dockerfiles/keycloak>
-* <https://github.com/bitnami/charts/tree/master/bitnami/postgresql>
-
 ## Learn More
 * [Application Overview](docs/overview.md)
 * [Other Documentation](docs/)
@@ -41,9 +34,9 @@ helm install keycloak chart/
 | nameOverride | string | `""` |  |
 | replicas | int | `1` |  |
 | image.repository | string | `"registry1.dso.mil/ironbank/opensource/keycloak/keycloak"` |  |
-| image.tag | string | `"21.1.1"` |  |
+| image.tag | string | `"21.1.2"` |  |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
-| imagePullSecrets[0].name | string | `"private-registry"` |  |
+| imagePullSecrets[0].name | string | `"regcred"` |  |
 | hostAliases | list | `[]` |  |
 | enableServiceLinks | bool | `true` |  |
 | podManagementPolicy | string | `"Parallel"` |  |
@@ -85,17 +78,16 @@ helm install keycloak chart/
 | resources.limits.cpu | string | `"1"` |  |
 | resources.limits.memory | string | `"1Gi"` |  |
 | extraVolumes | string | `""` |  |
-| extraVolumesBigBang | object | `{}` |  |
 | extraVolumeMounts | string | `""` |  |
-| extraVolumeMountsBigBang | object | `{}` |  |
 | extraPorts | list | `[]` |  |
 | podDisruptionBudget | object | `{}` |  |
 | statefulsetAnnotations | object | `{}` |  |
 | statefulsetLabels | object | `{}` |  |
 | secrets.env.stringData.JAVA_TOOL_OPTIONS | string | `"-Dcom.redhat.fips=false"` |  |
-| secrets.env.stringData.KEYCLOAK_ADMIN | string | `"admin"` |  |
-| secrets.env.stringData.KEYCLOAK_ADMIN_PASSWORD | string | `"password"` |  |
+| secrets.env.stringData.KEYCLOAK_ADMIN | string | `"user"` |  |
+| secrets.env.stringData.KEYCLOAK_ADMIN_PASSWORD | string | `""` |  |
 | secrets.env.stringData.JAVA_OPTS_APPEND | string | `"-Djgroups.dns.query={{ include \"keycloak.fullname\" . }}-headless"` |  |
+| secrets.env.stringData.BOOTSTRAPPER_CLIENT_SECRET | string | ``""`` |  |
 | service.annotations | object | `{}` |  |
 | service.labels | object | `{}` |  |
 | service.type | string | `"ClusterIP"` |  |
@@ -114,7 +106,7 @@ helm install keycloak chart/
 | ingress.servicePort | string | `"http"` |  |
 | ingress.annotations | object | `{}` |  |
 | ingress.labels | object | `{}` |  |
-| ingress.rules[0].host | string | `"{{ .Release.Name }}.keycloak.example.com"` |  |
+| ingress.rules[0].host | string | `""` |  |
 | ingress.rules[0].paths[0].path | string | `"/"` |  |
 | ingress.rules[0].paths[0].pathType | string | `"Prefix"` |  |
 | ingress.console.enabled | bool | `false` |  |
@@ -135,6 +127,13 @@ helm install keycloak chart/
 | route.tls.enabled | bool | `true` |  |
 | route.tls.insecureEdgeTerminationPolicy | string | `"Redirect"` |  |
 | route.tls.termination | string | `"edge"` |  |
+| keycloakSetup.enabled | bool | `true` |  |
+| keycloakSetup.backoffLimit |int | `5` |  |
+| keycloakSetup.cleanupAfterFinished.enabled | bool | `false` |  |
+| keycloakSetup.cleanupAfterFinished.seconds | int | `10` |  |
+| keycloakSetup.podLabels | object | `{}` |  |
+| keycloakSetup.restartPolicy | string | `Never` |  |
+| keycloakSetup.jhub_client_id | string | `"opal-jupyterhub"` |  |
 | pgchecker.image.repository | string | `"registry1.dso.mil/ironbank/opensource/postgres/postgresql12"` |  |
 | pgchecker.image.tag | float | `12.15` |  |
 | pgchecker.image.pullPolicy | string | `"IfNotPresent"` |  |
@@ -203,43 +202,4 @@ helm install keycloak chart/
 | autoscaling.behavior.scaleDown.policies[0].type | string | `"Pods"` |  |
 | autoscaling.behavior.scaleDown.policies[0].value | int | `1` |  |
 | autoscaling.behavior.scaleDown.policies[0].periodSeconds | int | `300` |  |
-| test.enabled | bool | `false` |  |
-| test.image.repository | string | `"docker.io/unguiculus/docker-python3-phantomjs-selenium"` |  |
-| test.image.tag | string | `"v1"` |  |
-| test.image.pullPolicy | string | `"IfNotPresent"` |  |
-| test.podSecurityContext.fsGroup | int | `1000` |  |
-| test.securityContext.runAsUser | int | `1000` |  |
-| test.securityContext.runAsNonRoot | bool | `true` |  |
-| domain | string | `"bigbang.dev"` |  |
-| istio.enabled | bool | `false` |  |
-| istio.injection | string | `"disabled"` |  |
-| istio.mtls.mode | string | `"STRICT"` | STRICT = Allow only mutual TLS traffic, PERMISSIVE = Allow both plain text and mutual TLS traffic |
-| istio.keycloak.enabled | bool | `false` |  |
-| istio.keycloak.annotations | object | `{}` |  |
-| istio.keycloak.labels | object | `{}` |  |
-| istio.keycloak.gateways[0] | string | `"istio-system/main"` |  |
-| istio.keycloak.hosts[0] | string | `"keycloak.{{ .Values.domain }}"` |  |
-| monitoring.enabled | bool | `false` |  |
-| networkPolicies.enabled | bool | `false` |  |
-| networkPolicies.ingressLabels.app | string | `"istio-ingressgateway"` |  |
-| networkPolicies.ingressLabels.istio | string | `"ingressgateway"` |  |
-| networkPolicies.smtpPort | int | `587` |  |
-| networkPolicies.ldap.enabled | bool | `false` |  |
-| networkPolicies.ldap.cidr | string | `"X.X.X.X/X"` |  |
-| networkPolicies.ldap.port | int | `636` |  |
-| openshift | bool | `false` |  |
-| bbtests.enabled | bool | `false` |  |
-| bbtests.image | string | `"registry1.dso.mil/ironbank/big-bang/base:2.0.0"` |  |
-| bbtests.cypress.artifacts | bool | `true` |  |
-| bbtests.cypress.envs.cypress_url | string | `"http://keycloak-http.keycloak.svc.cluster.local"` |  |
-| bbtests.cypress.envs.cypress_username | string | `"admin"` |  |
-| bbtests.cypress.envs.cypress_password | string | `"password"` |  |
-| bbtests.cypress.envs.tnr_username | string | `"cypress"` |  |
-| bbtests.cypress.envs.tnr_password | string | `"tnr_w!G33ZyAt@C8"` |  |
-| bbtests.cypress.envs.tnr_firstName | string | `"Cypress"` |  |
-| bbtests.cypress.envs.tnr_lastName | string | `"TNR"` |  |
-| bbtests.cypress.envs.tnr_email | string | `"cypress@tnr.mil"` |  |
 
-## Contributing
-
-Please see the [contributing guide](./CONTRIBUTING.md) if you are interested in contributing.
