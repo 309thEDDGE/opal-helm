@@ -1,4 +1,4 @@
-{{- $files := .Files -}}
+{{- $values := . -}}
 
 apiVersion: minio.min.io/v2
 kind: Tenant
@@ -153,9 +153,10 @@ spec:
   {{- end }}
   {{- with (dig "env" (list) .) }}
   env:
-    {{- toYaml . | nindent 4 }}
-    - name: MINIO_IDENTITY_OPENID_CLIENT_SECRET
-      value: {{ $files.Get "openid_client_secret.crt" }}
+  {{- range . }}
+  - name: {{ .name }}
+    value: {{ include "render-env-url" ( dict "value" .value "context" $values ) }}
+  {{- end}}}
   {{- end }}
   {{- if dig "priorityClassName" "" . }}
   priorityClassName: {{ dig "priorityClassName" "" . }}
