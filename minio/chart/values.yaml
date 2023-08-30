@@ -70,14 +70,13 @@ networkPolicies:
 
 openshift: false
 
-## Secret with credentials to be used by MinIO Tenant
+# Secret with credentials to be used by MinIO Tenant
 secrets:
   # create a kubernetes configuration secret object with the accessKey and secretKey as defined here.
+  enabled: false
   name: minio-creds-secret
   accessKey: opal-administrator
-  secretKey: 8g7Mkf&FgKS9SR
-  
-      
+
 
 ## If you change this name be sure to change the value in tenant.certificate.external.externalCaCertSecret
 tls:
