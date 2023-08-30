@@ -440,7 +440,7 @@ ingress:
       traefik.ingress.kubernetes.io/router.tls: "true"
     }
     tls: [ ]
-    host: "minio-k8.10.96.30.9.nip.io"
+    host: "minio-k8.{{ .Values.baseDns }}"
     path: /
     pathType: Prefix
 

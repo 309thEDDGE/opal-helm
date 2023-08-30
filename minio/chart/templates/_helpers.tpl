@@ -117,6 +117,6 @@ Note: the Minio operator has a fixed name of "minio" for the service it creates.
 80
 {{- end }}
 
-{{- define "render-env-url" -}}
+{{- define "render-url" -}}
 {{- tpl .value .context }}
 {{- end }}
