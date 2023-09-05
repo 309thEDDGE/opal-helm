@@ -9,7 +9,7 @@ data:
     defaultEntryPoints = ["web","websecure"]
 
     [providers.kubernetesIngress.ingressEndpoint]
-    publishedService = "{{- .Values.namespace }}/traefik"
+    publishedService = "{{- .Values.namespace }}/{{ include "traefik.fullname" . }}-service"
 
     [providers.file]
     filename = "/etc/traefik/traefik_dynamic.yml"
