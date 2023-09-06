@@ -73,7 +73,6 @@ openshift: false
 # Secret with credentials to be used by MinIO Tenant
 secrets:
   # create a kubernetes configuration secret object with the accessKey and secretKey as defined here.
-  enabled: false
   name: minio-creds-secret
   accessKey: opal-administrator
 
