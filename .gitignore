@@ -3,4 +3,6 @@
 .vscode
 .DS_Store
 
-tls.*
+# Certificates
+*.crt
+*.key
