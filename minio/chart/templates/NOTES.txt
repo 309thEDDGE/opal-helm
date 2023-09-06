@@ -9,5 +9,13 @@
   kubectl --namespace {{ $.Release.Namespace }} port-forward svc/{{ .name }}-console 9090:9090
 
   Then visit the MinIO Console at http://127.0.0.1:9090
+
+  To sign in to the MinIO Console you will need to retrieve the password from the kubernetes cluster.
+  The command to do that is as follows.
+
+    kubectl get secret minio-creds-secret -n minio-tenant -o jsonpath='{.data.secretkey}' | base64 -d
+
+  The username is: opal-administrator
+
   {{ end }}
 {{- end }}
