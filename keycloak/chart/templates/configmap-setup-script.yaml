@@ -1,0 +1,11 @@
+{{- if .Values.keycloakSetup.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "keycloak.fullname" . }}-setup
+  labels:
+    {{- include "keycloak.labels" . | nindent 2 }}
+data:
+  keycloak-setup.sh: |-
+    {{- .Files.Get "keycloak-setup.sh" | nindent 6 -}}
+{{- end }}
