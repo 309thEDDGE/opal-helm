@@ -1,5 +1,5 @@
 {{- if dig "secrets" true (.Values | merge (dict)) }}
-{{- if .Values.secrets.enabled }}
+{{- $ROOT_PASSWORD := (randAlphaNum 16 | quote)}}
 apiVersion: v1
 kind: Secret
 metadata:
@@ -8,10 +8,10 @@ type: Opaque
 stringData:
   config.env: |-
     export MINIO_ROOT_USER={{ .Values.secrets.accessKey | quote }}
+    export MINIO_ROOT_PASSWORD={{$ROOT_PASSWORD}}
 data:
   ## Access Key for MinIO Tenant
   accesskey: {{ dig "secrets" "accessKey" "" (.Values | merge (dict)) | b64enc }}
   ## Secret Key for MinIO Tenant
-  secretkey: {{ randAlphaNum 16 | b64enc | quote }}
-  {{- end }}
+  secretkey: {{$ROOT_PASSWORD | b64enc }}
   {{- end }}
