@@ -6,3 +6,4 @@
 # Certificates
 *.crt
 *.key
+*.secrets
