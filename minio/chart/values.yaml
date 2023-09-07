@@ -93,7 +93,7 @@ tenant:
     tag: RELEASE.2023-06-19T19-52-50Z
     pullPolicy: IfNotPresent
   ## Customize namespace for tenant deployment
-  #namespace: default
+  namespace: minio-tenant
   ## Customize any private registry image pull secret.
   ## currently only one secret registry is supported
   imagePullSecret:
