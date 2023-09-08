@@ -1,9 +1,7 @@
+{{- range .Values.namespaces }}
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: opal
+  name: {{ . }}
 ---
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: minio-tenant
+  {{- end }}
