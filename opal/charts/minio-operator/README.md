@@ -112,4 +112,4 @@ helm install operator chart/
 
 ## Contributing
 
-Please see the [contributing guide](./CONTRIBUTING.md) if you are interested in contributing.
+Please see the [contributing guide](CONTRIBUTING.md) if you are interested in contributing.
