@@ -23,16 +23,16 @@ version: 0.1.0
 # It is recommended to use it with quotes.
 appVersion: "1.16.0"
 
-#dependencies:
+dependencies:
 #  - name: keycloak
 #    version: 18.4.3-bb.2
 #    repository: "file://../keycloak/chart"
 #  - name: mongodb
 #    version: 13.16.0
 #    repository: "file://../mongodb/chart"
-#  - name: traefik
-#    version: 1.0.0
-#    repository: "file://../traefik/chart"
+  - name: traefik
+    version: 1.0.0
+    repository: "file://../traefik/chart"
 #  - name: minio-operator
 #    version: 5.0.5-bb.0
 #    repository: "file://../minio-operator/chart"

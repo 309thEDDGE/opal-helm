@@ -10,13 +10,16 @@ replicaCount: 1
 #  # Overrides the image tag whose default is the chart appVersion.
 #  tag: ""
 #
+
+tlsSecretName: &tlsSecret "tls-certs"
+
 imagePullSecrets:
   name: regcred
   namespaces:
     - opal
     - minio-tenant
 tls:
-  name: tls-certs
+  name: *tlsSecret
   namespaces:
     - opal
     - minio-tenant
@@ -94,3 +97,16 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+
+traefik:
+  image:
+    tag: "v2.10.4"
+  service:
+    loadBalancerIP: ""
+  tls:
+    nameOverride: *tlsSecret
+  ingress:
+    enabled: true
+    rules:
+        host: ""

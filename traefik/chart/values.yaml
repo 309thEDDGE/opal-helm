@@ -22,6 +22,8 @@ image:
 imagePullSecrets:
 - name: regcred
 
+tls:
+  nameOverride: ""
 
 # Indicates whether information about services should be injected into Pod's environment variables, matching the syntax of Docker links
 enableServiceLinks: true
@@ -129,7 +131,6 @@ ingress:
   labels: {}
    # List of rules for the Ingress
   rules:
-    -
       # Ingress host
       host: ""
       # Paths for the host
