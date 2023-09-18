@@ -26,16 +26,21 @@ appVersion: "1.16.0"
 dependencies:
   - name: keycloak
     version: 18.4.3-bb.2
-    repository: "file://./charts/keycloak/chart"
+    repository: "file://./charts/keycloak"
+    ocndition: keycloak.enabled
   - name: mongodb
     version: 13.16.0
-    repository: "file://./charts/mongodb/chart"
+    repository: "file://./charts/mongodb"
+    condition: mongodb.enabled
   - name: traefik
     version: 1.0.0
-    repository: "file://./charts/traefik/chart"
+    repository: "file://./charts/traefik"
+    condition: traefik.enabled
   - name: minio-operator
     version: 5.0.5-bb.0
-    repository: "file://./charts/minio-operator/chart"
+    repository: "file://./charts/minio-operator"
+    condition: minio-operator.enabled
   - name: minio-instance
     version: 5.0.5-bb.0
-    repository: "file://./charts/minio/chart"
+    repository: "file://./charts/minio"
+    condition: minio-instance.enabled

@@ -11,10 +11,10 @@ replicaCount: 1
 #  tag: ""
 #
 imagePullSecrets:
-  name: regcred
+  name: &dockerSecret regcred
   namespaces:
-    - opal
-    - minio-tenant
+    - &opalNS opal
+    - &minioNS minio-tenant
 tls:
   name: tls-certs
   namespaces:
@@ -81,6 +81,31 @@ resources: {}
   # requests:
   #   cpu: 100m
   #   memory: 128Mi
+
+mongodb:
+  image:
+    tag: 5.0.9
+    imagePullSecrets: *dockerSecret
+  auth:
+    enabled: true
+    rootUser: user
+    rootPassword: "fill_this_in"
+    usernames: []
+    passwords: []
+    databases: []
+  replicaCount: 2
+
+keycloak:
+  enabled: false
+
+traefik:
+  enabled: false
+
+minio-operator:
+  enabled: false
+
+minio-instance:
+  enabled: false
 
 autoscaling:
   enabled: false
