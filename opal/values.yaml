@@ -14,21 +14,21 @@ replicaCount: 1
 tlsSecretName: &tlsSecret "tls-certs"
 
 imagePullSecrets:
-  name: regcred
+  name: &dockerSecret regcred
   namespaces:
-    - opal
-    - minio-tenant
+    - &opalNS opal
+    - &minioNS minio-tenant
 tls:
   name: *tlsSecret
   namespaces:
-    - opal
-    - minio-tenant
+    - *opalNS
+    - *minioNS
 #nameOverride: ""
 #fullnameOverride: ""
 
 namespaces:
-  - opal
-  - minio-tenant
+  - *opalNS
+  - *minioNS
 
 
 serviceAccount:
@@ -85,6 +85,32 @@ resources: {}
   #   cpu: 100m
   #   memory: 128Mi
 
+mongodb:
+  enabled: false
+
+keycloak:
+  enabled: false
+
+traefik:
+  enabled: true
+  image:
+    tag: "v2.10.4"
+  service:
+    loadBalancerIP: ""
+  tls:
+    nameOverride: *tlsSecret
+  ingress:
+    enabled: true
+    rules:
+        host: ""
+
+minio-operator:
+  enabled: false
+
+minio-instance:
+  enabled: false
+
+
 autoscaling:
   enabled: false
   minReplicas: 1
@@ -97,16 +123,3 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
-
-
-traefik:
-  image:
-    tag: "v2.10.4"
-  service:
-    loadBalancerIP: ""
-  tls:
-    nameOverride: *tlsSecret
-  ingress:
-    enabled: true
-    rules:
-        host: ""
