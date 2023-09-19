@@ -20,7 +20,7 @@ global:
   ##
   imagePullSecrets: [regcred]
   storageClass: ""
-  namespaceOverride: ""
+  namespaceOverride: opal
 
 ## @section Common parameters
 ##
@@ -33,7 +33,7 @@ nameOverride: ""
 fullnameOverride: ""
 ## @param namespaceOverride String to fully override common.names.namespace
 ##
-namespaceOverride: ""
+namespaceOverride: opal
 ## @param kubeVersion Force target Kubernetes version (using Helm capabilities if not set)
 ##
 kubeVersion: ""

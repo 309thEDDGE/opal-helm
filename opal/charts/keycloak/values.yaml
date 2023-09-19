@@ -503,7 +503,7 @@ serviceMonitor:
   # If `true`, a ServiceMonitor resource for the prometheus-operator is created
   enabled: false
   # Optionally sets a target namespace in which to deploy the ServiceMonitor resource
-  namespace: ""
+  namespace: opal
   # Optionally sets a namespace for the ServiceMonitor
   namespaceSelector: {}
   # Annotations for the ServiceMonitor
@@ -526,7 +526,7 @@ extraServiceMonitor:
   # If `true`, a ServiceMonitor resource for the prometheus-operator is created
   enabled: false
   # Optionally sets a target namespace in which to deploy the ServiceMonitor resource
-  namespace: ""
+  namespace: opal
   # Optionally sets a namespace for the ServiceMonitor
   namespaceSelector: {}
   # Annotations for the ServiceMonitor

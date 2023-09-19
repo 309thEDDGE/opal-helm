@@ -219,4 +219,4 @@ helm install minio-instance chart/
 
 ## Contributing
 
-Please see the [contributing guide](./CONTRIBUTING.md) if you are interested in contributing.
+Please see the [contributing guide](CONTRIBUTING.md) if you are interested in contributing.
