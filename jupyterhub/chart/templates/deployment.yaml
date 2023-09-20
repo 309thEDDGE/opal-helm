@@ -1,3 +1,4 @@
+{{- $CONFIGPROXY_AUTH_TOKEN := ( randAlphaNum 64) }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -19,29 +20,24 @@ spec:
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
-        - name: regcred
+        - name: {{ .name }}
       {{- end }}
       containers:
         - name: chp
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command:
-            - configurable-http-proxy
-            - --ip=0.0.0.0
-            - --api-ip=0.0.0.0
-            - --api-port=8001
-            - --default-target=http://$(HUB_SERVICE_HOST):$(HUB_SERVICE_PORT)
-            - --error-target=http://$(HUB_SERVICE_HOST):$(HUB_SERVICE_PORT)/hub/error
-            - --port=8000
-            - --log-level=debug
+          command: ["bash"]
+          args: ["-c", "source /opt/conda/bin/activate && conda activate jupyterhub && configurable-http-proxy --ip=0.0.0.0 --api-ip=0.0.0.0 --api-port=8001 --default-target=http://$(HUB_SERVICE_HOST):$(HUB_SERVICE_PORT) --error-target=http://$(HUB_SERVICE_HOST):$(HUB_SERVICE_PORT)/hub/error --port=8000 --log-level=debug"]
           securityContext:
             allowPrivilegeEscalation: {{ .Values.securityContext.allowPrivilegeEscalation }}
-          env: {{ toYaml .Values.env | nindent 12 }}
+          env:
+            - name: CONFIGPROXY_AUTH_TOKEN
+              value: {{($CONFIGPROXY_AUTH_TOKEN | quote)}}
           ports:
-            - name: proxy-public
-              containerPort: 8000
-            - name: api
-              containerPort: {{ .Values.serviceApi.port }}
+            - containerPort: 8000
+              name: proxy-public
+            - containerPort: {{ .Values.serviceApi.port }}
+              name: api
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -61,23 +57,24 @@ spec:
         component: jupyter
     spec:
       serviceAccountName: hub
+      {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
-        - name: regcred
+        - name: {{ .name }}
+      {{- end }}
       containers:
         - name: jupyter-hub
-          image: registry1.dso.mil/ironbank/opensource/metrostar/jupyterhub:2.1.1_v3
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
           command: ["bash"]
-          args: ["-c", "source /opt/conda/bin/activate && conda activate jupyterhub && conda install -c conda-forge jupyterhub-kubespawner -y && jupyterhub -f /home/jovyan/jupyterhub_config.py"]
+          args: ["-c", "source /opt/conda/bin/activate && conda activate jupyterhub && jupyterhub -f /home/jovyan/jupyterhub_config.py"]
           ports:
             - containerPort: 8081
           env: {{ toYaml .Values.env | nindent 12 }}
+            - name: CONFIGPROXY_AUTH_TOKEN
+              value: {{($CONFIGPROXY_AUTH_TOKEN | quote)}}
           envFrom:
-            - configMapRef:
-                name: opal-env
             - secretRef:
-                name: token-env
-            - configMapRef:
-                name: deployment-env-h8t2dhkgbf
+                name: {{( include "get.tokenName" .)}}
           resources:
             requests: 
               cpu: 500m
