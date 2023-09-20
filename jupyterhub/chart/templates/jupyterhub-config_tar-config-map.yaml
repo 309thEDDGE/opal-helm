@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: {{ .Values.nameSpace }}
+  name: jupyterhub-config
+data:
+{{- (.Files.Glob "configs/*.tar").AsConfig | nindent 2 }}

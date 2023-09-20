@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: {{ .Values.nameSpace }}
+  name: jupyterhub-startup-script
+data:
+  startup_script.bash: |-
+    {{- .Files.Get "configs/startup_script.bash" | nindent 6 }}
