@@ -1,4 +1,4 @@
-# Default values for mychart.
+# Default values for jupyterhub.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
@@ -79,51 +79,20 @@ ingress:
                 number: 80
   tls: []
 env:
-  - name: KEYCLOAK_JUPYTERHUB_OAUTH_CALLBACK_URL
-    value: "https://opal-k8.10.96.30.9.nip.io/hub/oauth_callback"
-  - name: MINIO_BROWSER_REDIRECT_URL
-    value: https://minio-k8.10.96.30.9.nip.io
-  - name: MINIO_IDENTITY_OPENID_CLAIM_NAME
-    value: policy
-  - name: S3_ENDPOINT
-    value: "https://minio-k8.10.96.30.9.nip.io"
-  - name: MINIO_IDENTITY_OPENID_REDIRECT_URI
-    value: https://minio-k8.10.96.30.9.nip.io/oauth_callback/
-  - name: MINIO_ROOT_PASSWORD
-    value: 8g7Mkf&FgKS9SR
-  - name: OPAL_BANNER_COLOR
-    value: "Red"
-  - name: KEYCLOAK_JUPYTERHUB_AUTHORIZE_URL
-    value: "https://keycloak-k8.10.96.30.9.nip.io/auth/realms/master/protocol/openid-connect/auth"
-  - name: MINIO_IDENTITY_OPENID_CLIENT_SECRET
-    value: gIgGy8LiKXovhhagKEaeyeL2eIFSIiHi
-  - name: MINIO_ROOT_USER
-    value: opal-administrator
-  - name: MINIO_IDENTITY_OPENID_CONFIG_URL
-    value: https://keycloak-k8.10.96.30.9.nip.io/auth/realms/master/.well-known/openid-configuration
-  - name: KEYCLOAK_CLIENT_ID
-    value: "opal-jupyterhub"
-  - name: KEYCLOAK_REALM
-    value: "master"
-  - name: PYTHONPATH
-    value: "/python-packages/:$PYTHONPATH"
-  - name: KEYCLOAK_JUPYTERHUB_USERNAME_KEY
-    value: "preferred_username"
-  - name: OPAL_BANNER_TEXT
-    value: "Kubernetes Local Environment"
-  - name: KEYCLOAK_JUPYTERHUB_USERDATA_URL
-    value: "https://keycloak-k8.10.96.30.9.nip.io/auth/realms/master/protocol/openid-connect/userinfo"
-  - name: KEYCLOAK_OPAL_API_URL
-    value: "https://keycloak-k8.10.96.30.9.nip.io/auth/realms/master/protocol/openid-connect/token"
-  - name: MINIO_IDENTITY_OPENID_CLIENT_ID
-    value: opal-jupyterhub
-  - name: KEYCLOAK_JUPYTERHUB_CLIENT_ID
-    value: opal-jupyterhub
-  - name: PROXY_ADDRESS_FORWARDING
-    value: "true"
-  - name: SINGLE_USER_IMAGE
-    value: "deploytime_singleuser"
-resources: {}
+  keycloakJupyterhubOauthCallbackUrl: "https://opal-k8.10.96.30.9.nip.io/hub/oauth_callback"
+  s3Endpointurl: "https://minio-k8.10.96.30.9.nip.io"
+  keycloakJupyterhubAuthorizeUrl: "https://keycloak-k8.10.96.30.9.nip.io/auth/realms/master/protocol/openid-connect/auth"
+  keycloakJupyterhubUserdataUrl: "https://keycloak-k8.10.96.30.9.nip.io/auth/realms/master/protocol/openid-connect/userinfo"
+  keycloakOpalApiUrl: "https://keycloak-k8.10.96.30.9.nip.io/auth/realms/master/protocol/openid-connect/token"
+  openidClientId: opal-jupyterhub
+  singleUserImage: "deploytime_singleuser"
+  pythonPath: "/python-packages/:$PYTHONPATH"
+  opalBannerColor: "Red"
+  opalBannerText: "Kubernetes Local Environment"
+  keycloakJupyterhubUsernameKey: "preferred_username"
+
+resources: 
+  storage: 2gi
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
