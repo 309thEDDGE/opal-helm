@@ -2,9 +2,12 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+
 replicaCount: 1
 
 name: jupyterhub
+
+baseDns: "10.96.30.9.nip.io"
 
 namespace: opal
 
@@ -67,7 +70,7 @@ ingress:
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
     traefik.ingress.kubernetes.io/router.tls: "true"
   rules:
-    host: opal-k8.10.96.30.9.nip.io
+    host: "opal-k8.{{ .Values.baseDns }}"
     http:
       paths:
         - path: /
@@ -79,11 +82,11 @@ ingress:
                 number: 80
   tls: []
 env:
-  keycloakJupyterhubOauthCallbackUrl: "https://opal-k8.10.96.30.9.nip.io/hub/oauth_callback"
-  s3Endpointurl: "https://minio-k8.10.96.30.9.nip.io"
-  keycloakJupyterhubAuthorizeUrl: "https://keycloak-k8.10.96.30.9.nip.io/auth/realms/master/protocol/openid-connect/auth"
-  keycloakJupyterhubUserdataUrl: "https://keycloak-k8.10.96.30.9.nip.io/auth/realms/master/protocol/openid-connect/userinfo"
-  keycloakOpalApiUrl: "https://keycloak-k8.10.96.30.9.nip.io/auth/realms/master/protocol/openid-connect/token"
+  keycloakJupyterhubOauthCallbackUrl: "https://opal-k8.{{ .Values.baseDns }}/hub/oauth_callback"
+  s3Endpointurl: "https://minio-k8.{{ .Values.baseDns }}"
+  keycloakJupyterhubAuthorizeUrl: "https://keycloak-k8.{{ .Values.baseDns }}/auth/realms/master/protocol/openid-connect/auth"
+  keycloakJupyterhubUserdataUrl: "https://keycloak-k8.{{ .Values.baseDns }}/auth/realms/master/protocol/openid-connect/userinfo"
+  keycloakOpalApiUrl: "https://keycloak-k8.{{ .Values.baseDns }}/auth/realms/master/protocol/openid-connect/token"
   openidClientId: opal-jupyterhub
   singleUserImage: "deploytime_singleuser"
   pythonPath: "/python-packages/:$PYTHONPATH"
