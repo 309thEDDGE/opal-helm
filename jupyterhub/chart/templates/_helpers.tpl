@@ -87,3 +87,7 @@ Create the name of the service account to use
 {{- end }}
 {{- $secretName }}
 {{- end}}
+
+{{- define "render-url" -}}
+{{- tpl .value .context }}
+{{- end }}

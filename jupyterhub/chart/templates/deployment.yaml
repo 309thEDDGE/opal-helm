@@ -1,3 +1,5 @@
+{{- $values := . -}}
+
 {{- $CONFIGPROXY_AUTH_TOKEN := ( randAlphaNum 64) }}
 apiVersion: apps/v1
 kind: Deployment
@@ -72,15 +74,15 @@ spec:
           {{- with .Values.env }}
           env:
             - name: KEYCLOAK_JUPYTERHUB_OAUTH_CALLBACK_URL
-              value: {{ .keycloakJupyterhubOauthCallbackUrl }}
+              value: {{ include "render-url" ( dict "value" .keycloakJupyterhubOauthCallbackUrl "context" $values ) }}
             - name: S3_ENDPOINT
-              value: {{ .s3Endpointurl }}
+              value: {{ include "render-url" ( dict "value" .s3Endpointurl "context" $values ) }}
             - name: KEYCLOAK_JUPYTERHUB_AUTHORIZE_URL
-              value: {{ .keycloakJupyterhubAuthorizeUrl }}
+              value: {{ include "render-url" ( dict "value" .keycloakJupyterhubAuthorizeUrl "context" $values ) }}
             - name: KEYCLOAK_JUPYTERHUB_USERDATA_URL
-              value: {{ .keycloakJupyterhubUserdataUrl }}
+              value: {{ include "render-url" ( dict "value" .keycloakJupyterhubUserdataUrl "context" $values ) }}
             - name: KEYCLOAK_OPAL_API_URL
-              value: {{ .keycloakOpalApiUrl }}
+              value: {{ include "render-url" ( dict "value" .keycloakOpalApiUrl "context" $values ) }}
             - name: MINIO_IDENTITY_OPENID_CLIENT_ID
               value: {{ .openidClientId }}
             - name: KEYCLOAK_JUPYTERHUB_CLIENT_ID
