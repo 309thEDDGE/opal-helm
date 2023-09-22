@@ -1,3 +1,5 @@
+{{- $values := . -}}
+
 {{if .Values.ingress.enabled}}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -13,7 +15,7 @@ metadata:
 spec:
   rules:
   {{- with .Values.ingress.rules }}
-    - host: {{ .host }}
+    - host: {{ include "render-url" ( dict "value" .host "context" $values ) }}
       http: 
         paths: 
         {{- range .http.paths }}
