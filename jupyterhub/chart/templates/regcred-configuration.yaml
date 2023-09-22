@@ -1,3 +1,5 @@
+{{- $secret := lookup "v1" "Secret" .Values.namespace .Values.imagePullSecrets.name }}
+{{- if not $secret }}
 apiVersion: v1
 kind: Secret
 metadata:
@@ -6,3 +8,4 @@ metadata:
 type: kubernetes.io/dockerconfigjson
 data:
   .dockerconfigjson: {{ .Files.Get "dockerconfig.json" | b64enc }}
+{{- end }}

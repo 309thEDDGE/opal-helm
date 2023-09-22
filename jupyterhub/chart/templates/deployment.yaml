@@ -3,7 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   namespace: {{ .Values.namespace }}
-  name: proxy
+  name: {{ include "jupyterhub.fullname" . }}-proxy
   labels:
     component: proxy
 spec:
@@ -43,7 +43,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   namespace: {{ .Values.namespace }}
-  name: hub
+  name: {{ include "jupyterhub.fullname" . }}-hub
   labels:
     component: jupyter
 spec:
@@ -69,9 +69,37 @@ spec:
           args: ["-c", "source /opt/conda/bin/activate && conda activate jupyterhub && jupyterhub -f /home/jovyan/jupyterhub_config.py"]
           ports:
             - containerPort: 8081
-          env: {{ toYaml .Values.env | nindent 12 }}
+          {{- with .Values.env }}
+          env:
+            - name: KEYCLOAK_JUPYTERHUB_OAUTH_CALLBACK_URL
+              value: {{ .keycloakJupyterhubOauthCallbackUrl }}
+            - name: S3_ENDPOINT
+              value: {{ .s3Endpointurl }}
+            - name: KEYCLOAK_JUPYTERHUB_AUTHORIZE_URL
+              value: {{ .keycloakJupyterhubAuthorizeUrl }}
+            - name: KEYCLOAK_JUPYTERHUB_USERDATA_URL
+              value: {{ .keycloakJupyterhubUserdataUrl }}
+            - name: KEYCLOAK_OPAL_API_URL
+              value: {{ .keycloakOpalApiUrl }}
+            - name: MINIO_IDENTITY_OPENID_CLIENT_ID
+              value: {{ .openidClientId }}
+            - name: KEYCLOAK_JUPYTERHUB_CLIENT_ID
+              value: {{ .openidClientId }}
+            - name: SINGLE_USER_IMAGE
+              value: {{ .singleUserImage }}
+            - name: PYTHONPATH
+              value: {{ .pythonPath }}
+            - name: opalBannerColor
+              value: {{ .opalBannerColor }}
+            - name: OPAL_BANNER_TEXT
+              value: {{ .opalBannerText }}
+            - name: KEYCLOAK_JUPYTERHUB_USERNAME_KEY
+              value: {{ .keycloakJupyterhubUsernameKey }}
+            {{- end }}
             - name: CONFIGPROXY_AUTH_TOKEN
               value: {{($CONFIGPROXY_AUTH_TOKEN | quote)}}
+            - name: PROXY_ADDRESS_FORWARDING
+              value: "true"
           envFrom:
             - secretRef:
                 name: {{( include "get.tokenName" .)}}
