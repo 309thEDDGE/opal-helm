@@ -58,7 +58,7 @@ spec:
       labels:
         component: jupyter
     spec:
-      serviceAccountName: hub
+      serviceAccountName: {{ .Values.serviceAccount.name}}
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         - name: {{ .name }}
@@ -91,7 +91,7 @@ spec:
               value: {{ .singleUserImage }}
             - name: PYTHONPATH
               value: {{ .pythonPath }}
-            - name: opalBannerColor
+            - name: OPAL_BANNER_COLOR
               value: {{ .opalBannerColor }}
             - name: OPAL_BANNER_TEXT
               value: {{ .opalBannerText }}
@@ -104,7 +104,7 @@ spec:
               value: "true"
           envFrom:
             - secretRef:
-                name: {{( include "get.tokenName" .)}}
+                name: {{ printf "%s-token-env" (include "jupyterhub.fullname" .)}}
           resources:
             requests: 
               cpu: 500m

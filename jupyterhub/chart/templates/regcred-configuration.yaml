@@ -3,7 +3,7 @@
 apiVersion: v1
 kind: Secret
 metadata:
-  name: {{ .Values.imagePullSecrets.name }}
+  name: {{ printf "%s-%s" (include "jupyterhub.fullname" .) .Values.imagePullSecrets.name }}
   namespace: {{ .Values.namespace }}
 type: kubernetes.io/dockerconfigjson
 data:
