@@ -27,7 +27,7 @@ dependencies:
   - name: keycloak
     version: 18.4.3-bb.2
     repository: "file://./charts/keycloak"
-    ocndition: keycloak.enabled
+    condition: keycloak.enabled
   - name: mongodb
     version: 13.16.0
     repository: "file://./charts/mongodb"
@@ -44,3 +44,7 @@ dependencies:
     version: 5.0.5-bb.0
     repository: "file://./charts/minio"
     condition: minio-instance.enabled
+  - name: jupyterhub
+    version: 0.1.0
+    repository: "file://./charts/jupyterhub"
+    condition: jupyterhub.enabled

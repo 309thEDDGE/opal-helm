@@ -4,6 +4,8 @@ fullnameOverride: ""
 # Optionally override the name
 nameOverride: ""
 
+namespace: &ns opal
+
 # The number of replicas to create (has no effect if autoscaling enabled)
 replicas: 1
 
@@ -17,7 +19,7 @@ image:
 
 # Image pull secrets for the Pod
 imagePullSecrets:
-- name: regcred
+  - name: regcred
 
 # Mapping between IPs and hostnames that will be injected as entries in the Pod's hosts files
 hostAliases: []
@@ -275,6 +277,7 @@ secrets:
   #### Added for Big Bang ####
   # Environmental variables
   env:
+    annotations: {}
     stringData:
       # https://access.redhat.com/documentation/en-us/openjdk/11/html-single/configuring_openjdk_11_on_rhel_with_fips/index
       #JAVA_TOOL_OPTIONS: "-Dcom.redhat.fips=false"
@@ -284,8 +287,6 @@ secrets:
       # java opts for jgroups required for infinispan distributed cache when using the kubernetes stack.
       # https://www.keycloak.org/server/caching
       JAVA_OPTS_APPEND: -Djgroups.dns.query={{ include "keycloak.fullname" . }}-headless
-      # Custom client secret to use if creating the pre-configured OPAL client
-      BOOTSTRAPPER_CLIENT_SECRET: ""
 
 service:
   # Annotations for headless and HTTP Services
@@ -340,13 +341,12 @@ ingress:
   labels: {}
    # List of rules for the Ingress
   rules:
-    -
-      # Ingress host
-      host: ""
-      # Paths for the host
-      paths:
-        - path: /
-          pathType: Prefix
+    # Ingress host
+    host: ""
+    # Paths for the host
+    paths:
+      - path: /
+        pathType: Prefix
 # Example TLS configuration
 #   tls:
 #     - hosts:
@@ -385,7 +385,9 @@ keycloakSetup:
     seconds: 10
   podLabels: {}
   restartPolicy: Never
+  existingSecret: ""
   jhub_client_id: "opal-jupyterhub"
+  clientSecret: ""
 
 
 
@@ -450,6 +452,7 @@ pgchecker:
 postgresql:
   # If `true`, the Postgresql dependency is enabled
   enabled: true
+  namespace: *ns
   # PostgreSQL User to create
   postgresqlUsername: keycloak
   # PostgreSQL Password for the new user

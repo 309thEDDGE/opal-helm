@@ -65,7 +65,7 @@ Create a default fully qualified app name for the postgres requirement.
 */}}
 {{- define "keycloak.postgresql.fullname" -}}
 {{- $postgresContext := dict "Values" .Values.postgresql "Release" .Release "Chart" (dict "Name" "postgresql") -}}
-{{ include "keycloak.fullname" .}}-{{ include "postgresql.name" $postgresContext }}
+{{ .Release.Name }}-{{ include "postgresql.name" $postgresContext }}
 {{- end }}
 
 {{/*
@@ -74,3 +74,9 @@ Create the service DNS name.
 {{- define "keycloak.serviceDnsName" -}}
 {{ include "keycloak.fullname" . }}-headless.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}
 {{- end }}
+
+{{- define "get.oauthName" }}
+{{- $secretName := ""}}
+{{- $secretName = printf "%s-oauth" (include "keycloak.fullname" .) }}
+{{- $secretName }}
+{{- end}}

@@ -7,6 +7,7 @@ apiVersion: policy/v1beta1
 kind: PodDisruptionBudget
 metadata:
   name: {{ include "keycloak.fullname" . }}
+  namespace: {{ .Values.namespace }}
   labels:
     {{- include "keycloak.labels" . | nindent 4 }}
 spec:

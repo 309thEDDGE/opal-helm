@@ -3,6 +3,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: {{ template "keycloak.fullname" . }}-setup
+  namespace: {{ .Values.namespace }}
   labels:
     {{- include "keycloak.labels" . | nindent 4 }}
 spec:
@@ -56,8 +57,12 @@ spec:
             - name: KEYCLOAK_JUPYTERHUB_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "keycloak.fullname" . }}-env
-                  key: BOOTSTRAPPER_CLIENT_SECRET
+                  {{- if not .Values.keycloakSetup.existingSecret }}
+                  name: {{ include "get.oauthName" . }}
+                  {{- else }}
+                  name: {{ .Values.keycloakSetup.existingSecret }}
+                  {{- end }}
+                  key: KEYCLOAK_JUPYTERHUB_CLIENT_SECRET
           volumeMounts:
             - name: setup-script
               mountPath: /usr/local/bin/

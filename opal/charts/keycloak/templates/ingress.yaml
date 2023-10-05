@@ -14,6 +14,7 @@ apiVersion: {{ $apiVersion }}
 kind: Ingress
 metadata:
   name: {{ include "keycloak.fullname" . }}
+  namespace: {{ .Values.namespace }}
   {{- with $ingress.annotations }}
   annotations:
     {{- range $key, $value := . }}
@@ -42,14 +43,13 @@ spec:
     {{- end }}
 {{- end }}
   rules:
-    {{- range .Values.ingress.rules }}
-    - 
-      {{- if .host }}
-      host: {{ tpl .host $ | quote }}
+    -
+      {{- if $ingress.rules.host }}
+      host: {{ tpl $ingress.rules.host $ | quote }}
       {{- end }}
       http:
         paths:
-          {{- range .paths }}
+          {{- range $ingress.rules.paths }}
           - path: {{ .path }}
             {{- if $apiV1 }}
             pathType: {{ .pathType }}
@@ -64,7 +64,6 @@ spec:
               servicePort: {{ $ingress.servicePort }}
             {{- end }}
           {{- end }}
-    {{- end }}
 {{- if $ingress.console.enabled }}
 ---
 apiVersion: {{ $apiVersion }}

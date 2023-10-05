@@ -9,6 +9,8 @@ global:
 #     - myRegistryKeySecretName
 #   storageClass: myStorageClass
 
+namespace: ""
+
 ## Bitnami PostgreSQL image version
 ## ref: https://hub.docker.com/r/bitnami/postgresql/tags/
 ##
