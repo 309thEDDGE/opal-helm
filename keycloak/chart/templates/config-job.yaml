@@ -1,0 +1,69 @@
+{{- if .Values.keycloakSetup.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ template "keycloak.fullname" . }}-setup
+  labels:
+    {{- include "keycloak.labels" . | nindent 4 }}
+spec:
+  backoffLimit: {{ .Values.keycloakSetup.backoffLimit }}
+  {{- if .Values.keycloakSetup.cleanupAfterFinished.enabled }}
+  ttlSecondsAfterFinished: {{ .Values.keycloakSetup.cleanupAfterFinished.seconds }}
+  {{- end }}
+  template:
+    metadata:
+      labels:
+        {{- range $key, $value := .Values.podLabels }}
+        {{- printf "%s: %s" $key (tpl $value $ | quote) | nindent 8 }}
+        {{- end }}
+      annotations:
+        checksum/secrets: {{ tpl (toYaml .Values.secrets) . | sha256sum }}
+        {{- range $key, $value := .Values.podAnnotations }}
+        {{- printf "%s: %s" $key (tpl $value $ | quote) | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8}}
+      {{- end }}
+      restartPolicy: {{ .Values.keycloakSetup.restartPolicy }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: keycloak-setup
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+            - sh
+            - /usr/local/bin/keycloak-setup.sh
+          env:
+            - name: EXTERNAL_KEYCLOAK
+              value: {{ printf "http://%s-http:%d" (include "keycloak.fullname" .) (.Values.service.httpPort | int) }}
+            - name: KEYCLOAK_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "keycloak.fullname" . }}-env
+                  key: KEYCLOAK_ADMIN
+            - name: KEYCLOAK_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "keycloak.fullname" . }}-env
+                  key: KEYCLOAK_ADMIN_PASSWORD
+            - name: KEYCLOAK_JUPYTERHUB_CLIENT_ID
+              value: {{ .Values.keycloakSetup.jhub_client_id }}
+            - name: KEYCLOAK_JUPYTERHUB_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "keycloak.fullname" . }}-env
+                  key: BOOTSTRAPPER_CLIENT_SECRET
+          volumeMounts:
+            - name: setup-script
+              mountPath: /usr/local/bin/
+              #subPath: keycloak-setup.sh
+      volumes:
+        - name: setup-script
+          configMap:
+            name: {{ include "keycloak.fullname" . }}-setup
+{{- end }}
