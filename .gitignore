@@ -2,7 +2,9 @@
 /.idea/*
 .vscode
 .DS_Store
+dockerconfig.json
 
 # Certificates
 *.crt
 *.key
+
