@@ -1,0 +1,10 @@
+{{- if not .Values.imagePullSecrets.existingSecret }}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .Values.imagePullSecrets.name }}
+  namespace: {{ .Values.namespace }}
+type: kubernetes.io/dockerconfigjson
+data:
+  .dockerconfigjson: {{ .Files.Get "dockerconfig.json" | b64enc }}
+{{- end }}
