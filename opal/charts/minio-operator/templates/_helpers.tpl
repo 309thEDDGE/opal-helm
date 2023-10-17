@@ -86,3 +86,7 @@ Selector labels Operator
 app.kubernetes.io/name: {{ include "minio-operator.name" . }}
 app.kubernetes.io/instance: {{ printf "%s-%s" .Release.Name "console" }}
 {{- end -}}
+
+{{- define "render" -}}
+{{- tpl .value .context }}
+{{- end }}

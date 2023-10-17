@@ -15,11 +15,11 @@ maintainers:
   - name: MinIO, Inc
     email: dev@minio.io
 type: application
-dependencies:
-  - name: minio-operator-crds
-    version: "5.0.5"
-    condition: installCRDs
-    repository: "file://minio-operator-crds"
+#dependencies:
+#  - name: minio-operator-crds
+#    version: "5.0.5"
+#    condition: installCRDs
+#    repository: "file://minio-operator-crds"
 annotations:
   bigbang.dev/applicationVersions: |
     - Minio Operator: v5.0.5

@@ -1,8 +1,10 @@
+{{- $values := . -}}
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: "minio-operator"
-  namespace: {{ .Release.Namespace }}
+  namespace: {{ .Values.operator.namespace }}
   labels:
   {{- include "minio-operator.labels" . | nindent 4 }}
 spec:
@@ -55,7 +57,10 @@ spec:
             - "controller"
           {{- with .Values.operator.env }}
           env:
-          {{ toYaml . | nindent 10 }}
+          {{- range . }}
+            - name: {{ .name }}
+              value: {{ include "render" ( dict "value" .value "context" $values ) | quote }}
+          {{- end}}
           {{- end }}
           resources:
           {{- toYaml .Values.operator.resources | nindent 12 }}
