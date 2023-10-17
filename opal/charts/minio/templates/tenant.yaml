@@ -4,6 +4,7 @@ apiVersion: minio.min.io/v2
 kind: Tenant
 metadata:
   name: {{ include "minio-operator.fullname" . }}
+  namespace: {{ .Values.tenant.namespace }}
   {{- with .Values.tenant }}
   ## Optionally pass labels to be applied to the statefulset pods
   labels:
@@ -156,7 +157,7 @@ spec:
   {{- range . }}
   - name: {{ .name }}
     value: {{ include "render-url" ( dict "value" .value "context" $values ) }}
-  {{- end}}
+  {{- end }}
   {{- end }}
   {{- if dig "priorityClassName" "" . }}
   priorityClassName: {{ dig "priorityClassName" "" . }}
