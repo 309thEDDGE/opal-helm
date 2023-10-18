@@ -1,3 +1,4 @@
+{{- if not .Values.tls.nameOverride }}
 apiVersion: v1
 kind: Secret
 metadata:
@@ -8,3 +9,4 @@ data:
     {{ .Files.Get "tls.crt" | b64enc }}
   tls.key: |-
     {{ .Files.Get "tls.key" | b64enc }}
+{{- end }}

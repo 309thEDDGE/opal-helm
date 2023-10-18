@@ -1,0 +1,126 @@
+# Default values for jupyterhub.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+
+replicaCount: 1
+
+name: jupyterhub
+
+baseDns: ""
+
+namespace: opal
+
+secrets:
+  nameOverride: "token-env"
+  oauth:
+    # Leave blank to have jupyterhub create its own secret
+    existingSecret: ""
+    clientSecret: ""
+
+image:
+  repository: registry1.dso.mil/ironbank/opensource/metrostar/jupyterhub
+  tag: jupyterhub_v8
+  pullPolicy: IfNotPresent
+  
+imagePullSecrets: 
+  name: regcred
+  existingSecret: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: hub
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: 
+  allowPrivilegeEscalation: false
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+serviceApi:
+  name: proxy-api
+  port: 8001
+  targetPort: 8001
+
+servicePublic:
+  name: proxy-public
+  type: NodePort
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: 8000
+    - name: https
+      port: 443
+      targetPort: 443
+    - name: api
+      port: 8001
+ingress:
+  enabled: true
+  className: ""
+  annotations: 
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.tls: "true"
+  rules:
+    host: "opal-k8.{{ .Values.baseDns }}"
+    http:
+      paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: proxy-public
+              port:
+                number: 80
+  tls: []
+env:
+  keycloakJupyterhubOauthCallbackUrl: "https://opal-k8.{{ .Values.baseDns }}/hub/oauth_callback"
+  s3Endpointurl: "https://minio-k8.{{ .Values.baseDns }}"
+  keycloakJupyterhubAuthorizeUrl: "https://keycloak-k8.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/auth"
+  keycloakJupyterhubUserdataUrl: "https://keycloak-k8.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/userinfo"
+  keycloakOpalApiUrl: "https://keycloak-k8.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/token"
+  openidClientId: opal-jupyterhub
+  singleUserImage: "deploytime_singleuser"
+  pythonPath: "/python-packages/:$PYTHONPATH"
+  opalBannerColor: "Red"
+  opalBannerText: "Kubernetes Local Environment"
+  keycloakJupyterhubUsernameKey: "preferred_username"
+
+resources: 
+  storage: 2Gi
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
