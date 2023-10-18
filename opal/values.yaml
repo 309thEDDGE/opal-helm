@@ -11,31 +11,31 @@ replicaCount: 1
 #  tag: ""
 #
 
+tlsSecretName: &tlsSecret "tls-certs"
+
 imagePullSecrets:
-  name: regcred
+  name: &dockerSecret regcred
   namespaces:
-    - opal
-    - minio-tenant
+    - &opalNS opal
+    - &minioNS minio-tenant
+
+oauth:
+  name: &oauthSecret opal-oauth-common
+
+
 tls:
-  name: tls-certs
+  name: *tlsSecret
   namespaces:
-    - opal
-    - minio-tenant
+    - *opalNS
+    - *minioNS
+#nameOverride: ""
+#fullnameOverride: ""
 
-keycloak:
-  enabled: true
+namespaces:
+  - *opalNS
+  - *minioNS
 
-mongodb:
-  enabled: true
-
-traefik:
-  enabled: true
-
-minio:
-  enabled: true
-
-
-
+baseDns: &baseDns ""
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -63,22 +63,6 @@ service:
   type: ClusterIP
   port: 80
 
-ingress:
-  enabled: false
-  className: ""
-  annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
-  hosts:
-    - host: chart-example.local
-      paths:
-        - path: /
-          pathType: ImplementationSpecific
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
-
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
@@ -90,6 +74,76 @@ resources: {}
   # requests:
   #   cpu: 100m
   #   memory: 128Mi
+
+mongodb:
+  enabled: false
+
+keycloak:
+  enabled: false
+  namespace: *opalNS
+  secrets:
+    env:
+      stringData:
+        # both fields need to be filled in
+        KEYCLOAK_ADMIN: ""
+        KEYCLOAK_ADMIN_PASSWORD: ""
+  ingress:
+    enabled: true
+    rules:
+      host: ""
+  postgresql:
+    enabled: true
+    nameOverride: keycloak-postgres
+    namespace: *opalNS
+  keycloakSetup:
+    existingSecret: *oauthSecret
+
+traefik:
+  enabled: true
+  namespace: *opalNS
+  image:
+    tag: "v2.10.4"
+  service:
+    loadBalancerIP: ""
+  tls:
+    nameOverride: *tlsSecret
+  ingress:
+    enabled: true
+    rules:
+      host: ""
+  source:
+    url: ""
+    targetRevision: ""
+    path: ""
+
+minio-operator:
+  enabled: false
+
+minio-instance:
+  enabled: false
+
+jupyterhub:
+  enabled: false
+  namespace: *opalNS
+  baseDns: *baseDns
+  secrets:
+    oauth:
+      existingSecret: *oauthSecret
+  image:
+    tag: jupyterhub_v8
+  imagePullSecrets:
+    existingSecret: regcred
+  env:
+    singleUserImage: "registry1.dso.mil/ironbank/opensource/metrostar/singleuser/singleuser:singleuser_v21"
+    opalBannerColor: "green"
+    opalBannerText: "Unclassified (local development)"
+  ingress:
+    enabled: true
+    rules:
+      host: "opal-k8.{{ .Values.baseDns }}"
+  # metaflow datastore size
+  resources:
+    storage: 2Gi
 
 autoscaling:
   enabled: false
