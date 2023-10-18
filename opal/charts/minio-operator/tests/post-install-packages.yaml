@@ -1,4 +1,0 @@
-minio:
-  git:
-    repo: "https://repo1.dso.mil/platform-one/big-bang/apps/application-utilities/minio.git"
-  namespace: "minio"
