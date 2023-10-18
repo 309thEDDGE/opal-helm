@@ -45,7 +45,11 @@ spec:
       volumes:
         - name: traefik-certs-files
           secret:
+            {{- if not .Values.tls.nameOverride }}
             secretName: {{ include "traefik.fullname" .}}-tls-certs
+            {{- else }}
+            secretName: {{ .Values.tls.nameOverride }}
+            {{- end }}
         - name: traefik-cfg-dynamic
           configMap:
             name: {{ include "traefik.fullname" . }}-config-dynamic
