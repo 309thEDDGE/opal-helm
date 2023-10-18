@@ -100,21 +100,22 @@ keycloak:
 
 traefik:
   enabled: true
-  namespace: *opalNS
-  image:
-    tag: "v2.10.4"
-  service:
-    loadBalancerIP: ""
-  tls:
-    nameOverride: *tlsSecret
-  ingress:
-    enabled: true
-    rules:
-      host: ""
+  appValues:
+    namespace: *opalNS
+    image:
+      tag: "v2.10.4"
+    service:
+      loadBalancerIP: ""
+    tls:
+      nameOverride: *tlsSecret
+    ingress:
+      enabled: true
+      rules:
+        host: ""
   source:
-    url: ""
-    targetRevision: ""
-    path: ""
+    url: "test"
+    targetRevision: "test"
+    path: "test"
 
 minio-operator:
   enabled: false

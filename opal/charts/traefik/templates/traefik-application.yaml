@@ -13,9 +13,9 @@ spec:
 
   # Source of the application manifests
   source:
-    repoURL: {{ .Values.traefik.source.url }}  # Can point to either a Helm chart repo or a git repo.
-    targetRevision: {{ .Values.traefik.source.targetRevision }}  # For Helm, this refers to the chart version.
-    path: {{ .Values.traefik.source.path }}  # This has no meaning for Helm charts pulled directly from a Helm repo instead of git.
+    repoURL: {{ .Values.source.url }}  # Can point to either a Helm chart repo or a git repo.
+    targetRevision: {{ .Values.source.targetRevision }}  # For Helm, this refers to the chart version.
+    path: {{ .Values.source.path }}  # This has no meaning for Helm charts pulled directly from a Helm repo instead of git.
 
     # helm specific config
     helm:
@@ -36,14 +36,25 @@ spec:
 
       # Values file as block file. This takes precedence over values
       valuesObject:
-        {{ .Values.traefik | nindent 8 }}
+        namespace: {{ .Values.appValues.namespace }}
+        image:
+          tag: "{{ .Values.appValues.image.tag }}"
+        service:
+          loadBalancerIP: "{{ .Values.appValues.service.loadBalancerIP }}"
+        tls:
+          nameOverride: {{ .Values.appValues.nameOverride }}
+        ingress:
+          enabled: {{ .Values.appValues.ingress.enabled }}
+          rules:
+            host: "{{ .Values.appValues.ingress.rules.host }}"
+
 
 
   # Destination cluster and namespace to deploy the application
   destination:
     name: in-cluster
     # The namespace will only be set for namespace-scoped resources that have not set a value for .metadata.namespace
-    namespace: {{ .Values.traefik.namespace }}
+    namespace: {{ .Values.appValues.namespace }}
 
   # Extra information to show in the Argo CD Application details tab
 
