@@ -101,7 +101,7 @@ keycloak:
   source:
     url: "test"
     targetRevision: "test"
-    path: "test"
+    path: "apps/keycloak"
 
 traefik:
   enabled: true
@@ -120,7 +120,7 @@ traefik:
   source:
     url: "test"
     targetRevision: "test"
-    path: "test"
+    path: "apps/traefik"
 
 minio-operator:
   enabled: false
