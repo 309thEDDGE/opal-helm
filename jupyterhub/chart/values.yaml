@@ -83,7 +83,8 @@ ingress:
   tls: []
 env:
   keycloakJupyterhubOauthCallbackUrl: "https://opal-k8.{{ .Values.baseDns }}/hub/oauth_callback"
-  s3Endpointurl: "https://minio-k8.{{ .Values.baseDns }}"
+  # current minio endpoint may need to be updated depending on deployment. use http to avoid ssl errors
+  s3Endpointurl: "http://minio:9000"
   keycloakJupyterhubAuthorizeUrl: "https://keycloak-k8.{{ .Values.baseDns }}/auth/realms/master/protocol/openid-connect/auth"
   keycloakJupyterhubUserdataUrl: "https://keycloak-k8.{{ .Values.baseDns }}/auth/realms/master/protocol/openid-connect/userinfo"
   keycloakOpalApiUrl: "https://keycloak-k8.{{ .Values.baseDns }}/auth/realms/master/protocol/openid-connect/token"
