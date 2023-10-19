@@ -7,17 +7,6 @@ description: A Library Helm Chart for grouping common logic between bitnami char
   This chart is not deployable by itself.
 home: https://bitnami.com
 icon: https://bitnami.com/downloads/logos/bitnami-mark.png
-keywords:
-- common
-- helper
-- template
-- function
-- bitnami
-maintainers:
-- name: VMware, Inc.
-  url: https://github.com/bitnami/charts
 name: common
-sources:
-- https://github.com/bitnami/charts
 type: library
 version: 2.13.1
