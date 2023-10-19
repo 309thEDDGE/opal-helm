@@ -4,7 +4,7 @@ apiVersion: v2
 appVersion: 11.11.0
 dependencies:
   - name: common
-    repository: "file://./charts/common"
+    repository: "file://./deps/common"
     version: 2.x
 description: Chart for PostgreSQL, an object-relational database management system (ORDBMS) with an emphasis on extensibility and on standards-compliance.
 engine: gotpl

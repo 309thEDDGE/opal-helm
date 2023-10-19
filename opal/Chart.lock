@@ -1,0 +1,9 @@
+dependencies:
+- name: keycloak
+  repository: file://./charts/keycloak
+  version: 18.4.3-bb.2
+- name: traefik
+  repository: file://./charts/traefik
+  version: 1.0.0
+digest: sha256:216662dd0ef0ef0cfab5ff3a0cc50926981dbe0f41d2e3de1da40d2831b038da
+generated: "2023-10-19T08:38:54.646881824-06:00"
