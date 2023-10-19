@@ -80,23 +80,28 @@ mongodb:
 
 keycloak:
   enabled: false
-  namespace: *opalNS
-  secrets:
-    env:
-      stringData:
-        # both fields need to be filled in
-        KEYCLOAK_ADMIN: ""
-        KEYCLOAK_ADMIN_PASSWORD: ""
-  ingress:
-    enabled: true
-    rules:
-      host: ""
-  postgresql:
-    enabled: true
-    nameOverride: keycloak-postgres
+  appValues:
     namespace: *opalNS
-  keycloakSetup:
-    existingSecret: *oauthSecret
+    secrets:
+      env:
+        stringData:
+          # both fields need to be filled in
+          KEYCLOAK_ADMIN: ""
+          KEYCLOAK_ADMIN_PASSWORD: ""
+    ingress:
+      enabled: true
+      rules:
+        host: ""
+    postgresql:
+      enabled: true
+      nameOverride: keycloak-postgres
+      namespace: *opalNS
+    keycloakSetup:
+      existingSecret: *oauthSecret
+  source:
+    url: "test"
+    targetRevision: "test"
+    path: "test"
 
 traefik:
   enabled: true
