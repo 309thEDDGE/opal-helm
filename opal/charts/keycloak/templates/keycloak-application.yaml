@@ -40,8 +40,8 @@ spec:
         secrets:
           env:
             stringData:
-              KEYCLOAK_ADMIN: {{ .Values.secrets.env.stringData.KEYCLOAK_ADMIN }}
-              KEYCLOAK_ADMIN_PASSWORD: {{ .Values.secrets.env.stringData.KEYCLOAK_ADMIN }}
+              KEYCLOAK_ADMIN: {{ .Values.appValues.secrets.env.stringData.KEYCLOAK_ADMIN }}
+              KEYCLOAK_ADMIN_PASSWORD: {{ .Values.appValues.secrets.env.stringData.KEYCLOAK_ADMIN }}
         postgresql:
           enabled: {{ .Values.appValues.postgresql.enabled }}
           nameOverride: {{ .Values.appValues.postgresql.nameOverride }}
