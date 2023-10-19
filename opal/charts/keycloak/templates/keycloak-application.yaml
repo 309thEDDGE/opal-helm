@@ -37,6 +37,8 @@ spec:
       # Values file as block file. This takes precedence over values
       valuesObject:
         namespace: {{ .Values.appValues.namespace }}
+        postgresql:
+          enabled: false
         secrets:
           env:
             stringData:
