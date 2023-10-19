@@ -5,7 +5,7 @@ appValues:
   service:
     loadBalancerIP: ""
   tls:
-    nameOverride: token-env
+    nameOverride: tls-certs
   ingress:
     enabled: true
     rules:

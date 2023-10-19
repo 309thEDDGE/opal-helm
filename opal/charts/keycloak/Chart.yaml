@@ -1,0 +1,7 @@
+apiVersion: v2
+name: keycloak
+version: 18.4.3-bb.2
+appVersion: 21.1.1
+description: ArgoCD application yaml template for OPAL Keycloak instance
+home: https://www.keycloak.org/
+icon: https://www.keycloak.org/resources/images/keycloak_icon_512px.svg
