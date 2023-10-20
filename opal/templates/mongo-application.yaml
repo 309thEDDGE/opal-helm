@@ -1,21 +1,27 @@
+{{- if .Values.mongodb.enabled }}
+{{ $global := .Values }}
+{{ $values := .Values.mongodb }}
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: keycloak
+  name: mongodb
   # You'll usually want to add your resources to the argocd namespace.
   namespace: argocd
   # Add this finalizer ONLY if you want these to cascade delete.
+  finalizers:
+    # The default behaviour is foreground cascading deletion
+    - resources-finalizer.argocd.argoproj.io
   labels:
-    name: keycloak
+    name: mongodb
 spec:
   # The project the application belongs to.
-  project: default
+  project: {{ $global.argoProject }}
 
   # Source of the application manifests
   source:
-    repoURL: {{ .Values.source.url }}  # Can point to either a Helm chart repo or a git repo.
-    targetRevision: {{ .Values.source.targetRevision }}  # For Helm, this refers to the chart version.
-    path: {{ .Values.source.path }}  # This has no meaning for Helm charts pulled directly from a Helm repo instead of git.
+    repoURL: {{ $global.source.url }}  # Can point to either a Helm chart repo or a git repo.
+    targetRevision: {{ $global.source.targetRevision }}  # For Helm, this refers to the chart version.
+    path: "apps/mongodb"  # This has no meaning for Helm charts pulled directly from a Helm repo instead of git.
 
     # helm specific config
     helm:
@@ -24,7 +30,7 @@ spec:
 
 
       # Release name override (defaults to application name)
-      releaseName: keycloak
+      releaseName: {{ .Release.Name }}
 
       # Helm values files for overriding values in the helm chart
       # The path is relative to the spec.source.path directory defined above
@@ -36,32 +42,14 @@ spec:
 
       # Values file as block file. This takes precedence over values
       valuesObject:
-        namespace: {{ .Values.appValues.namespace }}
-        postgresql:
-          enabled: false
-        secrets:
-          env:
-            stringData:
-              KEYCLOAK_ADMIN: {{ .Values.appValues.secrets.env.stringData.KEYCLOAK_ADMIN }}
-              KEYCLOAK_ADMIN_PASSWORD: {{ .Values.appValues.secrets.env.stringData.KEYCLOAK_ADMIN }}
-        postgresql:
-          enabled: {{ .Values.appValues.postgresql.enabled }}
-          nameOverride: {{ .Values.appValues.postgresql.nameOverride }}
-          namespace: {{ .Values.appValues.postgresql.namespace }}
-        keycloakSetup:
-          existingSecret: {{ .Values.appValues.keycloakSetup.existingSecret }}
-        ingress:
-          enabled: {{ .Values.appValues.ingress.enabled }}
-          rules:
-            host: "{{ .Values.appValues.ingress.rules.host }}"
-
+{{ $values.appValues | toYaml | nindent 8}}
 
 
   # Destination cluster and namespace to deploy the application
   destination:
     name: in-cluster
     # The namespace will only be set for namespace-scoped resources that have not set a value for .metadata.namespace
-    namespace: {{ .Values.appValues.namespace }}
+    namespace: {{ $values.appValues.namespace }}
 
   # Extra information to show in the Argo CD Application details tab
 
@@ -72,7 +60,7 @@ spec:
       selfHeal: true # Specifies if partial app sync should be executed when resources are changed only in target Kubernetes cluster and no git change detected ( false by default ).
       allowEmpty: false # Allows deleting all application resources during automatic syncing ( false by default ).
     syncOptions:     # Sync options which modifies sync behavior
-    - Validate=false # disables resource validation (equivalent to 'kubectl apply --validate=false') ( true by default ).
+    - Validate=true # disables resource validation (equivalent to 'kubectl apply --validate=false') ( true by default ).
     - CreateNamespace=true # Namespace Auto-Creation ensures that namespace specified as the application destination exists in the destination cluster.
     - PrunePropagationPolicy=foreground # Supported policies are background, foreground and orphan.
     - PruneLast=true # Allow the ability for resource pruning to happen as a final, implicit wave of a sync operation
@@ -92,3 +80,5 @@ spec:
   # circumstances. Setting to zero will store no history. This will reduce storage used. Increasing will increase the
   # space used to store the history, so we do not recommend increasing it.
   revisionHistoryLimit: 10
+
+{{- end }}

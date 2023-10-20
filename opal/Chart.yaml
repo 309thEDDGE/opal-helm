@@ -22,25 +22,3 @@ version: 0.1.0
 # follow Semantic Versioning. They should reflect the version the application is using.
 # It is recommended to use it with quotes.
 appVersion: "1.16.0"
-
-dependencies:
-  - name: keycloak
-    condition: keycloak.enabled
-    version: 18.4.3-bb.2
-    repository: "file://./charts/keycloak"
-#  - name: mongodb
-#    condition: mongodb.enabled
-#    version: 13.16.0
-#    repository: "file://./charts/mongodb"
-  - name: traefik
-    condition: traefik.enabled
-    version: 1.0.0
-    repository: "file://./charts/traefik"
-#  - name: minio-operator
-#    condition: minio.enabled
-#    version: 5.0.5-bb.0
-#    repository: "file://./charts/minio-operator"
-#  - name: minio
-#    condition: minio.enabled
-#    version: 5.0.5-bb.0
-#    repository: "file://./charts/minio"
