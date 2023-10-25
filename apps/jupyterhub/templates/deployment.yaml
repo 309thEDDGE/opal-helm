@@ -21,14 +21,9 @@ spec:
         component: proxy
     spec:
       {{- with .Values.imagePullSecrets }}
-      {{- if not .existingSecret }}
       imagePullSecrets:
         - name: {{ .name }}
-      {{- else}}
-      imagePullSecrets:
-        - name: {{ .existingSecret }}
       {{- end }}
-      {{- end}}
       containers:
         - name: chp
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -63,16 +58,11 @@ spec:
       labels:
         component: jupyter
     spec:
-      serviceAccountName: hub
+      serviceAccountName: {{ .Values.serviceAccount.name}}
       {{- with .Values.imagePullSecrets }}
-      {{- if not .existingSecret }}
       imagePullSecrets:
         - name: {{ .name }}
-      {{- else}}
-      imagePullSecrets:
-        - name: {{ .existingSecret }}
       {{- end }}
-      {{- end}}
       containers:
         - name: jupyter-hub
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -101,7 +91,7 @@ spec:
               value: {{ .singleUserImage }}
             - name: PYTHONPATH
               value: {{ .pythonPath }}
-            - name: opalBannerColor
+            - name: OPAL_BANNER_COLOR
               value: {{ .opalBannerColor }}
             - name: OPAL_BANNER_TEXT
               value: {{ .opalBannerText }}
@@ -114,14 +104,7 @@ spec:
               value: "true"
           envFrom:
             - secretRef:
-                name: {{( include "get.tokenName" .)}}
-            {{- if .Values.secrets.oauth.existingSecret }}
-            - secretRef:
-                name: {{ .Values.secrets.oauth.existingSecret }}
-            {{- else }}
-            - secretRef:
-                name: {{( include "get.oauthName" )}}
-            {{- end }}
+                name: {{ printf "%s-token-env" (include "jupyterhub.fullname" .)}}
           resources:
             requests: 
               cpu: 500m

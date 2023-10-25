@@ -7,16 +7,12 @@ replicaCount: 1
 
 name: jupyterhub
 
-baseDns: ""
+baseDns: "10.96.30.9.nip.io"
 
 namespace: opal
 
-secrets:
+secret:
   nameOverride: "token-env"
-  oauth:
-    # Leave blank to have jupyterhub create its own secret
-    existingSecret: ""
-    clientSecret: ""
 
 image:
   repository: registry1.dso.mil/ironbank/opensource/metrostar/jupyterhub
@@ -25,7 +21,6 @@ image:
   
 imagePullSecrets: 
   name: regcred
-  existingSecret: ""
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -88,10 +83,11 @@ ingress:
   tls: []
 env:
   keycloakJupyterhubOauthCallbackUrl: "https://opal-k8.{{ .Values.baseDns }}/hub/oauth_callback"
-  s3Endpointurl: "https://minio-k8.{{ .Values.baseDns }}"
-  keycloakJupyterhubAuthorizeUrl: "https://keycloak-k8.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/auth"
-  keycloakJupyterhubUserdataUrl: "https://keycloak-k8.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/userinfo"
-  keycloakOpalApiUrl: "https://keycloak-k8.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/token"
+  # current minio endpoint may need to be updated depending on deployment. use http to avoid ssl errors
+  s3Endpointurl: "http://minio:9000"
+  keycloakJupyterhubAuthorizeUrl: "https://keycloak-k8.{{ .Values.baseDns }}/auth/realms/master/protocol/openid-connect/auth"
+  keycloakJupyterhubUserdataUrl: "https://keycloak-k8.{{ .Values.baseDns }}/auth/realms/master/protocol/openid-connect/userinfo"
+  keycloakOpalApiUrl: "https://keycloak-k8.{{ .Values.baseDns }}/auth/realms/master/protocol/openid-connect/token"
   openidClientId: opal-jupyterhub
   singleUserImage: "deploytime_singleuser"
   pythonPath: "/python-packages/:$PYTHONPATH"
