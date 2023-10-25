@@ -32,13 +32,13 @@ spec:
       # Helm values files for overriding values in the helm chart
       # The path is relative to the spec.source.path directory defined above
       valueFiles:
-      - values.yaml
+      - {{ $global.valuesFile }}
 
       # Ignore locally missing valueFiles when installing Helm chart. Defaults to false
       ignoreMissingValueFiles: false
 
       valuesObject:
-{{ $values | toYaml | nindent 8 }}
+{{- $values | toYaml | nindent 8 }}
 
 
 
