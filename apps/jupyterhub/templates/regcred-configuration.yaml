@@ -1,8 +1,9 @@
-{{- if not .Values.imagePullSecrets.existingSecret }}
+{{- $secret := lookup "v1" "Secret" .Values.namespace .Values.imagePullSecrets.name }}
+{{- if not $secret }}
 apiVersion: v1
 kind: Secret
 metadata:
-  name: {{ .Values.imagePullSecrets.name }}
+  name: {{ printf "%s-%s" (include "jupyterhub.fullname" .) .Values.imagePullSecrets.name }}
   namespace: {{ .Values.namespace }}
 type: kubernetes.io/dockerconfigjson
 data:
