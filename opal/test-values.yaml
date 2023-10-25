@@ -1,0 +1,143 @@
+# Default values for opal.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+
+argoProject: default
+
+imagePullSecrets: &dockerSecret regcred
+
+oauth: &oauthSecret opal-oauth-common
+
+
+tls: &tlsSecret "tls-certs"
+#nameOverride: ""
+#fullnameOverride: ""
+
+namespaces:
+  - *opalNS
+  - *minioNS
+
+baseDns: &baseDns ""
+
+source:
+  url: ""
+  targetRevision: ""
+
+mongodb:
+  enabled: true
+  appValues:
+    namespace: *opalNS
+    image:
+      tag: 5.0.9
+      imagePullSecrets: *dockerSecret
+    auth:
+      enabled: true
+      rootUser: user
+      rootPassword: "fill_this_in"
+      usernames: []
+      passwords: []
+      databases: []
+    replicaCount: 2
+
+
+keycloak:
+  enabled: true
+  appValues:
+    namespace: *opalNS
+    secrets:
+      env:
+        stringData:
+          # both fields need to be filled in
+          KEYCLOAK_ADMIN: "test"
+          KEYCLOAK_ADMIN_PASSWORD: "pass"
+    ingress:
+      enabled: true
+      rules:
+        host: "keycloak-k8s.10.96.30.9.nip.io"
+    postgresql:
+      enabled: false
+    keycloakSetup:
+      existingSecret: *oauthSecret
+  postgres:
+    nameOverride: keycloak-postgres
+    namespace: *opalNS
+    # PostgreSQL User to create
+    postgresqlUsername: keycloak
+    # PostgreSQL Password for the new user
+    postgresqlPassword: keycloak
+    # PostgreSQL Database to create
+    postgresqlDatabase: keycloak
+    # PostgreSQL network policy configuration
+    networkPolicy:
+      enabled: false
+    global:
+      imagePullSecrets:
+        - *dockerSecret
+    image:
+      registry: registry1.dso.mil
+      repository: ironbank/opensource/postgres/postgresql12
+      tag: 12.15
+    securityContext:
+      enabled: true
+      fsGroup: 26
+      runAsUser: 26
+      runAsGroup: 26
+    containerSecurityContext:
+      enabled: true
+      runAsUser: 26
+      capabilities:
+        drop:
+          - ALL
+    resources:
+      requests:
+        cpu: "250m"
+        memory: "256Mi"
+      limits:
+        cpu: "250m"
+        memory: "256Mi"
+
+traefik:
+  enabled: true
+  appValues:
+    namespace: *opalNS
+    image:
+      tag: "v2.10.4"
+    service:
+      loadBalancerIP: "10.96.30.9"
+    tls:
+      nameOverride: *tlsSecret
+    ingress:
+      enabled: true
+      rules:
+        host: "traefik-k8s.10.96.30.9.nip.io"
+
+minio-operator:
+  enabled: false
+
+minio-instance:
+  enabled: false
+
+jupyterhub:
+  enabled: false
+  namespace: *opalNS
+  baseDns: *baseDns
+  secrets:
+    oauth:
+      existingSecret: *oauthSecret
+  image:
+    tag: jupyterhub_v8
+  imagePullSecrets:
+    existingSecret: regcred
+  env:
+    singleUserImage: "registry1.dso.mil/ironbank/opensource/metrostar/singleuser/singleuser:singleuser_v21"
+    opalBannerColor: "green"
+    opalBannerText: "Unclassified (local development)"
+  ingress:
+    enabled: true
+    rules:
+      host: "opal-k8.{{ .Values.baseDns }}"
+  # metaflow datastore size
+  resources:
+    storage: 2Gi
+
