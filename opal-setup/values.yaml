@@ -1,3 +1,36 @@
+argoProject: default
 
 namespaces:
-  - minio-tenant
+  - &minioNS minio-tenant
+  - &opalNS opal
+  - &argoNS argocd
+
+imagePullSecrets:
+  name: regcred
+
+tls:
+  name: tls-certs
+  namespaces:
+    - *minioNS
+    - *opalNS
+
+oauth:
+  name: opal-oauth-common
+
+&appSource source:
+  url: "https://github.com/309thEDDGE/opal-helm.git"
+  targetRevision: "argo-architecture"
+
+appValues:
+  *appSource
+  mongodb:
+    enabled: true
+  keycloak:
+    enabled: true
+  traefik:
+    enabled: true
+  minio-operator:
+    enabled: false
+  minio-instance:
+    enabled: false
+  jupyterhub: false
