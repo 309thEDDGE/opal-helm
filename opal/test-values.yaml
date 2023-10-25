@@ -15,8 +15,8 @@ tls: &tlsSecret "tls-certs"
 #fullnameOverride: ""
 
 namespaces:
-  - *opalNS opal
-  - *minioNS minio-tenant
+  - &opalNS opal
+  - &minioNS minio-tenant
 
 baseDns: &baseDns ""
 

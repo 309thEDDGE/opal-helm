@@ -17,8 +17,8 @@ tls:
 #fullnameOverride: ""
 
 namespaces:
-  - *opalNS
-  - *minioNS
+  - &opalNS opal
+  - &minioNS minio-tenant
 
 baseDns: &baseDns ""
 
