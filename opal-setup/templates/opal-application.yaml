@@ -1,5 +1,5 @@
 {{ $global := .Values }}
-{{ $values := .Values.opalApplication }}
+{{ $values := .Values.appValues }}
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -36,6 +36,10 @@ spec:
 
       # Ignore locally missing valueFiles when installing Helm chart. Defaults to false
       ignoreMissingValueFiles: false
+
+      valuesObject:
+{{ $values | toYaml | nindent 8 }}
+
 
 
   # Destination cluster and namespace to deploy the application
