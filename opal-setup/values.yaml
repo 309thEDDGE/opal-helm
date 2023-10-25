@@ -3,7 +3,6 @@ argoProject: default
 namespaces:
   - &minioNS minio-tenant
   - &opalNS opal
-  - &argoNS argocd
 
 imagePullSecrets:
   name: regcred
@@ -17,12 +16,14 @@ tls:
 oauth:
   name: opal-oauth-common
 
-&appSource source:
+valuesFile: test-values.yaml
+
+source: &appSource
   url: "https://github.com/309thEDDGE/opal-helm.git"
   targetRevision: "argo-architecture"
 
 appValues:
-  *appSource
+  source: *appSource
   mongodb:
     enabled: true
   keycloak:
@@ -33,4 +34,5 @@ appValues:
     enabled: false
   minio-instance:
     enabled: false
-  jupyterhub: false
+  jupyterhub:
+    enabled: false

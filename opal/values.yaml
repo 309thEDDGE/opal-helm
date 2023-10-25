@@ -2,25 +2,17 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-tlsSecretName: &tlsSecret "tls-certs"
 
 argoProject: default
 
 imagePullSecrets:
   name: &dockerSecret regcred
-  namespaces:
-    - &opalNS opal
-    - &minioNS minio-tenant
 
 oauth:
   name: &oauthSecret opal-oauth-common
 
-
 tls:
-  name: *tlsSecret
-  namespaces:
-    - *opalNS
-    - *minioNS
+  name: *tlsSecret "tls-certs"
 #nameOverride: ""
 #fullnameOverride: ""
 
