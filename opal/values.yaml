@@ -12,7 +12,7 @@ oauth:
   name: &oauthSecret opal-oauth-common
 
 tls:
-  name: *tlsSecret "tls-certs"
+  name: &tlsSecret "tls-certs"
 #nameOverride: ""
 #fullnameOverride: ""
 
