@@ -35,4 +35,4 @@ appValues:
   minio-instance:
     enabled: false
   jupyterhub:
-    enabled: false
+    enabled: true
