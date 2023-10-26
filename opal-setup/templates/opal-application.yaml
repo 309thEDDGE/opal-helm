@@ -6,6 +6,9 @@ metadata:
   name: opal-application
   # You'll usually want to add your resources to the argocd namespace.
   namespace: argocd
+  finalizers:
+    # The default behaviour is foreground cascading deletion
+    - resources-finalizer.argocd.argoproj.io
   annotations:
     argocd.argoproj.io/hook: Skip
   labels:
