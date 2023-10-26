@@ -5,14 +5,11 @@
 
 argoProject: default
 
-imagePullSecrets:
-  name: &dockerSecret regcred
+imagePullSecrets: &dockerSecret regcred
 
-oauth:
-  name: &oauthSecret opal-oauth-common
+oauth: &oauthSecret opal-oauth-common
 
-tls:
-  name: &tlsSecret "tls-certs"
+tls: &tlsSecret "tls-certs"
 #nameOverride: ""
 #fullnameOverride: ""
 
@@ -20,7 +17,6 @@ namespaces:
   - &opalNS opal
   - &minioNS minio-tenant
 
-baseDns: &baseDns ""
 
 source:
   url: ""
@@ -122,24 +118,25 @@ minio-instance:
 
 jupyterhub:
   enabled: false
-  namespace: *opalNS
-  baseDns: *baseDns
-  secrets:
-    oauth:
-      existingSecret: *oauthSecret
-  image:
-    tag: jupyterhub_v8
-  imagePullSecrets:
-    existingSecret: regcred
-  env:
-    singleUserImage: "registry1.dso.mil/ironbank/opensource/metrostar/singleuser/singleuser:singleuser_v21"
-    opalBannerColor: "green"
-    opalBannerText: "Unclassified (local development)"
-  ingress:
-    enabled: true
-    rules:
-      host: "opal-k8.{{ .Values.baseDns }}"
-  # metaflow datastore size
-  resources:
-    storage: 2Gi
-
+  appValues:
+    namespace: *opalNS
+    baseDns: ""
+    secrets:
+      oauth:
+        existingSecret: *oauthSecret
+    image:
+      tag: jupyterhub_v8
+    imagePullSecrets:
+      existingSecret: regcred
+    env:
+      singleUserImage: "registry1.dso.mil/ironbank/opensource/metrostar/singleuser/singleuser:singleuser_v21"
+      opalBannerColor: "green"
+      opalBannerText: "Unclassified (local development)"
+      s3Endpointurl: "http://minio:9000"
+    ingress:
+      enabled: true
+      rules:
+        host: "opal-k8s.{{ .Values.baseDns }}"
+    # metaflow datastore size
+    resources:
+      storage: 2Gi
