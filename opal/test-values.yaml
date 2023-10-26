@@ -118,7 +118,7 @@ minio-instance:
   enabled: false
 
 jupyterhub:
-  enabled: false
+  enabled: true
   namespace: *opalNS
   baseDns: "10.96.30.9.nip.io"
   secrets:

@@ -117,7 +117,7 @@ minio-instance:
   enabled: false
 
 jupyterhub:
-  enabled: false
+  enabled: true
   appValues:
     namespace: *opalNS
     baseDns: ""
