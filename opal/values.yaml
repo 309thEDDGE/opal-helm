@@ -133,6 +133,10 @@ jupyterhub:
       opalBannerColor: "green"
       opalBannerText: "Unclassified (local development)"
       s3Endpointurl: "http://minio:9000"
+      keycloakJupyterhubOauthCallbackUrl: "https://opal-k8s.{{ .Values.baseDns }}/hub/oauth_callback"
+      keycloakJupyterhubAuthorizeUrl: "https://keycloak-k8s.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/auth"
+      keycloakJupyterhubUserdataUrl: "https://keycloak-k8s.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/userinfo"
+      keycloakOpalApiUrl: "https://keycloak-k8s.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/token"
     ingress:
       enabled: true
       rules:
