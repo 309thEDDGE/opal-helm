@@ -18,7 +18,6 @@ namespaces:
   - &opalNS opal
   - &minioNS minio-tenant
 
-baseDns: &baseDns ""
 
 source:
   url: ""
@@ -121,7 +120,7 @@ minio-instance:
 jupyterhub:
   enabled: false
   namespace: *opalNS
-  baseDns: *baseDns
+  baseDns: "10.96.30.9.nip.io"
   secrets:
     oauth:
       existingSecret: *oauthSecret
@@ -133,6 +132,7 @@ jupyterhub:
     singleUserImage: "registry1.dso.mil/ironbank/opensource/metrostar/singleuser/singleuser:singleuser_v21"
     opalBannerColor: "green"
     opalBannerText: "Unclassified (local development)"
+    s3Endpointurl: "http://minio:9000"
   ingress:
     enabled: true
     rules:
