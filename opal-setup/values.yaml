@@ -31,6 +31,12 @@ appValues:
     enabled: true
   keycloak:
     enabled: true
+    # bootstrapper admin credentials. Should be deleted after post-install setup
+    secrets:
+      env:
+        stringData:
+          KEYCLOAK_ADMIN: ""
+          KEYCLOAK_ADMIN_PASSWORD: ""
   traefik:
     enabled: true
   minio-operator:
