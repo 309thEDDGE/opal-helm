@@ -48,8 +48,8 @@ keycloak:
       env:
         stringData:
           # both fields need to be filled in
-          KEYCLOAK_ADMIN: "test"
-          KEYCLOAK_ADMIN_PASSWORD: "pass"
+          KEYCLOAK_ADMIN: ""
+          KEYCLOAK_ADMIN_PASSWORD: ""
     ingress:
       enabled: true
       rules:
