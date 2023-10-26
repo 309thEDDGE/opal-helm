@@ -6,6 +6,9 @@ namespaces:
 
 imagePullSecrets:
   name: regcred
+  namespaces:
+    - *opalNS
+    - *minioNS
 
 tls:
   name: tls-certs
