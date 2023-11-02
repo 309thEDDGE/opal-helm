@@ -15,9 +15,15 @@ echo "in auth"
             --user $KEYCLOAK_USER \
             --password $KEYCLOAK_PASSWORD \
             --realm master
+echo "after auth"
+echo "creds follow:"
+echo $EXTERNAL_KEYCLOAK
+echo $KEYCLOAK_USER
+echo $KEYCLOAK_PASSWORD
 }
 
 until authenticate_keycloak; do
+    echo "in loop"
     if [ $? -eq 1 ]; then
         echo "keycloak_setup cannot authenticate. It is likely the keycloak server is still booting. Retrying in 2 seconds"
 	sleep 2
