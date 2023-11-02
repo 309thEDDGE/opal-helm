@@ -6,9 +6,6 @@ metadata:
   namespace: {{ .Values.namespace }}
   labels:
     {{- include "keycloak.labels" . | nindent 4 }}
-  annotations:
-    argocd.argoproj.io/hook: PostSync
-    argocd.argoproj.io/hook-delete-policy: HookSucceeded
 spec:
   backoffLimit: {{ .Values.keycloakSetup.backoffLimit }}
   {{- if .Values.keycloakSetup.cleanupAfterFinished.enabled }}
