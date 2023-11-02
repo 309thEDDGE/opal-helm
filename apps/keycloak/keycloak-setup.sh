@@ -10,16 +10,16 @@ cd /opt/keycloak/bin
 
 authenticate_keycloak () {
 echo "in auth"
+echo "creds follow:"
+echo $EXTERNAL_KEYCLOAK
+echo $KEYCLOAK_USER
+echo $KEYCLOAK_PASSWORD
 ./kcadm.sh config credentials \
             --server $EXTERNAL_KEYCLOAK \
             --user $KEYCLOAK_USER \
             --password $KEYCLOAK_PASSWORD \
             --realm master
 echo "after auth"
-echo "creds follow:"
-echo $EXTERNAL_KEYCLOAK
-echo $KEYCLOAK_USER
-echo $KEYCLOAK_PASSWORD
 }
 
 until authenticate_keycloak; do
