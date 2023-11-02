@@ -57,6 +57,7 @@ keycloak:
     postgresql:
       enabled: false
     keycloakSetup:
+      enabled: true
       existingSecret: *oauthSecret
   postgres:
     nameOverride: keycloak-postgres
