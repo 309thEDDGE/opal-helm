@@ -9,14 +9,13 @@ cd /opt/keycloak/bin
 #EXTERNAL_KEYCLOAK=${EXTERNAL_KEYCLOAK:-http://keycloak:8080/}
 
 authenticate_keycloak () {
+echo "in auth"
 ./kcadm.sh config credentials \
             --server $EXTERNAL_KEYCLOAK \
             --user $KEYCLOAK_USER \
             --password $KEYCLOAK_PASSWORD \
             --realm master
 }
-
-echo "before"
 
 until authenticate_keycloak; do
     if [ $? -eq 1 ]; then
