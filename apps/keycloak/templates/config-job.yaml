@@ -7,6 +7,7 @@ metadata:
   labels:
     {{- include "keycloak.labels" . | nindent 4 }}
   annotations:
+    argocd.argoproj.io/hook: PostSync
     argocd.argoproj.io/compare-options: IgnoreExtraneous
     #argocd.argoproj.io/sync-options: ApplyOutOfSyncOnly=false
 spec:
