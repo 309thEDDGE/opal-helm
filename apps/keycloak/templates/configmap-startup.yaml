@@ -5,8 +5,6 @@ kind: ConfigMap
 metadata:
   name: {{ include "keycloak.fullname" . }}-startup
   namespace: {{ .Values.namespace }}
-  labels:
-    {{- include "keycloak.labels" . | nindent 4 }}
 data:
   {{- range $key, $value := .Values.startupScripts }}
   {{ $key }}: |
