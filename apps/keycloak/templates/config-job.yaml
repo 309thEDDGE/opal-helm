@@ -6,6 +6,8 @@ metadata:
   namespace: {{ .Values.namespace }}
   labels:
     {{- include "keycloak.labels" . | nindent 4 }}
+  annotations:
+    argocd.argoproj.io/sync-options: ApplyOutOfSyncOnly=false
 spec:
   backoffLimit: {{ .Values.keycloakSetup.backoffLimit }}
   {{- if .Values.keycloakSetup.cleanupAfterFinished.enabled }}
