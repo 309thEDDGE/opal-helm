@@ -16,6 +16,8 @@ authenticate_keycloak () {
             --realm master
 }
 
+echo "before"
+
 until authenticate_keycloak; do
     if [ $? -eq 1 ]; then
         echo "keycloak_setup cannot authenticate. It is likely the keycloak server is still booting. Retrying in 2 seconds"
