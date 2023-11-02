@@ -14,6 +14,7 @@ authenticate_keycloak () {
             --user $KEYCLOAK_USER \
             --password $KEYCLOAK_PASSWORD \
             --realm master
+}
 
 until authenticate_keycloak; do
     if [ $? -eq 1 ]; then
