@@ -9,21 +9,13 @@ cd /opt/keycloak/bin
 #EXTERNAL_KEYCLOAK=${EXTERNAL_KEYCLOAK:-http://keycloak:8080/}
 
 authenticate_keycloak () {
-echo "in auth"
-echo "creds follow:"
-echo $EXTERNAL_KEYCLOAK
-echo $KEYCLOAK_USER
-echo $KEYCLOAK_PASSWORD
 ./kcadm.sh config credentials \
             --server $EXTERNAL_KEYCLOAK \
             --user $KEYCLOAK_USER \
             --password $KEYCLOAK_PASSWORD \
             --realm master
-echo "after auth"
-}
 
 until authenticate_keycloak; do
-    echo "in loop"
     if [ $? -eq 1 ]; then
         echo "keycloak_setup cannot authenticate. It is likely the keycloak server is still booting. Retrying in 2 seconds"
 	sleep 2
