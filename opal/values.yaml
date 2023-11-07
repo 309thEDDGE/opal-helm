@@ -54,7 +54,7 @@ keycloak:
       rules:
         host: ""
     postgresql:
-      enabled: false
+      enabled: true
     keycloakSetup:
       existingSecret: *oauthSecret
   postgres:
