@@ -31,7 +31,6 @@ spec:
 
       # Release name override (defaults to application name)
       releaseName: {{ .Release.Name }}
-
       # Helm values files for overriding values in the helm chart
       # The path is relative to the spec.source.path directory defined above
       valueFiles:
@@ -41,7 +40,12 @@ spec:
       ignoreMissingValueFiles: false
 
       # Values file as block file. This takes precedence over values
-      valuesObject:
+      valuesObject: | 
+        secrets:
+          env:
+            stringData:
+              KEYCLOAK_ADMIN: {{ ( randAlphaNum 16 ) }}
+              KEYCLOAK_ADMIN_PASSWORD: {{ ( randAlphaNum 16 ) }}
 {{- $values.appValues | toYaml | nindent 8 }}
 
   - repoURL: {{ $global.source.url }}  # Can point to either a Helm chart repo or a git repo.
