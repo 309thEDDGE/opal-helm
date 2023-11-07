@@ -1,0 +1,48 @@
+argoProject: default
+
+namespaces:
+  - &minioNS minio-tenant
+  - &opalNS opal
+
+imagePullSecrets:
+  name: regcred
+  namespaces:
+    - *opalNS
+    - *minioNS
+
+tls:
+  name: tls-certs
+  namespaces:
+    - *minioNS
+    - *opalNS
+
+oauth:
+  name: opal-oauth-common
+
+valuesFile: test-values.yaml
+
+source: &appSource
+  url: "https://github.com/309thEDDGE/opal-helm.git"
+  targetRevision: "argo-architecture"
+
+appValues:
+  source: *appSource
+  mongodb:
+    enabled: true
+  keycloak:
+    enabled: true
+    # bootstrapper admin credentials. Should be deleted after post-install setup
+    appValues:
+      secrets:
+        env:
+          stringData:
+            KEYCLOAK_ADMIN: ""
+            KEYCLOAK_ADMIN_PASSWORD: ""
+  traefik:
+    enabled: true
+  minio-operator:
+    enabled: false
+  minio-instance:
+    enabled: false
+  jupyterhub:
+    enabled: true

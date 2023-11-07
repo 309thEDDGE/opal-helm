@@ -1,0 +1,6 @@
+dependencies:
+- name: common
+  repository: file://./deps/common
+  version: 2.13.1
+digest: sha256:6b2c565fc644302d11b7536d3f8a89bbcd7107fe45fbbdee2da3d43a70a64696
+generated: "2023-10-19T14:11:44.191240685-06:00"
