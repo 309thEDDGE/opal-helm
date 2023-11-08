@@ -138,8 +138,7 @@ minioInstance:
   enabled: false
   appValues:
     namespace: ""
-    oauth:
-      existingSecret: *oauthSecret
+    existingOauth: *oauthSecret
     secrets:
       # both fields need to be filled in
       name: "minio-creds-secret"
