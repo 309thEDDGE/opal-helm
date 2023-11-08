@@ -22,11 +22,7 @@ serviceAccount:
   name: "tenant"
 
 
-oauth:
-  name: "MINIO_IDENTITY_OPENID_CLIENT_SECRET"
-  # override to use previously generated oauth secret
-  existingSecret: ""
-
+existingOauth: ""
 # This is maintained for compatible upgrade with the 2.0.9 release.   The following service itens will be removed ina future release
 # because the operator handles the service deployment in 4.x and beyond.
 service:
