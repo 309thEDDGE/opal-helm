@@ -110,7 +110,7 @@ traefik:
       rules:
         host: ""
 
-minio-operator:
+minioOperator:
   enabled: true
   appValues:
     namespace: *opalNS
@@ -132,7 +132,7 @@ minio-operator:
         cpu: 200m
         memory: 256Mi
 
-minio-instance:
+minioInstance:
   enabled: true
   appValues:
     namespace: ""
