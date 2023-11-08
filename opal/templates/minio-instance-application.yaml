@@ -2,9 +2,9 @@
 ## Note: to enable upgrade of minio instance, then values file has a number of values that will be
 ## deprecated in the future. Deprecation candidates will have an annotation in comments regarding the timeframe for deprecation.
 
-{{- if .Values.minio-instance.enabled }}
+{{- if .Values.minioInstance.enabled }}
 {{- $global := .Values }}
-{{- $values := .Values.minio-instance }}
+{{- $values := .Values.minioInstance }}
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
