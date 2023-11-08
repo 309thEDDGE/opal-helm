@@ -7,7 +7,7 @@ argoProject: default
 
 imagePullSecrets: &dockerSecret regcred
 
-oauth: &oauthSecret opal-oauth-common
+oauth: &oauthSecret "opal-oauth-common"
 
 
 tls: &tlsSecret "tls-certs"
