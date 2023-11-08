@@ -139,6 +139,7 @@ minioInstance:
   appValues:
     namespace: ""
     existingOauth: *oauthSecret
+    baseDns: "10.96.30.9.nip.io"
     secrets:
       # both fields need to be filled in
       name: "minio-creds-secret"
@@ -194,7 +195,7 @@ minioInstance:
         api:
           enabled: true
           rules:
-            host: ""
+            host: "s3-k8s.{{ .Values.baseDns }}"
         console:
           enabled: true
           host: "minio-k8s.{{ .Values.baseDns }}"
