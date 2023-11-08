@@ -138,7 +138,8 @@ minioInstance:
   enabled: true
   appValues:
     namespace: ""
-    existingOauth: *oauthSecret
+    oauth:
+      existingSecret: *oauthSecret
     baseDns: "10.96.30.9.nip.io"
     secrets:
       # both fields need to be filled in
