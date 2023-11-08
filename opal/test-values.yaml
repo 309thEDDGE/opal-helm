@@ -135,7 +135,7 @@ minioOperator:
         memory: 256Mi
 
 minioInstance:
-  enabled: true
+  enabled: false
   appValues:
     namespace: ""
     secrets:
