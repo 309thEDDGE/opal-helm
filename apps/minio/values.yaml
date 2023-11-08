@@ -22,7 +22,9 @@ serviceAccount:
   name: "tenant"
 
 
-existingOauth: ""
+oauth:
+  existingSecret: ""
+
 # This is maintained for compatible upgrade with the 2.0.9 release.   The following service itens will be removed ina future release
 # because the operator handles the service deployment in 4.x and beyond.
 service:
