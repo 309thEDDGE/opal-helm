@@ -7,12 +7,16 @@ replicaCount: 1
 
 name: jupyterhub
 
-baseDns: "10.96.30.9.nip.io"
+baseDns: ""
 
 namespace: opal
 
-secret:
+secrets:
   nameOverride: "token-env"
+  oauth:
+    # Leave blank to have jupyterhub create its own secret
+    existingSecret: ""
+    clientSecret: ""
 
 image:
   repository: registry1.dso.mil/ironbank/opensource/metrostar/jupyterhub
@@ -21,6 +25,7 @@ image:
   
 imagePullSecrets: 
   name: regcred
+  existingSecret: ""
 
 serviceAccount:
   # Specifies whether a service account should be created
