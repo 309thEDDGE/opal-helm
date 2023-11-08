@@ -48,6 +48,7 @@ spec:
       # Values file as block file. This takes precedence over values
       valuesObject:
 {{- $values.appValues | toYaml | nindent 8 }}
+
 {{- $tenantValues := .Values.minioInstance }}
   - repoURL: {{ $global.source.url }}  # Can point to either a Helm chart repo or a git repo.
     targetRevision: {{ $global.source.targetRevision }}  # For Helm, this refers to the chart version.
@@ -72,7 +73,7 @@ spec:
 
       # Values file as block file. This takes precedence over values
       valuesObject:
-  {{- $tenantValues.appValues | toYaml | nindent 8 }}
+{{- $tenantValues.appValues | toYaml | nindent 8 }}
 
   # Destination cluster and namespace to deploy the application
   destination:
