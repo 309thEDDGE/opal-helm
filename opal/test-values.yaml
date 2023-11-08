@@ -135,7 +135,7 @@ minioOperator:
         memory: 256Mi
 
 minioInstance:
-  enabled: false
+  enabled: true
   appValues:
     namespace: ""
     existingOauth: *oauthSecret
