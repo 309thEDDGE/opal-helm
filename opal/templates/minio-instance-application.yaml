@@ -4,7 +4,7 @@
 
 {{- if .Values.minioInstance.enabled }}
 {{- $global := .Values }}
-{{- $values := .Values.minioInstance.appValues }}
+{{- $values := .Values.minioInstance }}
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:

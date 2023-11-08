@@ -4,7 +4,7 @@
 
 {{- if .Values.minioOperator.enabled }}
 {{- $global := .Values }}
-{{- $values := .Values.minioOperator.appValues }}
+{{- $values := .Values.minioOperator }}
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -53,7 +53,7 @@ spec:
   destination:
     name: in-cluster
     # The namespace will only be set for namespace-scoped resources that have not set a value for .metadata.namespace
-    namespace: { { $values.appValues.namespace } }
+    namespace: {{ $values.appValues.namespace }}
 
   # Extra information to show in the Argo CD Application details tab
 
