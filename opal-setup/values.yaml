@@ -43,6 +43,6 @@ appValues:
   minioOperator:
     enabled: true
   minioInstance:
-    enabled: true
+    enabled: false
   jupyterhub:
     enabled: true
