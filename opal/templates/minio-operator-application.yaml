@@ -5,6 +5,7 @@
 {{- if .Values.minioOperator.enabled }}
 {{- $global := .Values }}
 {{- $values := .Values.minioOperator }}
+{{- $tenantValues := .Values.minioInstance }}
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -49,7 +50,6 @@ spec:
       valuesObject:
 {{- $values.appValues | toYaml | nindent 8 }}
 
-{{- $tenantValues := .Values.minioInstance }}
   - repoURL: {{ $global.source.url }}  # Can point to either a Helm chart repo or a git repo.
     targetRevision: {{ $global.source.targetRevision }}  # For Helm, this refers to the chart version.
     path: "apps/minio"  # This has no meaning for Helm charts pulled directly from a Helm repo instead of git.
