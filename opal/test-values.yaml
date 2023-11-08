@@ -194,11 +194,10 @@ minioInstance:
       ingress:
         api:
           enabled: true
-          rules:
-            host: "s3-k8s.{{ .Values.baseDns }}"
+          host: "s3-k8s.10.96.30.9.nip.io"
         console:
           enabled: true
-          host: "minio-k8s.{{ .Values.baseDns }}"
+          host: "minio-k8s.10.96.30.9.nip.io"
 
 jupyterhub:
   enabled: true
