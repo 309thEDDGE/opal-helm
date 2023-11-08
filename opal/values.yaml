@@ -135,7 +135,6 @@ minioOperator:
 minioInstance:
   enabled: true
   appValues:
-    namespace: ""
     secrets:
       # both fields need to be filled in
       name: "minio-creds-secret"
