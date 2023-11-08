@@ -51,7 +51,7 @@ spec:
 {{- $tenantValues := .Values.minioInstance }}
   - repoURL: {{ $global.source.url }}  # Can point to either a Helm chart repo or a git repo.
     targetRevision: {{ $global.source.targetRevision }}  # For Helm, this refers to the chart version.
-    path: "apps/minio-instance"  # This has no meaning for Helm charts pulled directly from a Helm repo instead of git.
+    path: "apps/minio"  # This has no meaning for Helm charts pulled directly from a Helm repo instead of git.
 
     # helm specific config
     helm:
