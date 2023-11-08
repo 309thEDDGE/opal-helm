@@ -1,5 +1,12 @@
 {{- if dig "secrets" true (.Values | merge (dict)) }}
 {{- $ROOT_PASSWORD := (randAlphaNum 16 | quote)}}
+
+{{- $oauthSecret := (randAlphaNum 64) | b64enc | quote }}
+{{- if .Values.oauth.existingSecret }}
+{{- $existingSecret := (lookup "v1" "Secret" .Release.Namespace .Values.oauth.existingSecret) }}
+{{- $oauthSecret = index $existingSecret.data "MINIO_IDENTITY_OPENID_CLIENT_SECRET" | b64dec}}
+{{- end -}}
+
 apiVersion: v1
 kind: Secret
 metadata:
@@ -10,6 +17,7 @@ stringData:
   config.env: |-
     export MINIO_ROOT_USER={{ .Values.secrets.accessKey | quote }}
     export MINIO_ROOT_PASSWORD={{$ROOT_PASSWORD}}
+    export MINIO_IDENTITY_OPENID_CLIENT_SECRET={{$oauthSecret}}
 data:
   ## Access Key for MinIO Tenant
   accesskey: {{ dig "secrets" "accessKey" "" (.Values | merge (dict)) | b64enc }}
