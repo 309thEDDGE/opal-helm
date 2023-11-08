@@ -138,12 +138,14 @@ minioInstance:
   enabled: false
   appValues:
     namespace: ""
+    oauth:
+      existingSecret: *oauthSecret
     secrets:
       # both fields need to be filled in
       name: "minio-creds-secret"
       accessKey: "minio-admin"
     tls:
-      name: tls-certs
+      name: *tlsSecret
     tenant:
       namespace: *minioNS
       imagePullSecrets:
@@ -176,6 +178,17 @@ minioInstance:
         - name: metaflow-data
         - name: basket-data
         - name: airflow
+      env:
+        - name: MINIO_IDENTITY_OPENID_CONFIG_URL
+          value: "https://keycloak-k8s.{{ .Values.baseDns }}/realms/master/.well-known/openid-configuration"
+        - name: MINIO_BROWSER_REDIRECT_URL
+          value: "https://minio-k8s.{{ .Values.baseDns }}"
+        - name: MINIO_IDENTITY_OPENID_CLIENT_ID
+          value: opal-jupyterhub
+        - name: MINIO_IDENTITY_OPENID_CLAIM_NAME
+          value: policy
+        - name: MINIO_IDENTITY_OPENID_REDIRECT_URI
+          value: "https://minio-k8s.{{ .Values.baseDns }}/oauth_callback"
       ## List of secret names to use for generating MinIO users during tenant provisioning
       users: [ ]
       ingress:
@@ -185,8 +198,7 @@ minioInstance:
             host: ""
         console:
           enabled: true
-          rules:
-            host: ""
+          host: "minio-k8s.{{ .Values.baseDns }}"
 
 jupyterhub:
   enabled: true

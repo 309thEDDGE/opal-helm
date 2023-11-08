@@ -159,6 +159,14 @@ spec:
     value: {{ include "render-url" ( dict "value" .value "context" $values ) }}
   {{- end }}
   {{- end }}
+  {{- if not .Values.oauth.existingSecret }}
+  - name: MINIO_IDENTITY_OPENID_CLIENT_SECRET
+    value: {{ .Files.Get "openid_client_secret.crt "}}
+  {{- else }}
+  envFrom:
+    - secretRef:
+        name: {{ .Values.oauth.existingSecret }}
+  {{- end }}
   {{- if dig "priorityClassName" "" . }}
   priorityClassName: {{ dig "priorityClassName" "" . }}
   {{- end }}
