@@ -5,7 +5,6 @@
 {{- if .Values.minioOperator.enabled }}
 {{- $global := .Values }}
 {{- $values := .Values.minioOperator }}
-{{- $tenantValues := .Values.minioInstance }}
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
