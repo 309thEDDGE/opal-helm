@@ -183,7 +183,7 @@ minioInstance:
         - name: MINIO_IDENTITY_OPENID_CONFIG_URL
           value: "https://keycloak-k8s.{{ .Values.baseDns }}/realms/master/.well-known/openid-configuration"
         - name: MINIO_BROWSER_REDIRECT_URL
-          value: "https://minio-k8s.{{ .Values.baseDns }}/login"
+          value: "https://minio-k8s.{{ .Values.baseDns }}/oauth_callback"
         - name: MINIO_IDENTITY_OPENID_CLIENT_ID
           value: opal-jupyterhub
         - name: MINIO_IDENTITY_OPENID_CLAIM_NAME
@@ -192,13 +192,13 @@ minioInstance:
           value: "https://minio-k8s.{{ .Values.baseDns }}/oauth_callback"
       ## List of secret names to use for generating MinIO users during tenant provisioning
       users: [ ]
-      ingress:
-        api:
-          enabled: true
-          host: "s3-k8s.{{ .Values.baseDns }}"
-        console:
-          enabled: true
-          host: "minio-k8s.{{ .Values.baseDns }}"
+    ingress:
+      api:
+        enabled: true
+        host: "s3-k8s.{{ .Values.baseDns }}"
+      console:
+        enabled: true
+        host: "minio-k8s.{{ .Values.baseDns }}"
 
 jupyterhub:
   enabled: true
