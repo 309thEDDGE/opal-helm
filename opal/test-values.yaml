@@ -213,7 +213,8 @@ jupyterhub:
     imagePullSecrets:
       existingSecret: regcred
     env:
-      singleUserImage: "registry1.dso.mil/ironbank/opensource/metrostar/singleuser/singleuser:singleuser_v21"
+      singleUserImage: "jupyterhub/singleuser"
+      #singleUserImage: "registry1.dso.mil/ironbank/opensource/metrostar/singleuser/singleuser:singleuser_v22"
       opalBannerColor: "green"
       opalBannerText: "Unclassified (local development)"
       s3Endpointurl: "http://opal-setup-minio-console.minio-tenant.svc.cluster.local:9090"
