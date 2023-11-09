@@ -44,5 +44,8 @@ appValues:
     enabled: true
   minioInstance:
     enabled: true
+    appValues:
+      oauth:
+        existingSecret: minio-creds-secret
   jupyterhub:
     enabled: true
