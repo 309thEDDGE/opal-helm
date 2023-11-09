@@ -183,7 +183,7 @@ minioInstance:
         - name: MINIO_IDENTITY_OPENID_CONFIG_URL
           value: "https://keycloak-k8s.{{ .Values.baseDns }}/realms/master/.well-known/openid-configuration"
         - name: MINIO_BROWSER_REDIRECT_URL
-          value: "https://minio-k8s.{{ .Values.baseDns }}"
+          value: "https://minio-k8s.{{ .Values.baseDns }}/login"
         - name: MINIO_IDENTITY_OPENID_CLIENT_ID
           value: opal-jupyterhub
         - name: MINIO_IDENTITY_OPENID_CLAIM_NAME
@@ -195,10 +195,10 @@ minioInstance:
       ingress:
         api:
           enabled: true
-          host: "s3-k8s.10.96.30.9.nip.io"
+          host: "s3-k8s.{{ .Values.baseDns }}"
         console:
           enabled: true
-          host: "minio-k8s.10.96.30.9.nip.io"
+          host: "minio-k8s.{{ .Values.baseDns }}"
 
 jupyterhub:
   enabled: true
