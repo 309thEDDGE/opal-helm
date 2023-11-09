@@ -217,7 +217,7 @@ jupyterhub:
       #singleUserImage: "registry1.dso.mil/ironbank/opensource/metrostar/singleuser/singleuser:singleuser_v22"
       opalBannerColor: "green"
       opalBannerText: "Unclassified (local development)"
-      s3Endpointurl: "http://opal-setup-minio-console.minio-tenant.svc.cluster.local:9090"
+      s3Endpointurl: "http://opal-setup-minio-hl.minio-tenant.svc.cluster.local:9000"
       keycloakJupyterhubOauthCallbackUrl: "https://opal-k8s.{{ .Values.baseDns }}/hub/oauth_callback"
       keycloakJupyterhubAuthorizeUrl: "https://keycloak-k8s.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/auth"
       keycloakJupyterhubUserdataUrl: "https://keycloak-k8s.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/userinfo"
