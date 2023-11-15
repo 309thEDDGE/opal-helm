@@ -243,8 +243,6 @@ tenant:
       value: "https://minio-k8.{{ .Values.baseDns }}/oauth_callback"
     - name: MINIO_IDENTITY_OPENID_CLIENT_ID
       value: opal-jupyterhub
-    - name: MINIO_IDENTITY_OPENID_CLAIM_NAME
-      value: policy
     - name: MINIO_IDENTITY_OPENID_REDIRECT_URI
       value: "https://minio-k8.{{ .Values.baseDns }}/oauth_callback"
   ## PriorityClassName indicates the Pod priority and hence importance of a Pod relative to other Pods.
