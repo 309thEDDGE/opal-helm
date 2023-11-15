@@ -138,6 +138,9 @@ minioInstance:
   enabled: true
   appValues:
     namespace: ""
+    annotations:
+      #sync after things like keycloak have finished sync
+      argocd.argoproj.io/sync-wave: "2"
     oauth:
       existingSecret: *oauthSecret
     baseDns: "10.96.30.9.nip.io"
