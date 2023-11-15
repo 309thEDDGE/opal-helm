@@ -187,7 +187,7 @@ minioInstance:
         - name: MINIO_IDENTITY_OPENID_CLIENT_ID
           value: opal-jupyterhub
         - name: MINIO_IDENTITY_OPENID_CLAIM_NAME
-          value: "policy"
+          value: \"policy\"
         - name: MINIO_IDENTITY_OPENID_REDIRECT_URI
           value: "https://minio-k8s.{{ .Values.baseDns }}/oauth_callback"
       ## List of secret names to use for generating MinIO users during tenant provisioning
