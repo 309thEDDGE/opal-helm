@@ -30,7 +30,6 @@ data:
     insecure = true
     dashboard = false
 
-    #[ping]
 
     [log]
     level = "DEBUG"
