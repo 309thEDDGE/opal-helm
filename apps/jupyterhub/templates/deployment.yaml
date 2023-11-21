@@ -101,7 +101,7 @@ spec:
               value: {{ .singleUserImage }}
             - name: PYTHONPATH
               value: {{ .pythonPath }}
-            - name: OPAL_BANNER_COLOR
+            - name: opalBannerColor
               value: {{ .opalBannerColor }}
             - name: OPAL_BANNER_TEXT
               value: {{ .opalBannerText }}
