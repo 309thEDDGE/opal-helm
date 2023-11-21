@@ -24,7 +24,7 @@ source:
   targetRevision: ""
 
 mongodb:
-  enabled: true
+  enabled: false
   appValues:
     namespace: *opalNS
     image:
@@ -33,7 +33,7 @@ mongodb:
     auth:
       enabled: true
       rootUser: user
-      rootPassword: "fill_this_in"
+      rootPassword: ""
       usernames: []
       passwords: []
       databases: []
@@ -41,7 +41,7 @@ mongodb:
 
 
 keycloak:
-  enabled: true
+  enabled: false
   appValues:
     namespace: *opalNS
     secrets:
@@ -97,7 +97,7 @@ keycloak:
         memory: "256Mi"
 
 traefik:
-  enabled: true
+  enabled: false
   appValues:
     namespace: *opalNS
     image:
@@ -112,7 +112,7 @@ traefik:
         host: ""
 
 minioOperator:
-  enabled: true
+  enabled: false
   appValues:
     namespace: *opalNS
     tenantNamespace: *minioNS
@@ -175,15 +175,26 @@ minioInstance:
         - name: metaflow-data
         - name: basket-data
         - name: airflow
+      env:
+        - name: MINIO_IDENTITY_OPENID_CONFIG_URL
+          value: "https://keycloak-prod.{{ .Values.baseDns }}/realms/master/.well-known/openid-configuration"
+        - name: MINIO_BROWSER_REDIRECT_URL
+          value: "https://minio-prod.{{ .Values.baseDns }}"
+        - name: MINIO_IDENTITY_OPENID_CLIENT_ID
+          value: opal-jupyterhub
+        - name: MINIO_IDENTITY_OPENID_CLAIM_NAME
+          value: 'policy'
+        - name: MINIO_IDENTITY_OPENID_REDIRECT_URI
+          value: "https://minio-prod.{{ .Values.baseDns }}/oauth_callback"
       ## List of secret names to use for generating MinIO users during tenant provisioning
       users: [ ]
       ingress:
         api:
-          enabled: true
+          enabled: false
           rules:
             host: ""
         console:
-          enabled: true
+          enabled: false
           rules:
             host: ""
 
@@ -203,7 +214,7 @@ jupyterhub:
       singleUserImage: "registry1.dso.mil/ironbank/opensource/metrostar/singleuser/singleuser:singleuser_v21"
       opalBannerColor: "green"
       opalBannerText: "Unclassified (local development)"
-      s3Endpointurl: "http://opal-setup-minio-console.minio-tenant.svc.cluster.local:9090"
+      s3Endpointurl: "http://opal-minio-console.minio-tenant.svc.cluster.local:9090"
       keycloakJupyterhubOauthCallbackUrl: "https://opal-prod.{{ .Values.baseDns }}/hub/oauth_callback"
       keycloakJupyterhubAuthorizeUrl: "https://keycloak-prod.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/auth"
       keycloakJupyterhubUserdataUrl: "https://keycloak-prod.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/userinfo"

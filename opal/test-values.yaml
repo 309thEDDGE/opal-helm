@@ -113,7 +113,7 @@ traefik:
         host: "traefik-k8s.10.96.30.9.nip.io"
 
 minioOperator:
-  enabled: true
+  enabled: false
   appValues:
     namespace: *opalNS
     tenantNamespace: *minioNS
@@ -135,7 +135,7 @@ minioOperator:
         memory: 256Mi
 
 minioInstance:
-  enabled: true
+  enabled: false
   appValues:
     namespace: ""
     oauth:
