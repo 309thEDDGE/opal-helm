@@ -88,16 +88,15 @@ ingress:
   tls: []
 env:
   keycloakJupyterhubOauthCallbackUrl: "https://opal-k8.{{ .Values.baseDns }}/hub/oauth_callback"
-  # current minio endpoint may need to be updated depending on deployment. use http to avoid ssl errors
-  s3Endpointurl: "http://minio:9000"
+  s3Endpointurl: "https://minio-k8.{{ .Values.baseDns }}"
   keycloakJupyterhubAuthorizeUrl: "https://keycloak-k8.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/auth"
   keycloakJupyterhubUserdataUrl: "https://keycloak-k8.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/userinfo"
   keycloakOpalApiUrl: "https://keycloak-k8.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/token"
   openidClientId: opal-jupyterhub
   singleUserImage: "deploytime_singleuser"
   pythonPath: "/python-packages/:$PYTHONPATH"
-  opalBannerColor: "green"
-  opalBannerText: "Unclassified (local development)"
+  opalBannerColor: "Red"
+  opalBannerText: "Kubernetes Local Environment"
   keycloakJupyterhubUsernameKey: "preferred_username"
 
 resources: 
