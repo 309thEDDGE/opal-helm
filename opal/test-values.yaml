@@ -32,8 +32,8 @@ mongodb:
       imagePullSecrets: *dockerSecret
     auth:
       enabled: true
-      rootUser: user
-      rootPassword: "fill_this_in"
+      rootUser: rootuser
+      rootPassword: ""
       usernames: []
       passwords: []
       databases: []
