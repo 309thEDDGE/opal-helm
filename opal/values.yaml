@@ -110,11 +110,80 @@ traefik:
       rules:
         host: ""
 
-minio-operator:
-  enabled: false
+minioOperator:
+  enabled: true
+  appValues:
+    namespace: *opalNS
+    tenantNamespace: *minioNS
+    imagePullSecrets: *dockerSecret
+    containerSecurityContext:
+      runAsUser: 1001
+      runAsGroup: 1001
+      runAsNonRoot: true
+      capabilities:
+        drop:
+          - ALL
+    resources:
+      requests:
+        cpu: 200m
+        memory: 256Mi
+        ephemeral-storage: 500Mi
+      limits:
+        cpu: 200m
+        memory: 256Mi
 
-minio-instance:
+minioInstance:
   enabled: false
+  appValues:
+    secrets:
+      # both fields need to be filled in
+      name: "minio-creds-secret"
+      accessKey: "minio-admin"
+    tls:
+      name: tls-certs
+    tenant:
+      namespace: *minioNS
+      imagePullSecrets:
+        - *dockerSecret
+      pools:
+        - servers: 4
+          volumesPerServer: 4
+          size: 10Gi
+          resources:
+            requests:
+              memory: 2Gi
+              cpu: 1000m
+            limits:
+              memory: 2Gi
+              cpu: 1000m
+          securityContext:
+            runAsUser: 1001
+            runAsGroup: 1001
+            fsGroup: 1001
+            runAsNonRoot: true
+          containerSecurityContext:
+            runAsUser: 1001
+            runAsGroup: 1001
+            runAsNonRoot: true
+      mountPath: /home/minio
+      subPath: /data
+      externalCaCertSecret:
+        - name: tls-certs
+      buckets:
+        - name: metaflow-data
+        - name: basket-data
+        - name: airflow
+      ## List of secret names to use for generating MinIO users during tenant provisioning
+      users: [ ]
+      ingress:
+        api:
+          enabled: true
+          rules:
+            host: ""
+        console:
+          enabled: true
+          rules:
+            host: ""
 
 jupyterhub:
   enabled: true
@@ -132,7 +201,7 @@ jupyterhub:
       singleUserImage: "registry1.dso.mil/ironbank/opensource/metrostar/singleuser/singleuser:singleuser_v21"
       opalBannerColor: "green"
       opalBannerText: "Unclassified (local development)"
-      s3Endpointurl: "http://minio:9000"
+      s3Endpointurl: "http://opal-setup-minio-console.minio-tenant.svc.cluster.local:9090"
       keycloakJupyterhubOauthCallbackUrl: "https://opal-k8s.{{ .Values.baseDns }}/hub/oauth_callback"
       keycloakJupyterhubAuthorizeUrl: "https://keycloak-k8s.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/auth"
       keycloakJupyterhubUserdataUrl: "https://keycloak-k8s.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/userinfo"

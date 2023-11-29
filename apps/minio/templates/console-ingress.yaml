@@ -3,7 +3,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ .Values.tenant.name }}-console
+  name: {{ include "minio-operator.fullname" .}}-console
   namespace: {{ .Values.tenant.namespace }}
   {{- with .Values.ingress.console.labels }}
   labels: {{ toYaml . | nindent 4 }}
@@ -33,7 +33,7 @@ spec:
             pathType: {{ .Values.ingress.console.pathType }}
             backend:
               service:
-                name: minio-tenant-minio-instance-console
+                name: {{ include "minio-operator.fullname" . }}-console
                 port:
                   {{- if or .Values.tenant.certificate.requestAutoCert (not (empty .Values.tenant.certificate.externalCertSecret)) }}
                   name: https-console

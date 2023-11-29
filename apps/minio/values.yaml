@@ -4,7 +4,7 @@
 
 domain: minio
 
-baseDns: "10.96.30.9.nip.io"
+baseDns: ""
 
 # When true, upgradeTenants enables use of the V4.* Minio Operator CRD for creation of tenants is enabled.
 # The default will be made TRUE in a future release.
@@ -20,6 +20,11 @@ serviceAccount:
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
   name: "tenant"
+
+
+oauth:
+  existingSecret: ""
+
 
 # This is maintained for compatible upgrade with the 2.0.9 release.   The following service itens will be removed ina future release
 # because the operator handles the service deployment in 4.x and beyond.
@@ -242,8 +247,6 @@ tenant:
       value: policy
     - name: MINIO_IDENTITY_OPENID_REDIRECT_URI
       value: "https://minio-k8.{{ .Values.baseDns }}/oauth_callback"
-    - name: MINIO_IDENTITY_OPENID_CLIENT_SECRET
-      value: '{{.Files.Get "openid_client_secret.crt"}}'
   ## PriorityClassName indicates the Pod priority and hence importance of a Pod relative to other Pods.
   ## This is applied to MinIO pods only.
   ## Refer Kubernetes documentation for details https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/#priorityclass/
@@ -439,7 +442,7 @@ ingress:
       traefik.ingress.kubernetes.io/router.tls: "true"
     }
     tls: [ ]
-    host: "minio-k8.{{ .Values.baseDns }}"
+    host: "minio-k8s.{{ .Values.baseDns }}"
     path: /
     pathType: Prefix
 

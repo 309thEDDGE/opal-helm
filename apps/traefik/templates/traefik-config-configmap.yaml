@@ -28,9 +28,8 @@ data:
 
     [api]
     insecure = true
-    dashboard = true
+    dashboard = false
 
-    #[ping]
 
     [log]
     level = "DEBUG"
