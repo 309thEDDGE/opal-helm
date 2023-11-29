@@ -1,5 +1,7 @@
+{{- if not .Values.oauth.existingSecret }}
 {{- if dig "secrets" true (.Values | merge (dict)) }}
 {{- $ROOT_PASSWORD := (randAlphaNum 16 | quote)}}
+
 apiVersion: v1
 kind: Secret
 metadata:
@@ -16,3 +18,4 @@ data:
   ## Secret Key for MinIO Tenant
   secretkey: {{$ROOT_PASSWORD | b64enc }}
   {{- end }}
+{{- end }}
