@@ -11,6 +11,9 @@ metadata:
   finalizers:
     # The default behaviour is foreground cascading deletion
     - resources-finalizer.argocd.argoproj.io
+  annotations:
+    #sync after things like keycloak have finished sync
+    argocd.argoproj.io/sync-wave: "-2"
   labels:
     name: traefik
 spec:

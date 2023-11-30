@@ -1,4 +1,6 @@
 {{- $values := . -}}
+{{- $files := .Files -}}
+{{- $oauth := .Values.oauth -}}
 
 apiVersion: minio.min.io/v2
 kind: Tenant
@@ -35,7 +37,11 @@ spec:
   {{- end }}
   ## Secret with credentials to be used by MinIO Tenant.:
   configuration:
+    {{- if not $oauth.existingSecret }}
     name: {{ dig "secrets" "name" "" ($.Values | merge (dict)) }}
+    {{- else }}
+    name: {{ $oauth.existingSecret }}
+    {{- end}}
   pools:
   {{- range (dig "pools" (list) .) }}
     - servers: {{ dig "servers" 4 . }}
@@ -155,8 +161,8 @@ spec:
   {{- with (dig "env" (list) .) }}
   env:
   {{- range . }}
-  - name: {{ .name }}
-    value: {{ include "render-url" ( dict "value" .value "context" $values ) }}
+    - name: {{ .name }}
+      value: {{ include "render-url" ( dict "value" .value "context" $values ) }}
   {{- end }}
   {{- end }}
   {{- if dig "priorityClassName" "" . }}
