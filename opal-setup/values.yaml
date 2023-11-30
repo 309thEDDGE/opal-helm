@@ -35,6 +35,7 @@ appValues:
     appValues:
       secrets:
         env:
+          annotations: {}
           stringData:
             KEYCLOAK_ADMIN: "admin"
             KEYCLOAK_ADMIN_PASSWORD: "password"
