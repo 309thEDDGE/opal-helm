@@ -363,7 +363,7 @@ enableJournal: true
 ##   # security options
 security:
   authorization: enabled
-  keyFile: /opt/bitnami/mongodb/conf/keyfile
+  #keyFile: /opt/bitnami/mongodb/conf/keyfile
 ##
 configuration: ""
 ## @section replicaSetConfigurationSettings settings applied during runtime (not via configuration file)
