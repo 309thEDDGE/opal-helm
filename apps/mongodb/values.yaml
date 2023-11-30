@@ -326,7 +326,7 @@ enableJournal: true
 ## @param configuration MongoDB(&reg;) configuration file to be used for Primary and Secondary nodes
 ## For documentation of all options, see: http://docs.mongodb.org/manual/reference/configuration-options/
 ## Example:
-##configuration: |-
+## configuration: |-
 ##   # where and how to store data.
 ##   storage:
 ##     dbPath: /bitnami/mongodb/data/db
@@ -361,9 +361,9 @@ enableJournal: true
 ##   setParameter:
 ##      enableLocalhostAuthBypass: true
 ##   # security options
-  #security:
-    #authorization: disabled
-    #keyFile: /opt/bitnami/mongodb/conf/keyfile
+security:
+  authorization: enabled
+  keyFile: /opt/bitnami/mongodb/conf/keyfile
 ##
 configuration: ""
 ## @section replicaSetConfigurationSettings settings applied during runtime (not via configuration file)
