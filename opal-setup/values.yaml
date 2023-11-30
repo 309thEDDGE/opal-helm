@@ -36,13 +36,20 @@ appValues:
       secrets:
         env:
           stringData:
-            KEYCLOAK_ADMIN: ""
-            KEYCLOAK_ADMIN_PASSWORD: ""
+            KEYCLOAK_ADMIN: "admin"
+            KEYCLOAK_ADMIN_PASSWORD: "password"
   traefik:
     enabled: true
-  minio-operator:
-    enabled: false
-  minio-instance:
-    enabled: false
+  minioOperator:
+    enabled: true
+  minioInstance:
+    enabled: true
+    creds:
+      namespace: *minioNS
+    secrets:
+      accessKey: opal-administrator
+    appValues:
+      oauth:
+        existingSecret: minio-creds-secret
   jupyterhub:
     enabled: true
