@@ -1,19 +1,34 @@
 ### Table of Contents
 
-[Purpose](https://github.com/309thEDDGE/opal-helm#purpose)
-[Getting Started](https://github.com/309thEDDGE/opal-helm#getting-started-with-opal-helm-depolyment)
-[ArgoCD](https://github.com/309thEDDGE/opal-helm#argocd)
-[Deploying ArgoCD](https://github.com/309thEDDGE/opal-helm#deploying-argocd)
-    - [Starting Minikube](https://github.com/309thEDDGE/opal-helm#starting-minikube)
-    - [Setting up Argocd Regcred](https://github.com/309thEDDGE/opal-helm#setting-up-argo-regcred)
-    - [Configure ArgoCD Helm Chart](https://github.com/309thEDDGE/opal-helm#configure-argocd-helm-chart)
-    - [Install ArgoCD Helm Chart](https://github.com/309thEDDGE/opal-helm#install-argocd-helm-chart)
-    - [Accessing ArgoCD Secret](https://github.com/309thEDDGE/opal-helm#access-the-argocd-secret)
-    - [Adding the Repository to ArgoCD](https://github.com/309thEDDGE/opal-helm#add-repo-to-argocd-dashboard)
-[Deploying OPAL](https://github.com/309thEDDGE/opal-helm#deploying-opal)
-[Important URLs](https://github.com/309thEDDGE/opal-helm#important-urls)
-[Mongodb](https://github.com/309thEDDGE/opal-helm#argocd)
-[To Do List](https://github.com/309thEDDGE/opal-helm#todo)
+- [Purpose](#purpose)
+  - [Getting Started with Opal-helm Deployment](#getting-started-with-opal-helm-deployment)
+    - [ArgoCD](#argocd)
+  - [Deploying ArgoCD](#deploying-argocd)
+    - [Starting minikube](#starting-minikube)
+    - [Setting up ArgoCD regcred](#setting-up-argocd-regcred)
+    - [Configure the ArgoCD Helm Chart](#configure-the-argocd-helm-chart)
+    - [Install ArgoCD helm chart](#install-argocd-helm-chart)
+    - [Access the ArgoCD secret](#access-the-argocd-secret)
+    - [Add Repo to ArgoCD Dashboard](#add-repo-to-argocd-dashboard)
+  - [Deploying OPAL](#deploying-opal)
+    - [TLS certs](#tls-certs)
+    - [Add docker configuration JSON](#add-docker-configuration-json)
+    - [Helm install OPAL](#helm-install-opal)
+    - [Patching argoCD](#patching-argocd)
+    - [Important URLs](#important-urls)
+  - [Mongodb](#mongodb)
+    - [Mongodb documentation](#mongodb-documentation)
+    - [Mongodb configuration and user creation](#mongodb-configuration-and-user-creation)
+    - [Log in as root](#log-in-as-root)
+    - [Create a userAdmin](#create-a-useradmin)
+    - [Create a Mongo Database](#create-a-mongo-database)
+    - [Insert test data into a Database](#insert-test-data-into-a-database)
+    - [Helpful Mongosh Commands](#helpful-mongosh-commands)
+    - [Create a Mongo User and authentication](#create-a-mongo-user-and-authentication)
+    - [MongoDB Built-in Roles](#mongodb-built-in-roles)
+    - [Signing in as a user with specific roles](#signing-in-as-a-user-with-specific-roles)
+  - [TODO](#todo)
+
 
 # Purpose
 This repo contains all the deployment helm charts and configuration files for deploying the Open Platform for Avionics Learning or OPAL.  
@@ -152,6 +167,12 @@ if there is a reason to update any of the helm values while argoCD is running, t
 >traefik-k8s.10.96.30.9.nip.io
 
 ## Mongodb
+Mongodb is a document database designed for ease of application development and scaling.  In the instance of OPAL, it is used in conjuction with pyMongo in a jupyterhub notebook to provide data analyst access to important collections within the database.
+
+### Mongodb documentation
+
+for reference 
+> https://www.mongodb.com/docs/manual/
 
 ### Mongodb configuration and user creation
 
@@ -254,8 +275,6 @@ client = MongoClient('example.com',
                      authMechanism='SCRAM-SHA-256')
 
 By default mongosh excludes all db.auth() operations from the saved history
-
-### 
 
 ## TODO
 add the regcred-init repo to opal-helm
