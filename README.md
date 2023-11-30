@@ -144,6 +144,10 @@ Navigate to the parent opal-helm repository directory and helm install opal-setu
 This process can take several minutes depeneding on different variables.  Opening a watch list for the pods can be helpful in this step:
 >$watch kubectl get pods -A
 
+In order for the product to work properly you will also need to run a minikube tunnel.  Open a new browser and run the following command:
+
+> minikube tunnel
+
 After the status of all opal pods are running and the keycloak-setup pod is complete, open a browser to access the services.
 
 ### Patching argoCD
