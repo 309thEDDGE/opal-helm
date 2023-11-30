@@ -170,14 +170,27 @@ To connect to your database, and create a MongoDB client container:
 
 The terminal should change showing that the container is running
 
-### Log in as root
-Then, run the following command:
->$ mongosh admin --host "opal-mongodb" --authenticationDatabase admin -u rootname
-
 To connect to your database from outside the cluster execute the following commands:
-
 >kubectl port-forward --namespace opal svc/mongo-db-mongodb 27017:27017 &
 mongosh --host 127.0.0.1 --authenticationDatabase admin -p $MONGODB_ROOT_PASSWORD
+
+### Log in as root
+The default root user name is : *rootuser*
+Then, run the following command:
+>$ mongosh admin --host "opal-mongodb" --authenticationDatabase admin -u rootuser
+
+This will prompt a password that is found in the previous section.
+
+### Create a userAdmin
+It is best practice to create a user administrator in order to create database users. 
+
+>>db.createUser(
+  {
+    user: "user_name_admin",
+    pwd:  passwordPrompt(),   // or cleartext password
+    roles: [ { role: "userAdmin", db: "admin" } ]
+  }
+)
 
 ### Create a Mongo Database
 After logging into the container as root, If this is a fresh OPAL deployment you will need to create the databases before adding users.
@@ -186,8 +199,10 @@ To create a database simple run this command in the terminal:
 > use database_name
 
 This will create and empty database that will not be visible to any user until some data has been submitted
+
 ### Insert test data into a Database
 For purposes of this documentation use the following entry in the command line to place some data in 
+
 ### Helpful Mongosh Commands
 show dbs  // *shows all available databases the user can access, if the user is root it will also display local and admin*
 
@@ -201,27 +216,47 @@ show dbs  // *shows all available databases the user can access, if the user is 
 
 >db.<name_of_collection>.find() // *shows all data in a specific collection
 
-### Create a Mongo User
+### Create a Mongo User and authentication
+
+By deafault SCRAM-SHA-256 is enabled as the authentication mechanism supported by a cluster configured for authentication with MongoDB 4.0 and later.  Authentication requires a username, password, and a database name.  The default database name is "admin"
 
 >db.createUser(
   {
     user: "user_name",
     pwd:  passwordPrompt(),   // or cleartext password
-    roles: [ { role: "readWrite", db: "name_of_database" },
-             { role: "read", db: "name_of_database" } ]
+    roles: [ { role: "readWrite", db: "name_of_database" } ]
   }
 )
 
 ### MongoDB Built-in Roles
 
-Mongo grats acces to data and commands through role.  These roles are built-in, but there is also the option to create user-defined roles.
+Mongo grants acces to data and commands through roles.  These roles are built-in, but there is also the option to create user-defined roles.
+
+>**read** // *provides with user to read data on all non-system collections*
+
+>**readWrite** // *provides all the privileges of the read role and the ability to modify data on all non-system collections*
+
+>**dbAdmin** // *provides the ability to perform adminisrative tasks such as schema-related tasks, indexing, gathering statistics. This role does NOT grant privelges for user and role management.*
+
+>**dbOwner** // *provides the ability to perform any administrative task on the database.*
+
+>**userAdmin** // * provides the ability to create and modify roles and users on the current database. Since the userAdmin role allows users to grant any privilege to any user, including themselves, the role also indirectly provides superuser access to either the database or, if scoped to the admin database, the cluster.*
+
 
 ### Signing in as a user with specific roles
-To be able to securly enter a database you will need to login with the user credentials, this can be done with the following command:
+To be able to securly enter a database you will need to login with the user credentials and authentication method, this can be done with the following command in pymongo:
 
->db.auth( username, passwordPrompt())
+>from pymongo import MongoClient
+client = MongoClient('example.com',
+                     username='user',
+                     password='password',
+                     authSource='the_database',
+                     authMechanism='SCRAM-SHA-256')
 
 By default mongosh excludes all db.auth() operations from the saved history
+
+### 
+
 ## TODO
 add the regcred-init repo to opal-helm
 add the argoCD repo to opal-helm
