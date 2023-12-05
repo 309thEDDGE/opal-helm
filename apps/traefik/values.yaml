@@ -95,7 +95,7 @@ service:
   labels: {}
   # key: value
   # Optional IP for the load balancer. Used for services of type LoadBalancer only
-  loadBalancerIP: ""
+  loadBalancerIP: "10.96.30.9"
   # The http Service port
   httpPort: 80
 
@@ -132,7 +132,7 @@ ingress:
    # List of rules for the Ingress
   rules:
       # Ingress host
-      host: ""
+      host: "traefik-k8.10.96.30.9.nip.io"
       # Paths for the host
       paths:
         - path: /

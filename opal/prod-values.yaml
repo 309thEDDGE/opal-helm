@@ -226,3 +226,40 @@ jupyterhub:
     # metaflow datastore size
     resources:
       storage: 2Gi
+  postgres:
+    nameOverride: jupyterhub-postgres
+    namespace: *opalNS
+    # PostgreSQL User to create
+    postgresqlUsername: keycloak
+    # PostgreSQL Password for the new user
+    postgresqlPassword: keycloak
+    # PostgreSQL Database to create
+    postgresqlDatabase: keycloak
+    # PostgreSQL network policy configuration
+    networkPolicy:
+      enabled: false
+    global:
+      imagePullSecrets:
+        - *dockerSecret
+    image:
+      registry: registry1.dso.mil
+      repository: ironbank/opensource/postgres/postgresql12
+      tag: 12.15
+    securityContext:
+      enabled: true
+      fsGroup: 26
+      runAsUser: 26
+      runAsGroup: 26
+    containerSecurityContext:
+      enabled: true
+      runAsUser: 26
+      capabilities:
+        drop:
+          - ALL
+    resources:
+      requests:
+        cpu: "250m"
+        memory: "256Mi"
+      limits:
+        cpu: "250m"
+        memory: "256Mi"

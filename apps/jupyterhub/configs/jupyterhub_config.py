@@ -45,6 +45,13 @@ c.KubeSpawner.environment = {
     "METAFLOW_DATASTORE_SYSROOT_LOCAL":metaflow_mount_path,
 }
 
+jupyterhub_mount_path = "/home/jovyan"
+c.KubeSpawner.environment = {
+    "S3_ENDPOINT": "http://minio:9000",
+    "USERNAME": "jovyan",
+    "JUPYTERHUB_DATASTORE_SYSROOT_LOCAL":jupyterhub_mount_path,
+}
+
 # assign a security context for write permissions to
 # the attached volumes
 c.KubeSpawner.fs_gid = 100
@@ -79,6 +86,12 @@ c.KubeSpawner.volumes = [
         "persistentVolumeClaim": {
             "claimName": "metaflow-datastore"
         }
+    },
+    {
+        'name': "jupyterhub-store",
+        "persistentVolumeClaim": {
+            "claimName": "jupyterhub-datastore"
+        }
     }
 ]
 
@@ -97,7 +110,13 @@ c.KubeSpawner.volume_mounts = [
         'mountPath': metaflow_mount_path,
         "name": "metaflow-store",
         "readOnly": False
+    },
+    {
+        'mountPath': jupyterhub_mount_path,
+        "name": "jupyterhub-store",
+        "readOnly": False
     }
+
 ]
 
 # set the startup bash script
