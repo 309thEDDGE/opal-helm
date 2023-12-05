@@ -138,6 +138,11 @@ Supply TLS certs in the same directory as opal-helm/opal-setup
 In order for the helm install to work properly in a local instance, it is necessary to add the docker config json file in the opal-helm/opal-setup directory.  This is needed for the helm chart to pull the appropriate image from a private repository.
 
 ### Helm install OPAL
+
+In order to make sure opal is running properly, you need to change the branch to the specific git repo you will be working off of.  This is important for development and testing, as argo will always pull a specific branch from github.  To change the repo branch go into the values.yaml file in the opal-setup directory.
+
+>targetRevision: "specific_branch"
+
 Navigate to the parent opal-helm repository directory and helm install opal-setup:
 >$helm install opal ./opal-setup
 
