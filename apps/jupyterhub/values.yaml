@@ -9,7 +9,7 @@ name: jupyterhub
 
 baseDns: ""
 
-namespace: opal
+namespace: &ns opal
 
 secrets:
   nameOverride: "token-env"
