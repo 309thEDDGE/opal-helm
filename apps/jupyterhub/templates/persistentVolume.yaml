@@ -1,10 +1,8 @@
-{{ range .Values.volume_names }}
----
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   namespace: {{ .Values.namespace }}
-  name: {{ .Values.volume_names }} #metaflow-datastore
+  name: metaflow-datastore
 spec:
   accessModes:
     - ReadWriteOnce
