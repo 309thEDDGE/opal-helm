@@ -39,6 +39,7 @@ appValues:
           stringData:
             KEYCLOAK_ADMIN: "admin"
             KEYCLOAK_ADMIN_PASSWORD: "password"
+            JAVA_OPTS_APPEND: -Djgroups.dns.query=opal-setup-keycloak-headless
   traefik:
     enabled: true
   minioOperator:
