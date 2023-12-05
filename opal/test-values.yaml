@@ -229,7 +229,7 @@ jupyterhub:
     # metaflow datastore size
     resources:
       storage: 2Gi
-   postgres:
+  postgres:
     nameOverride: jupyterhub-postgres
     namespace: *opalNS
     # PostgreSQL User to create
