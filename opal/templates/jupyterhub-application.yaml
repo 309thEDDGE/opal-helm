@@ -46,7 +46,7 @@ spec:
 
   - repoURL: {{ $global.source.url }}  # Can point to either a Helm chart repo or a git repo.
     targetRevision: {{ $global.source.targetRevision }}  # For Helm, this refers to the chart version.
-    path: "apps/keycloak/deps/postgresql"  # This has no meaning for Helm charts pulled directly from a Helm repo instead of git.
+    path: "apps/postgresql"  # This has no meaning for Helm charts pulled directly from a Helm repo instead of git.
 
     # helm specific config
     helm:
