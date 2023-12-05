@@ -68,6 +68,7 @@ spec:
       # Values file as block file. This takes precedence over values
       valuesObject:
 {{- $values.postgres | toYaml | nindent 8 }}
+
   # Destination cluster and namespace to deploy the application  
   destination:
     name: in-cluster
