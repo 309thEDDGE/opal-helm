@@ -144,7 +144,7 @@ In order to make sure opal is running properly, you need to change the branch to
 >targetRevision: "specific_branch"
 
 Navigate to the parent opal-helm repository directory and helm install opal-setup:
->$helm install opal ./opal-setup
+>$helm install opal-setup ./opal-setup
 
 This process can take several minutes depeneding on different variables.  Opening a watch list for the pods can be helpful in this step:
 >$watch kubectl get pods -A
