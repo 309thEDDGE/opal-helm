@@ -113,10 +113,10 @@ traefik:
         host: "traefik-k8s.10.96.30.9.nip.io"
 
 minio-operator:
-  enabled: false
+  enabled: true
 
 minio-instance:
-  enabled: false
+  enabled: true
 
 jupyterhub:
   enabled: true
