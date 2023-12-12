@@ -1,10 +1,14 @@
-{{- if .Values.traefik.enabled }}
-{{ $global := .Values }}
-{{ $values := .Values.traefik }}
+## Default values for minio instance creation.
+## Note: to enable upgrade of minio instance, then values file has a number of values that will be
+## deprecated in the future. Deprecation candidates will have an annotation in comments regarding the timeframe for deprecation.
+
+{{- if .Values.minioOperator.enabled }}
+{{- $global := .Values }}
+{{- $values := .Values.minioOperator }}
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: traefik
+  name: minio-operator
   # You'll usually want to add your resources to the argocd namespace.
   namespace: argocd
   # Add this finalizer ONLY if you want these to cascade delete.
@@ -13,9 +17,10 @@ metadata:
     - resources-finalizer.argocd.argoproj.io
   annotations:
     #sync after things like keycloak have finished sync
-    argocd.argoproj.io/sync-wave: "-2"
+    argocd.argoproj.io/sync-wave: "1"
   labels:
-    name: traefik
+    name: minio-operator
+
 spec:
   # The project the application belongs to.
   project: {{ $global.argoProject }}
@@ -24,7 +29,7 @@ spec:
   source:
     repoURL: {{ $global.source.url }}  # Can point to either a Helm chart repo or a git repo.
     targetRevision: {{ $global.source.targetRevision }}  # For Helm, this refers to the chart version.
-    path: "apps/traefik"  # This has no meaning for Helm charts pulled directly from a Helm repo instead of git.
+    path: "apps/minio-operator"  # This has no meaning for Helm charts pulled directly from a Helm repo instead of git.
 
     # helm specific config
     helm:
@@ -43,10 +48,9 @@ spec:
       # Ignore locally missing valueFiles when installing Helm chart. Defaults to false
       ignoreMissingValueFiles: false
 
-      #$values.file as block file. This takes precedence over values
+      # Values file as block file. This takes precedence over values
       valuesObject:
-{{ $values.appValues | toYaml | nindent 8 }}
-
+{{- $values.appValues | toYaml | nindent 8 }}
 
   # Destination cluster and namespace to deploy the application
   destination:
@@ -62,7 +66,7 @@ spec:
       prune: true # Specifies if resources should be pruned during auto-syncing ( false by default ).
       selfHeal: true # Specifies if partial app sync should be executed when resources are changed only in target Kubernetes cluster and no git change detected ( false by default ).
       allowEmpty: false # Allows deleting all application resources during automatic syncing ( false by default ).
-    syncOptions:     # Sync options which modifies sync behavior
+    syncOptions: # Sync options which modifies sync behavior
     - Validate=true # disables resource validation (equivalent to 'kubectl apply --validate=false') ( true by default ).
     - ApplyOutOfSyncOnly=true
     - CreateNamespace=true # Namespace Auto-Creation ensures that namespace specified as the application destination exists in the destination cluster.
