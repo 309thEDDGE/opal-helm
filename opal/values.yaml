@@ -111,10 +111,10 @@ traefik:
         host: ""
 
 minio-operator:
-  enabled: false
+  enabled: true
 
 minio-instance:
-  enabled: false
+  enabled: true
 
 jupyterhub:
   enabled: true
