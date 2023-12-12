@@ -24,7 +24,7 @@ source:
   targetRevision: ""
 
 mongodb:
-  enabled: true
+  enabled: false
   appValues:
     namespace: *opalNS
     image:
@@ -33,6 +33,7 @@ mongodb:
     auth:
       enabled: true
       rootUser: rootuser
+      rootUser: user
       rootPassword: ""
       usernames: []
       passwords: []
@@ -41,7 +42,7 @@ mongodb:
 
 
 keycloak:
-  enabled: true
+  enabled: false
   appValues:
     namespace: *opalNS
     secrets:
@@ -97,7 +98,7 @@ keycloak:
         memory: "256Mi"
 
 traefik:
-  enabled: true
+  enabled: false
   appValues:
     namespace: *opalNS
     image:
@@ -116,7 +117,92 @@ minio-operator:
 
 minio-instance:
   enabled: true
+minioOperator:
+  enabled: false
+  appValues:
+    namespace: *opalNS
+    tenantNamespace: *minioNS
+    imagePullSecrets: *dockerSecret
+    containerSecurityContext:
+      runAsUser: 1001
+      runAsGroup: 1001
+      runAsNonRoot: true
+      capabilities:
+        drop:
+          - ALL
+    resources:
+      requests:
+        cpu: 200m
+        memory: 256Mi
+        ephemeral-storage: 500Mi
+      limits:
+        cpu: 200m
+        memory: 256Mi
 
+minioInstance:
+  enabled: false
+  appValues:
+    namespace: ""
+    secrets:
+      # both fields need to be filled in
+      name: "minio-creds-secret"
+      accessKey: "minio-admin"
+    tls:
+      name: tls-certs
+    tenant:
+      namespace: *minioNS
+      imagePullSecrets:
+        - *dockerSecret
+      pools:
+        - servers: 4
+          volumesPerServer: 4
+          size: 10Gi
+          resources:
+            requests:
+              memory: 2Gi
+              cpu: 1000m
+            limits:
+              memory: 2Gi
+              cpu: 1000m
+          securityContext:
+            runAsUser: 1001
+            runAsGroup: 1001
+            fsGroup: 1001
+            runAsNonRoot: true
+          containerSecurityContext:
+            runAsUser: 1001
+            runAsGroup: 1001
+            runAsNonRoot: true
+      mountPath: /home/minio
+      subPath: /data
+      externalCaCertSecret:
+        - name: tls-certs
+      buckets:
+        - name: metaflow-data
+        - name: basket-data
+        - name: airflow
+      env:
+        - name: MINIO_IDENTITY_OPENID_CONFIG_URL
+          value: "https://keycloak-prod.{{ .Values.baseDns }}/realms/master/.well-known/openid-configuration"
+        - name: MINIO_BROWSER_REDIRECT_URL
+          value: "https://minio-prod.{{ .Values.baseDns }}"
+        - name: MINIO_IDENTITY_OPENID_CLIENT_ID
+          value: opal-jupyterhub
+        - name: MINIO_IDENTITY_OPENID_CLAIM_NAME
+          value: 'policy'
+        - name: MINIO_IDENTITY_OPENID_REDIRECT_URI
+          value: "https://minio-prod.{{ .Values.baseDns }}/oauth_callback"
+      ## List of secret names to use for generating MinIO users during tenant provisioning
+      users: [ ]
+      ingress:
+        api:
+          enabled: false
+          rules:
+            host: ""
+        console:
+          enabled: false
+          rules:
+            host: ""
 jupyterhub:
   enabled: true
   appValues:
@@ -133,7 +219,7 @@ jupyterhub:
       singleUserImage: "registry1.dso.mil/ironbank/opensource/metrostar/singleuser/singleuser:singleuser_v21"
       opalBannerColor: "green"
       opalBannerText: "Unclassified (local development)"
-      s3Endpointurl: "http://minio:9000"
+      s3Endpointurl: "http://opal-minio-console.minio-tenant.svc.cluster.local:9090"
       keycloakJupyterhubOauthCallbackUrl: "https://opal-prod.{{ .Values.baseDns }}/hub/oauth_callback"
       keycloakJupyterhubAuthorizeUrl: "https://keycloak-prod.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/auth"
       keycloakJupyterhubUserdataUrl: "https://keycloak-prod.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/userinfo"

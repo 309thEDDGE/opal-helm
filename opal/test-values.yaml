@@ -7,7 +7,7 @@ argoProject: default
 
 imagePullSecrets: &dockerSecret regcred
 
-oauth: &oauthSecret opal-oauth-common
+oauth: &oauthSecret "opal-oauth-common"
 
 
 tls: &tlsSecret "tls-certs"
@@ -114,10 +114,95 @@ traefik:
 
 minio-operator:
   enabled: true
-
 minio-instance:
   enabled: true
+minioOperator:
+  enabled: false
+  appValues:
+    namespace: *opalNS
+    tenantNamespace: *minioNS
+    imagePullSecrets: *dockerSecret
+    containerSecurityContext:
+      runAsUser: 1001
+      runAsGroup: 1001
+      runAsNonRoot: true
+      capabilities:
+        drop:
+          - ALL
+    resources:
+      requests:
+        cpu: 200m
+        memory: 256Mi
+        ephemeral-storage: 500Mi
+      limits:
+        cpu: 200m
+        memory: 256Mi
 
+minioInstance:
+  enabled: false
+  appValues:
+    namespace: ""
+    oauth:
+      existingSecret: *oauthSecret
+    baseDns: "10.96.30.9.nip.io"
+    secrets:
+      # both fields need to be filled in
+      name: "minio-creds-secret"
+      accessKey: "minio-admin"
+    tls:
+      name: *tlsSecret
+    tenant:
+      namespace: *minioNS
+      imagePullSecrets:
+        - *dockerSecret
+      pools:
+        - servers: 4
+          volumesPerServer: 4
+          size: 1Gi
+          resources:
+            requests:
+              memory: 2Gi
+              cpu: 1000m
+            limits:
+              memory: 2Gi
+              cpu: 1000m
+          securityContext:
+            runAsUser: 1001
+            runAsGroup: 1001
+            fsGroup: 1001
+            runAsNonRoot: true
+          containerSecurityContext:
+            runAsUser: 1001
+            runAsGroup: 1001
+            runAsNonRoot: true
+      mountPath: /home/minio
+      subPath: /data
+      externalCaCertSecret:
+        - name: tls-certs
+      buckets:
+        - name: metaflow-data
+        - name: basket-data
+        - name: airflow
+      env:
+        - name: MINIO_IDENTITY_OPENID_CONFIG_URL
+          value: "https://keycloak-k8s.{{ .Values.baseDns }}/realms/master/.well-known/openid-configuration"
+        - name: MINIO_BROWSER_REDIRECT_URL
+          value: "https://minio-k8s.{{ .Values.baseDns }}"
+        - name: MINIO_IDENTITY_OPENID_CLIENT_ID
+          value: opal-jupyterhub
+        - name: MINIO_IDENTITY_OPENID_CLAIM_NAME
+          value: 'policy'
+        - name: MINIO_IDENTITY_OPENID_REDIRECT_URI
+          value: "https://minio-k8s.{{ .Values.baseDns }}/oauth_callback"
+      ## List of secret names to use for generating MinIO users during tenant provisioning
+      users: [ ]
+    ingress:
+      api:
+        enabled: true
+        host: "s3-k8s.{{ .Values.baseDns }}"
+      console:
+        enabled: true
+        host: "minio-k8s.{{ .Values.baseDns }}"
 jupyterhub:
   enabled: true
   appValues:
@@ -131,10 +216,11 @@ jupyterhub:
     imagePullSecrets:
       existingSecret: regcred
     env:
-      singleUserImage: "registry1.dso.mil/ironbank/opensource/metrostar/singleuser/singleuser:singleuser_v21"
+      singleUserImage: "jupyterhub/singleuser"
+      #singleUserImage: "registry1.dso.mil/ironbank/opensource/metrostar/singleuser/singleuser:singleuser_v22"
       opalBannerColor: "green"
       opalBannerText: "Unclassified (local development)"
-      s3Endpointurl: "http://minio:9000"
+      s3Endpointurl: "http://opal-setup-minio-hl.minio-tenant.svc.cluster.local:9000"
       keycloakJupyterhubOauthCallbackUrl: "https://opal-k8s.{{ .Values.baseDns }}/hub/oauth_callback"
       keycloakJupyterhubAuthorizeUrl: "https://keycloak-k8s.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/auth"
       keycloakJupyterhubUserdataUrl: "https://keycloak-k8s.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/userinfo"

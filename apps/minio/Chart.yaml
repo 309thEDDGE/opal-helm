@@ -15,10 +15,6 @@ maintainers:
   - name: MinIO, Inc
     email: dev@minio.io
 type: application
-dependencies:
-- name: gluon
-  version: "0.3.2"
-  repository: "oci://registry1.dso.mil/bigbang"
 annotations:
   bigbang.dev/applicationVersions: |
     - Minio: RELEASE.2023-06-19T19-52-50Z

@@ -80,11 +80,17 @@ Create the name of the service account to use
 
 {{- define "get.tokenName" }}
 {{- $secretName := ""}}
-{{- if .Values.secret.nameOverride }}
-{{- $secretName = .Values.secret.nameOverride }}
+{{- if .Values.secrets.nameOverride }}
+{{- $secretName = .Values.secrets.nameOverride }}
 {{- else }}
 {{- $secretName = printf "%s-token-env" (include "jupyterhub.fullname" .) }}
 {{- end }}
+{{- $secretName }}
+{{- end}}
+
+{{- define "get.oauthName" }}
+{{- $secretName := ""}}
+{{- $secretName = printf "%s-oauth" (include "jupyterhub.fullname" .) }}
 {{- $secretName }}
 {{- end}}
 

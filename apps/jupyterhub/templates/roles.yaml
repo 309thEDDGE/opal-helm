@@ -22,7 +22,7 @@ metadata:
     component: jupyter
 subjects:
   - kind: ServiceAccount
-    name: {{ .Values.serviceAccount.name}}
+    name: hub
 roleRef:
   kind: Role
   name: {{ include "jupyterhub.fullname" . }}-hub
