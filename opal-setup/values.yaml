@@ -41,8 +41,8 @@ appValues:
   traefik:
     enabled: true
   minio-operator:
-    enabled: false
+    enabled: true
   minio-instance:
-    enabled: false
+    enabled: true
   jupyterhub:
     enabled: true
