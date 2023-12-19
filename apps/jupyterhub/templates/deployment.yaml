@@ -133,3 +133,6 @@ spec:
       - name: jupyterhub-config-py-mnt
         configMap:
           name: jupyterhub-config-py
+      - name: metaflow-datastore-mnt
+        persistentVolumeClaim:
+          claimName: metaflow-datastore
