@@ -4,7 +4,7 @@ metadata:
   namespace: {{ .Values.namespace}}
   name: {{ include "traefik.fullname" . }}-service
   annotations:
-    {{- .Values.service.annotations | nindent 4 }}
+    {{- .Values.service.annotations | toYaml | nindent 4 }}
   labels:
     {{- include "traefik.labels" . | nindent 4 }}
     {{- range $key, $value := .Values.service.labels }}
