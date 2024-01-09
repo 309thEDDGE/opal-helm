@@ -192,7 +192,7 @@ MongoDB can be accessed on the following DNS name(s) and ports from within your 
 >mongo-db-mongodb.opal.svc.cluster.local
 
 To get the root password run:
->kubectl get secret --namespace opal opal-mongodb -o jsonpath="{.data.mongodb-root-password}" | base64 -d
+>kubectl get secret --namespace opal opal-setup-mongodb -o jsonpath="{.data.mongodb-root-password}" | base64 -d
 
 To connect to your database, and create a MongoDB client container:
 
@@ -207,7 +207,7 @@ mongosh --host 127.0.0.1 --authenticationDatabase admin -p $MONGODB_ROOT_PASSWOR
 ### Log in as root
 The default root user name is : *rootuser*
 Then, run the following command:
->$ mongosh admin --host "opal-mongodb" --authenticationDatabase admin -u rootuser
+>$ mongosh admin --host "opal-setup-mongodb" --authenticationDatabase admin -u rootuser
 
 This will prompt a password that is found in the previous section.
 
