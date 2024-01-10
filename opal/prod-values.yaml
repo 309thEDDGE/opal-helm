@@ -5,6 +5,8 @@
 
 argoProject: default
 
+appPrefix: opal
+
 imagePullSecrets: &dockerSecret regcred
 
 oauth: &oauthSecret opal-oauth-common
