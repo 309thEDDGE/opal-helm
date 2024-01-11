@@ -148,7 +148,7 @@ minioInstance:
     tenant:
       namespace: *minioNS
       imagePullSecrets:
-        - *dockerSecret
+        - name: *dockerSecret
       pools:
         - servers: 4
           volumesPerServer: 4
