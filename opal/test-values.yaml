@@ -120,7 +120,8 @@ minioOperator:
     operator:
       namespace: *opalNS
       tenantNamespace: *minioNS
-      imagePullSecrets: *dockerSecret
+      imagePullSecrets:
+        - *dockerSecret
       containerSecurityContext:
         runAsUser: 1001
         runAsGroup: 1001
