@@ -113,26 +113,27 @@ traefik:
         host: ""
 
 minioOperator:
-  enabled: true
+  enabled: false
   appValues:
-    namespace: *opalNS
-    tenantNamespace: *minioNS
-    imagePullSecrets: *dockerSecret
-    containerSecurityContext:
-      runAsUser: 1001
-      runAsGroup: 1001
-      runAsNonRoot: true
-      capabilities:
-        drop:
-          - ALL
-    resources:
-      requests:
-        cpu: 200m
-        memory: 256Mi
-        ephemeral-storage: 500Mi
-      limits:
-        cpu: 200m
-        memory: 256Mi
+    operator:
+      namespace: *opalNS
+      tenantNamespace: *minioNS
+      imagePullSecrets: *dockerSecret
+      containerSecurityContext:
+        runAsUser: 1001
+        runAsGroup: 1001
+        runAsNonRoot: true
+        capabilities:
+          drop:
+            - ALL
+      resources:
+        requests:
+          cpu: 200m
+          memory: 256Mi
+          ephemeral-storage: 500Mi
+        limits:
+          cpu: 200m
+          memory: 256Mi
 
 minioInstance:
   enabled: false
