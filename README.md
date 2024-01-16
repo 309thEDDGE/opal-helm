@@ -6,7 +6,6 @@
   - [Deploying ArgoCD](#deploying-argocd)
     - [Starting minikube](#starting-minikube)
     - [Setting up ArgoCD regcred](#setting-up-argocd-regcred)
-    - [Configure the ArgoCD Helm Chart](#configure-the-argocd-helm-chart)
     - [Install ArgoCD helm chart](#install-argocd-helm-chart)
     - [Access the ArgoCD secret](#access-the-argocd-secret)
     - [Add Repo to ArgoCD Dashboard](#add-repo-to-argocd-dashboard)
@@ -65,27 +64,6 @@ https://minikube.sigs.k8s.io/docs/start/
 
 >$helm install argoregcred . --create-namespace -n argocd
 
-### Configure the ArgoCD Helm Chart
-
-change directory to the ARGOCD/chart helm repository. open the values.yaml IDE of your choice.  
-
-make the following changes:
-
-**line 60:**
-    - change upgradeJob -> enabled value from "true" to "false"
-**line 135:**
-    - change imagePullSecrets -> name from "private-registry" to "regcred"
-**line 1470:**
-    - change redis-bb -> image -> pullSecrets from "private-registry" to "regcred"
-**line 2000:**
-    - change server -> ingress -> enabled from "flase" to "true" 
-**line 2002:**  
-    - remove brackets from server -> ingress -> annotations and add the following fields
-        
->traefik.ingress.kubernetes.io/router.entrypoints: websecure 
->traefik.ingress.kubernetes.io/router.tls: "true"
-
-NOTE: make sure to save the file
 ### Install ArgoCD helm chart
 now that the argoCD values are configured properly for a local deployment, helm install the argocd from the parent directory of ArgoCD repository
 
