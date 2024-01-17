@@ -201,7 +201,7 @@ It is best practice to create a user administrator in order to create database u
 )
 
 ### Create a Mongo Database
-After logging into the container as root, If this is a fresh OPAL deployment you will need to create the databases before adding users.
+After logging into the container as root, If this is a fresh OPAL deployment you will need to log in as root in a  adding users.
 
 To create a database simple run this command in the terminal:
 > use database_name
