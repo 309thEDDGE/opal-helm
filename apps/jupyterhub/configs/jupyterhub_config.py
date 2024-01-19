@@ -97,6 +97,11 @@ c.KubeSpawner.volume_mounts = [
         'mountPath': metaflow_mount_path,
         "name": "metaflow-store",
         "readOnly": False
+    },
+    {
+        'mountPath': '/home/jovyan/syncedrepos',
+        'name': 'git-sync-mnt',
+        'readOnly': False
     }
 ]
 
