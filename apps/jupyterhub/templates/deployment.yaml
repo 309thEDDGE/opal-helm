@@ -135,7 +135,7 @@ spec:
             - "-repo=https://github.com/309theddge/opal.git"
             - "-branch=main"
             - "-max-sync-failures=-1"
-            - "-root=/repos"
+            - "-root=/repos/opal"
             - "-dest=from-github"
             - "-wait=60"
           volumeMounts:
@@ -146,14 +146,14 @@ spec:
               mountPath: /repos/opal
               readOnly: false
           securityContext:
-            runAsUser: 65533 # git-sync-user
+            runAsUser: 3042 # git-sync-user
         - image: k8s.gcr.io/git-sync:v3.1.6
           name: weave-repo-sync
           args:
             - "-repo=https://github.com/309theddge/weave.git"
             - "-branch=main"
             - "-max-sync-failures=-1"
-            - "-root=/repos"
+            - "-root=/repos/weave"
             - "-dest=from-github"
             - "-wait=60"
           volumeMounts:
@@ -161,10 +161,12 @@ spec:
               mountPath: /etc/git-secret
               readOnly: true
             - name: git-sync-mnt
-              mountPath: /repos/opal
+              mountPath: /repos/weave
               readOnly: false
           securityContext:
-            runAsUser: 65533 # git-sync-user
+            runAsUser: 3042 # git-sync-user
+      securityContext:
+        fsGroup: 3042
       volumes:
       - name: jupyterhub-config-py-mnt
         configMap:
@@ -175,4 +177,4 @@ spec:
       - name: git-creds-mnt
         secret:
           secretName: git-creds
-          defaultMode: 0600
+          defaultMode: 0400
