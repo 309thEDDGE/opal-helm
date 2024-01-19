@@ -133,12 +133,12 @@ spec:
           name: opal-repo-sync
           args:
             - "--repo=git@github.com:309theddge/opal.git"
-            - "--branch=main"
-            - "--max-sync-failures=-1"
-            - "--root=/repos/opal"
-            - "--dest=from-github"
+            - "--ref=main"
+            - "--max-failures=-1"
+            - "--root=/repos"
+            - "--link=opal"
             - "--add-user"
-            - "--wait=60"
+            - "--period=60"
           volumeMounts:
             - name: git-creds-mnt
               mountPath: /etc/git-secret
@@ -152,12 +152,12 @@ spec:
           name: weave-repo-sync
           args:
             - "--repo=git@github.com:309theddge/weave.git"
-            - "--branch=main"
-            - "--max-sync-failures=-1"
-            - "--root=/repos/weave"
-            - "--dest=from-github"
+            - "--ref=main"
+            - "--max-failures=-1"
+            - "--root=/repos"
+            - "--link=weave"
             - "--add-user"
-            - "--wait=60"
+            - "--period=60"
           volumeMounts:
             - name: git-creds-mnt
               mountPath: /etc/git-secret
