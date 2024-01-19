@@ -139,7 +139,7 @@ spec:
             - "-dest=from-github"
             - "-wait=60"
           volumeMounts:
-            - name: git-secret
+            - name: git-creds
               mountPath: /etc/git-secret
               readOnly: true
             - name: git-sync-mnt
@@ -157,7 +157,7 @@ spec:
             - "-dest=from-github"
             - "-wait=60"
           volumeMounts:
-            - name: git-secret
+            - name: git-creds
               mountPath: /etc/git-secret
               readOnly: true
             - name: git-sync-mnt
