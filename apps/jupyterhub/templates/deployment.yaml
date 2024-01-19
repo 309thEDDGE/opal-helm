@@ -135,8 +135,7 @@ spec:
             - "--repo=git@github.com:309theddge/opal.git"
             - "--ref=main"
             - "--max-failures=-1"
-            - "--root=/repos"
-            - "--link=opal"
+            - "--root=/repos/opal"
             - "--add-user"
             - "--period=60"
           volumeMounts:
@@ -154,8 +153,7 @@ spec:
             - "--repo=git@github.com:309theddge/weave.git"
             - "--ref=main"
             - "--max-failures=-1"
-            - "--root=/repos"
-            - "--link=weave"
+            - "--root=/repos/weave"
             - "--add-user"
             - "--period=60"
           volumeMounts:
