@@ -129,16 +129,16 @@ spec:
             - name: jupyterhub-config-py-mnt
               mountPath: /home/jovyan/jupyterhub_config.py
               subPath: jupyterhub_config.py
-        - image: k8s.gcr.io/git-sync:v3.1.6
+        - image: registry.k8s.io/git-sync/git-sync:v4.0.0
           name: opal-repo-sync
           args:
-            - "-repo=https://github.com/309theddge/opal.git"
-            - "-branch=main"
-            - "-max-sync-failures=-1"
-            - "-root=/repos/opal"
-            - "-dest=from-github"
-            - "-add-user"
-            - "-wait=60"
+            - "--repo=git@github.com:309theddge/opal.git"
+            - "--branch=main"
+            - "--max-sync-failures=-1"
+            - "--root=/repos/opal"
+            - "--dest=from-github"
+            - "--add-user"
+            - "--wait=60"
           volumeMounts:
             - name: git-creds-mnt
               mountPath: /etc/git-secret
@@ -148,16 +148,16 @@ spec:
               readOnly: false
           securityContext:
             runAsUser: 3042 # git-sync-user
-        - image: k8s.gcr.io/git-sync:v3.1.6
+        - image: registry.k8s.io/git-sync/git-sync:v4.0.0
           name: weave-repo-sync
           args:
-            - "-repo=https://github.com/309theddge/weave.git"
-            - "-branch=main"
-            - "-max-sync-failures=-1"
-            - "-root=/repos/weave"
-            - "-dest=from-github"
-            - "-add-user"
-            - "-wait=60"
+            - "--repo=git@github.com:309theddge/weave.git"
+            - "--branch=main"
+            - "--max-sync-failures=-1"
+            - "--root=/repos/weave"
+            - "--dest=from-github"
+            - "--add-user"
+            - "--wait=60"
           volumeMounts:
             - name: git-creds-mnt
               mountPath: /etc/git-secret
