@@ -137,6 +137,7 @@ spec:
             - "-max-sync-failures=-1"
             - "-root=/repos/opal"
             - "-dest=from-github"
+            - "-add-user"
             - "-wait=60"
           volumeMounts:
             - name: git-creds-mnt
@@ -155,6 +156,7 @@ spec:
             - "-max-sync-failures=-1"
             - "-root=/repos/weave"
             - "-dest=from-github"
+            - "-add-user"
             - "-wait=60"
           volumeMounts:
             - name: git-creds-mnt
