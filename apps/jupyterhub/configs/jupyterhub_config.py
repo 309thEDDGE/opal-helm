@@ -79,6 +79,12 @@ c.KubeSpawner.volumes = [
         "persistentVolumeClaim": {
             "claimName": "metaflow-datastore"
         }
+    },
+    {
+        'name': 'git-sync-mnt',
+        'persistentVolumeClaim': {
+            'claimName': 'git-sync-pvc'
+        }
     }
 ]
 
@@ -101,7 +107,7 @@ c.KubeSpawner.volume_mounts = [
     {
         'mountPath': '/home/jovyan/syncedrepos',
         'name': 'git-sync-mnt',
-        'readOnly': False
+        'readOnly': True
     }
 ]
 
