@@ -129,7 +129,46 @@ spec:
             - name: jupyterhub-config-py-mnt
               mountPath: /home/jovyan/jupyterhub_config.py
               subPath: jupyterhub_config.py
+        - image: k8s.gcr.io/git-sync:v3.1.6
+          name: opal-repo-sync
+          args:
+            - "-repo=https://github.com/309theddge/opal.git"
+            - "-branch=main"
+            - "-max-sync-failures=-1"
+            - "-root=/repos"
+            - "-dest=from-github"
+            - "-wait=60"
+          volumeMounts:
+            - name: git-secret
+              mountPath: /etc/git-secret
+              readOnly: true
+            - name: git-sync-mnt
+              mountPath: /repos/opal
+              readOnly: false
+          securityContext:
+            runAsUser: 65533 # git-sync-user
+        - image: k8s.gcr.io/git-sync:v3.1.6
+          name: weave-repo-sync
+          args:
+            - "-repo=https://github.com/309theddge/weave.git"
+            - "-branch=main"
+            - "-max-sync-failures=-1"
+            - "-root=/repos"
+            - "-dest=from-github"
+            - "-wait=60"
+          volumeMounts:
+            - name: git-secret
+              mountPath: /etc/git-secret
+              readOnly: true
+            - name: git-sync-mnt
+              mountPath: /repos/opal
+              readOnly: false
+          securityContext:
+            runAsUser: 65533 # git-sync-user
       volumes:
       - name: jupyterhub-config-py-mnt
         configMap:
           name: jupyterhub-config-py
+      - name: git-sync-mnt
+        persistentVolumeClaim:
+          claimName: git-sync-pvc
