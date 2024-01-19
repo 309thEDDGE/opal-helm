@@ -147,7 +147,7 @@ spec:
               mountPath: /repos/opal
               readOnly: false
           securityContext:
-            runAsUser: 3042 # git-sync-user
+            runAsUser: 65533 # git-sync-user
         - image: registry.k8s.io/git-sync/git-sync:v4.0.0
           name: weave-repo-sync
           args:
@@ -166,9 +166,9 @@ spec:
               mountPath: /repos/weave
               readOnly: false
           securityContext:
-            runAsUser: 3042 # git-sync-user
+            runAsUser: 65533 # git-sync-user
       securityContext:
-        fsGroup: 3042
+        fsGroup: 65533
       volumes:
       - name: jupyterhub-config-py-mnt
         configMap:
