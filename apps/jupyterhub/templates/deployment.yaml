@@ -138,6 +138,7 @@ spec:
             - "--root=/repos/opal"
             - "--add-user"
             - "--period=60s"
+            - "--ssh"
           volumeMounts:
             - name: git-creds-mnt
               mountPath: /etc/git-secret
@@ -156,6 +157,7 @@ spec:
             - "--root=/repos/weave"
             - "--add-user"
             - "--period=60s"
+            - "--ssh"
           volumeMounts:
             - name: git-creds-mnt
               mountPath: /etc/git-secret
