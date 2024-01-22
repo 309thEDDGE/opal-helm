@@ -137,7 +137,7 @@ spec:
             - "--max-failures=-1"
             - "--ssh"
             - "--link=/repos/opal"
-            - "--period=60s"
+            - "--period=120s"
           volumeMounts:
             - name: git-creds-mnt
               mountPath: /etc/git-secret
@@ -155,7 +155,7 @@ spec:
             - "--max-failures=-1"
             - "--ssh"
             - "--link=/repos/weave"
-            - "--period=60s"
+            - "--period=120s"
           volumeMounts:
             - name: git-creds-mnt
               mountPath: /etc/git-secret
