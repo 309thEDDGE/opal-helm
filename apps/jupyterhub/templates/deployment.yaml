@@ -136,7 +136,7 @@ spec:
             - "--depth=1"
             - "--max-failures=-1"
             - "--ssh"
-            - "--root=/repos/opal"
+            - "--root=/repos"
             - "--period=60s"
           volumeMounts:
             - name: git-creds-mnt
@@ -154,7 +154,7 @@ spec:
             - "--depth=1"
             - "--max-failures=-1"
             - "--ssh"
-            - "--root=/repos/weave"
+            - "--root=/repos"
             - "--period=60s"
           volumeMounts:
             - name: git-creds-mnt
