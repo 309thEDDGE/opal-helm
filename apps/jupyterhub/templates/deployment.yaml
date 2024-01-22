@@ -132,12 +132,11 @@ spec:
         - image: registry.k8s.io/git-sync/git-sync:v4.0.0
           name: opal-repo-sync
           args:
-            - "--repo=git@github.com:309theddge"
+            - "--repo=git@github.com:309theddge/opal"
             - "--depth=1"
             - "--max-failures=-1"
             - "--ssh"
             - "--root=/repos/opal"
-            - "--add-user"
             - "--period=60s"
           volumeMounts:
             - name: git-creds-mnt
