@@ -143,7 +143,7 @@ spec:
               mountPath: /etc/git-secret
               readOnly: true
             - name: git-sync-mnt
-              mountPath: /
+              mountPath: /repos
               readOnly: false
           securityContext:
             runAsUser: 65533 # git-sync-user
@@ -161,7 +161,7 @@ spec:
               mountPath: /etc/git-secret
               readOnly: true
             - name: git-sync-mnt
-              mountPath: /
+              mountPath: /repos
               readOnly: false
           securityContext:
             runAsUser: 65533 # git-sync-user
