@@ -136,14 +136,14 @@ spec:
             - "--depth=1"
             - "--max-failures=-1"
             - "--ssh"
-            - "--root=/repos"
+            - "--root=/repos/opal"
             - "--period=60s"
           volumeMounts:
             - name: git-creds-mnt
               mountPath: /etc/git-secret
               readOnly: true
-            - name: git-sync-mnt
-              mountPath: /repos
+            - name: opal-sync-mnt
+              mountPath: /repos/
               readOnly: false
           securityContext:
             runAsUser: 65533 # git-sync-user
@@ -154,14 +154,14 @@ spec:
             - "--depth=1"
             - "--max-failures=-1"
             - "--ssh"
-            - "--root=/repos"
+            - "--root=/repos/weave"
             - "--period=60s"
           volumeMounts:
             - name: git-creds-mnt
               mountPath: /etc/git-secret
               readOnly: true
-            - name: git-sync-mnt
-              mountPath: /repos
+            - name: weave-sync-mnt
+              mountPath: /repos/
               readOnly: false
           securityContext:
             runAsUser: 65533 # git-sync-user
