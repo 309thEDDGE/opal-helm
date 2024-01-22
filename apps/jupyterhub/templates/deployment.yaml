@@ -143,7 +143,7 @@ spec:
               mountPath: /etc/git-secret
               readOnly: true
             - name: git-sync-mnt
-              mountPath: /repos/opal
+              mountPath: /repos
               readOnly: false
           securityContext:
             runAsUser: 65533 # git-sync-user
@@ -151,18 +151,17 @@ spec:
           name: weave-repo-sync
           args:
             - "--repo=git@github.com:309theddge/weave"
-            - "--ref=main"
+            - "--depth=1"
             - "--max-failures=-1"
             - "--ssh"
             - "--root=/repos/weave"
-            - "--add-user"
             - "--period=60s"
           volumeMounts:
             - name: git-creds-mnt
               mountPath: /etc/git-secret
               readOnly: true
             - name: git-sync-mnt
-              mountPath: /repos/weave
+              mountPath: /repos
               readOnly: false
           securityContext:
             runAsUser: 65533 # git-sync-user
