@@ -106,14 +106,14 @@ c.KubeSpawner.volume_mounts = [
     },
     {
         'mountPath': '/home/jovyan/weave',
-        'subPath': '/repos/weave',
+        'subPath': 'weave',
         'name': 'git-sync-mnt',
         'readOnly': True
     },
     {
         'mountPath': '/home/jovyan/opal',
         'name': 'git-sync-mnt',
-        'subPath': '/repos/weave',
+        'subPath': 'opal',
         'readOnly': True
     }
 ]
