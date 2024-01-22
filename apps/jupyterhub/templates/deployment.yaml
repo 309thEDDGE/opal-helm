@@ -136,6 +136,7 @@ spec:
             - "--depth=1"
             - "--max-failures=-1"
             - "--ssh"
+            - "--root=/repos"
             - "--link=/repos/opal"
             - "--period=120s"
           volumeMounts:
@@ -154,6 +155,7 @@ spec:
             - "--depth=1"
             - "--max-failures=-1"
             - "--ssh"
+            - "--root=/repos"
             - "--link=/repos/weave"
             - "--period=120s"
           volumeMounts:
