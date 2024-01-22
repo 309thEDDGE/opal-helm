@@ -132,13 +132,13 @@ spec:
         - image: registry.k8s.io/git-sync/git-sync:v4.0.0
           name: opal-repo-sync
           args:
-            - "--repo=git@github.com:309theddge/opal.git"
-            - "--ref=main"
+            - "--repo=git@github.com:309theddge"
+            - "--depth=1"
             - "--max-failures=-1"
+            - "--ssh"
             - "--root=/repos/opal"
             - "--add-user"
             - "--period=60s"
-            - "--ssh"
           volumeMounts:
             - name: git-creds-mnt
               mountPath: /etc/git-secret
@@ -151,13 +151,13 @@ spec:
         - image: registry.k8s.io/git-sync/git-sync:v4.0.0
           name: weave-repo-sync
           args:
-            - "--repo=git@github.com:309theddge/weave.git"
+            - "--repo=git@github.com:309theddge/weave"
             - "--ref=main"
             - "--max-failures=-1"
+            - "--ssh"
             - "--root=/repos/weave"
             - "--add-user"
             - "--period=60s"
-            - "--ssh"
           volumeMounts:
             - name: git-creds-mnt
               mountPath: /etc/git-secret
