@@ -133,7 +133,7 @@ spec:
         - image: "{{ .Values.gitSync.image.repository }}:{{ .Values.gitSync.image.tag }}"
           name: opal-repo-sync
           args:
-            - "--repo=github.com/309theddge/opal"
+            - "--repo=https://github.com/309theddge/opal.git"
             - "--depth=1"
             - "--max-failures=-1"
             - "--username={{ .Values.gitSync.username }}"
@@ -153,7 +153,7 @@ spec:
         - image: "{{ .Values.gitSync.image.repository }}:{{ .Values.gitSync.image.tag }}"
           name: weave-repo-sync
           args:
-            - "--repo=github.com/309theddge/weave"
+            - "--repo=https://github.com/309theddge/weave.git"
             - "--depth=1"
             - "--max-failures=-1"
             - "--username={{ .Values.gitSync.username }}"
