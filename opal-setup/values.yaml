@@ -23,7 +23,7 @@ valuesFile: test-values.yaml
 
 source: &appSource
   url: "https://github.com/309thEDDGE/opal-helm.git"
-  targetRevision: "OPAL-1119_randomize_creds"
+  targetRevision: "OPAL-1175-argocd-secrets-sync"
 
 appValues:
   source: *appSource
