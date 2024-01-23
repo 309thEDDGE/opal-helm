@@ -1,4 +1,8 @@
-{{- if not .Values.oauth.existingSecret }}
+{{ $secretName := .Values.secrets.name }}
+{{ $secret := lookup "v1" "Secret" .Values.tenant.namespace $secretName }}
+{{ $secret := "false" }}
+
+{{- if not $secret }}
 {{- if dig "secrets" true (.Values | merge (dict)) }}
 {{- $ROOT_PASSWORD := (randAlphaNum 16 | quote)}}
 
