@@ -10,6 +10,7 @@ spec:
     requests:
       storage: {{ .Values.resources.storage }}
 ---
+apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   namespace: {{ .Values.namespace }}
