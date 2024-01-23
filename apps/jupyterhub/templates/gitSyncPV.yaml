@@ -9,7 +9,7 @@ spec:
   resources:
     requests:
       {{- if .Values.gitSync.enabled }}
-      storage: {{ .Values.resources.git-storage }}
+      storage: {{ .Values.resources.gitStorage }}
       {{- else }}
       storage: 4Mi
       {{- end }}
@@ -25,7 +25,7 @@ spec:
   resources:
     requests:
       {{- if .Values.gitSync.enabled }}
-      storage: {{ .Values.resources.git-storage }}
+      storage: {{ .Values.resources.gitStorage }}
       {{- else }}
       storage: 4Mi
       {{- end }}
