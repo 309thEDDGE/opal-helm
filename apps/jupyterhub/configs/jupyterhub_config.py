@@ -81,9 +81,15 @@ c.KubeSpawner.volumes = [
         }
     },
     {
-        'name': 'git-sync-mnt',
+        'name': 'opal-sync-mnt',
         'persistentVolumeClaim': {
-            'claimName': 'git-sync-pvc'
+            'claimName': 'opal-sync-pvc'
+        }
+    },
+    {
+        'name': 'weave-sync-mnt',
+        'persistentVolumeClaim': {
+            'claimName': 'weave-sync-pvc'
         }
     }
 ]
