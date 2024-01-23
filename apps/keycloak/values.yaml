@@ -1,3 +1,5 @@
+# Comment added for argo sync test
+
 # Optionally override the fully qualified name
 fullnameOverride: ""
 
