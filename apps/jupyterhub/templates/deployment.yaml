@@ -185,5 +185,5 @@ spec:
           claimName: weave-sync-pvc
       - name: git-creds-mnt
         secret:
-          secretName: {{ .Values.gitSync.secretName }}
+          secretName: {{ .Values.gitSync.gitSecret.secretName }}
           defaultMode: 0400
