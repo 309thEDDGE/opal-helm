@@ -1,6 +1,6 @@
 {{ $secretName := .Values.secrets.name }}
 {{ $secret := lookup "v1" "Secret" .Values.tenant.namespace $secretName }}
-{{ $secret := "false" }}
+{{ $secret := "true" }}
 
 {{- if not $secret }}
 {{- if dig "secrets" true (.Values | merge (dict)) }}
