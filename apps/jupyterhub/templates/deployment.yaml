@@ -129,13 +129,15 @@ spec:
             - name: jupyterhub-config-py-mnt
               mountPath: /home/jovyan/jupyterhub_config.py
               subPath: jupyterhub_config.py
-        - image: registry.k8s.io/git-sync/git-sync:v4.0.0
+{{- if .Values.gitSync.enabled }}
+        - image: "{{ .Values.gitSync.image.repository }}:{{ .Values.gitSync.image.tag }}"
           name: opal-repo-sync
           args:
-            - "--repo=git@github.com:309theddge/opal"
+            - "--repo=github.com/309theddge/opal"
             - "--depth=1"
             - "--max-failures=-1"
-            - "--ssh"
+            - "--username={{ .Values.gitSync.username }}"
+            - "--password-file=/etc/git-secret/token"
             - "--root=/repos"
             - "--link=/repos/opal"
             - "--period=120s"
@@ -148,13 +150,14 @@ spec:
               readOnly: false
           securityContext:
             runAsUser: 65533 # git-sync-user
-        - image: registry.k8s.io/git-sync/git-sync:v4.0.0
+        - image: "{{ .Values.gitSync.image.repository }}:{{ .Values.gitSync.image.tag }}"
           name: weave-repo-sync
           args:
-            - "--repo=git@github.com:309theddge/weave"
+            - "--repo=github.com/309theddge/weave"
             - "--depth=1"
             - "--max-failures=-1"
-            - "--ssh"
+            - "--username={{ .Values.gitSync.username }}"
+            - "--password-file=/etc/git-secret/token"
             - "--root=/repos"
             - "--link=/repos/weave"
             - "--period=120s"
@@ -169,6 +172,7 @@ spec:
             runAsUser: 65533 # git-sync-user
       securityContext:
         fsGroup: 65533
+{{- end }}
       volumes:
       - name: jupyterhub-config-py-mnt
         configMap:
@@ -181,5 +185,5 @@ spec:
           claimName: weave-sync-pvc
       - name: git-creds-mnt
         secret:
-          secretName: git-creds
+          secretName: {{ .Values.gitSync.secretName }}
           defaultMode: 0400
