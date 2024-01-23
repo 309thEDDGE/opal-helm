@@ -143,7 +143,7 @@ spec:
             - name: git-creds-mnt
               mountPath: /etc/git-secret
               readOnly: true
-            - name: git-sync-mnt
+            - name: opal-sync-mnt
               mountPath: /repos
               readOnly: false
           securityContext:
@@ -162,7 +162,7 @@ spec:
             - name: git-creds-mnt
               mountPath: /etc/git-secret
               readOnly: true
-            - name: git-sync-mnt
+            - name: weave-sync-mnt
               mountPath: /repos
               readOnly: false
           securityContext:
@@ -173,9 +173,12 @@ spec:
       - name: jupyterhub-config-py-mnt
         configMap:
           name: jupyterhub-config-py
-      - name: git-sync-mnt
+      - name: opal-sync-mnt
         persistentVolumeClaim:
-          claimName: git-sync-pvc
+          claimName: opal-sync-pvc
+      - name: weave-sync-mnt
+        persistentVolumeClaim:
+          claimName: weave-sync-pvc
       - name: git-creds-mnt
         secret:
           secretName: git-creds
