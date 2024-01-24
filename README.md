@@ -87,6 +87,7 @@ there should be a login page for argoCD
 >username: **admin**
 >password: output from the last section (remove the trailing '%' symbol if present)
 
+
 once logged in go to the settings>repository>connect repo
 Next change the connection method to :
 >VIA HTTPS
@@ -121,9 +122,6 @@ If enabled in the values.yaml, jupyterhub will add sidecars containers to the hu
 **NOTE**: A github account and access token with repo scope is currently required to use this functionality.
 
 To use git-sync, place your token in opal-setup, and rename it to `git-creds`. In opal-setup/values, fill in your username in jupyterhub:appValues:gitSync
-
-
-
 
 ### Helm install OPAL
 
