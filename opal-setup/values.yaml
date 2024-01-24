@@ -10,6 +10,10 @@ imagePullSecrets:
     - *opalNS
     - *minioNS
 
+gitSyncSecret:
+  namespace: *opalNS
+  secretName: &gitSyncSecret "git-creds"
+
 tls:
   name: tls-certs
   namespaces:
@@ -23,7 +27,7 @@ valuesFile: test-values.yaml
 
 source: &appSource
   url: "https://github.com/309thEDDGE/opal-helm.git"
-  targetRevision: "OPAL-1148-argo-minio"
+  targetRevision: "OPAL-1193-add-gitsync"
 
 appValues:
   source: *appSource
@@ -37,7 +41,7 @@ appValues:
         env:
           stringData:
             KEYCLOAK_ADMIN: "admin"
-            KEYCLOAK_ADMIN_PASSWORD: "password"
+            KEYCLOAK_ADMIN_PASSWORD: ""
   traefik:
     enabled: true
   minioOperator:
@@ -49,7 +53,19 @@ appValues:
     secrets:
       accessKey: opal-administrator
     appValues:
+      instance:
+        namespace: *minioNS
       oauth:
         existingSecret: minio-creds-secret
   jupyterhub:
     enabled: true
+    appValues:
+      namespace: *opalNS
+      gitSync:
+        enabled: true
+        username: ""
+        gitSecret:
+          secretName: *gitSyncSecret
+        image:
+          repository: registry.k8s.io/git-sync/git-sync
+          tag: v4.0.0

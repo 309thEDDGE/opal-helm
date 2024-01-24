@@ -31,6 +31,7 @@ gitSync:
   enabled: true
   gitSecret:
     secretName: "git-creds"
+  username: ""
   image:
     repository: registry.k8s.io/git-sync/git-sync
     tag: v4.0.0
