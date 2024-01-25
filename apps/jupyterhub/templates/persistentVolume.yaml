@@ -5,7 +5,7 @@ metadata:
   name: metaflow-datastore
 spec:
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   resources:
     requests:
       storage: {{ .Values.resources.storage }}
