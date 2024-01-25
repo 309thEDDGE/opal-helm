@@ -92,7 +92,7 @@ spec:
             - name: KC_DB_URL_HOST
               value: {{ include "keycloak.postgresql.fullname" . }}
             - name: KC_DB_URL_PORT
-              value: {{ .Values.postgresql.service.port | quote }}
+              value: {{ default .Values.postgresql.service.port 5432 | quote }}
             - name: KC_DB_URL_DATABASE
               value: {{ .Values.postgresql.postgresqlDatabase | quote }}
             - name: KC_DB_USERNAME
