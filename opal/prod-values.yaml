@@ -32,6 +32,7 @@ mongodb:
       imagePullSecrets: *dockerSecret
     auth:
       enabled: true
+      rootUser: rootuser
       rootUser: user
       rootPassword: ""
       usernames: []
@@ -107,10 +108,15 @@ traefik:
     tls:
       nameOverride: *tlsSecret
     ingress:
-      enabled: false
+      enabled: true
       rules:
         host: ""
 
+minio-operator:
+  enabled: true
+
+minio-instance:
+  enabled: true
 minioOperator:
   enabled: false
   appValues:
@@ -197,9 +203,8 @@ minioInstance:
           enabled: false
           rules:
             host: ""
-
 jupyterhub:
-  enabled: false
+  enabled: true
   appValues:
     namespace: *opalNS
     baseDns: "opalacceptance.dso.mil"
@@ -220,7 +225,7 @@ jupyterhub:
       keycloakJupyterhubUserdataUrl: "https://keycloak-prod.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/userinfo"
       keycloakOpalApiUrl: "https://keycloak-prod.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/token"
     ingress:
-      enabled: false
+      enabled: true
       rules:
         host: "opal-prod.{{ .Values.baseDns }}"
     # metaflow datastore size
