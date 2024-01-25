@@ -455,6 +455,8 @@ postgresql:
   # set to true if using with opal-helm. This enables pg connection when using separate pg
   useExternal: false
   namespace: *ns
+  service:
+    port: 5432
   # PostgreSQL User to create
   postgresqlUsername: keycloak
   # PostgreSQL Password for the new user
