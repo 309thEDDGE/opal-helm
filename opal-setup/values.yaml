@@ -23,7 +23,7 @@ valuesFile: test-values.yaml
 
 source: &appSource
   url: "https://github.com/309thEDDGE/opal-helm.git"
-  targetRevision: "OPAL-1125-mongo-user-creation"
+  targetRevision: "OPAL-1174-nginx-fileserver"
 
 appValues:
   source: *appSource
@@ -63,5 +63,7 @@ appValues:
     appValues:
       oauth:
         existingSecret: minio-creds-secret
+  nginx:
+    enabled: true
   jupyterhub:
     enabled: true

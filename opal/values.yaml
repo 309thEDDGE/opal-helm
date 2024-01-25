@@ -38,6 +38,15 @@ mongodb:
       databases: []
     replicaCount: 2
 
+nginx:
+  enabled: true
+  appValues:
+    namespace: *opalNS
+    image:
+      registry: registry1.dso.mil
+      repository: ironbank/opensource/nginx/nginx
+      tag: 1.25.3
+      imagePullSecrets: *dockerSecret
 
 keycloak:
   enabled: true
