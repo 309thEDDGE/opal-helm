@@ -157,7 +157,7 @@ auth:
   enabled: true
   ## @param auth.rootUser MongoDB(&reg;) root user
   ##
-  rootUser: root
+  rootUser: rootuser
   ## @param auth.rootPassword MongoDB(&reg;) root password
   ## ref: https://github.com/bitnami/containers/tree/main/bitnami/mongodb#setting-the-root-user-and-password-on-first-run
   ##Fill out password
@@ -361,9 +361,9 @@ enableJournal: true
 ##   setParameter:
 ##      enableLocalhostAuthBypass: true
 ##   # security options
-##   security:
-##     authorization: disabled
-##     #keyFile: /opt/bitnami/mongodb/conf/keyfile
+security:
+  authorization: enabled
+  #keyFile: /opt/bitnami/mongodb/conf/keyfile
 ##
 configuration: ""
 ## @section replicaSetConfigurationSettings settings applied during runtime (not via configuration file)

@@ -25,10 +25,19 @@ source: &appSource
   url: "https://github.com/309thEDDGE/opal-helm.git"
   targetRevision: "OPAL-1165-sql-server-backend"
 
+
 appValues:
   source: *appSource
   mongodb:
     enabled: true
+    auth:
+      enabled: true
+      rootUser: rootuser
+      rootPassword: ""
+      usernames: []
+      passwords: []
+      databases: []
+    replicaCount: 2
   keycloak:
     enabled: true
     # bootstrapper admin credentials. Should be deleted after post-install setup
@@ -39,6 +48,10 @@ appValues:
             KEYCLOAK_ADMIN: "admin"
             KEYCLOAK_ADMIN_PASSWORD: "password"
   traefik:
+    enabled: true
+  minio-operator:
+    enabled: true
+  minio-instance:
     enabled: true
   minioOperator:
     enabled: true
