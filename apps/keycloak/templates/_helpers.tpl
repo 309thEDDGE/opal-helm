@@ -65,7 +65,7 @@ Create a default fully qualified app name for the postgres requirement.
 */}}
 {{- define "keycloak.postgresql.fullname" -}}
 {{- $postgresContext := dict "Values" .Values.postgresql "Release" .Release "Chart" (dict "Name" "postgresql") -}}
-{{ .Release.Name }}-{{ .Values.postgresql.nameOverride $postgresContext }}
+{{ .Release.Name }}-{{ .Values.postgresql.nameOverride }}
 {{- end }}
 
 {{/*
