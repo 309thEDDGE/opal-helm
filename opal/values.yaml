@@ -56,10 +56,11 @@ keycloak:
     postgresql:
       enabled: false
       useExternal: true
+      nameOverride: &keycloakPostgresName keycloak-postgres
     keycloakSetup:
       existingSecret: *oauthSecret
   postgres:
-    nameOverride: keycloak-postgres
+    nameOverride: *keycloakPostgresName
     namespace: *opalNS
     # PostgreSQL User to create
     postgresqlUsername: keycloak
