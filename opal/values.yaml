@@ -55,6 +55,7 @@ keycloak:
         host: ""
     postgresql:
       enabled: false
+      useExternal: true
     keycloakSetup:
       existingSecret: *oauthSecret
   postgres:

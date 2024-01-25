@@ -35,7 +35,7 @@ spec:
         {{- end }}
       labels:
         {{- include "keycloak.selectorLabels" . | nindent 8 }}
-        {{- if and .Values.postgresql.enabled (and .Values.postgresql.networkPolicy .Values.postgresql.networkPolicy.enabled) }}
+        {{- if and (or .Values.postgresql.enabled .Values.postgresql.useExternal) (and .Values.postgresql.networkPolicy .Values.postgresql.networkPolicy.enabled) }}
         {{ include "keycloak.postgresql.fullname" . }}-client: "true"
         {{- end }}
         {{- range $key, $value := .Values.podLabels }}
@@ -43,9 +43,9 @@ spec:
         {{- end }}
     spec:
     {{- if not .Values.skipInitContainers }}
-      {{- if or .Values.postgresql.enabled .Values.extraInitContainers }}
+      {{- if or (or .Values.postgresql.enabled .Values.postgresql.useExternal) .Values.extraInitContainers }}
       initContainers:
-        {{- if .Values.postgresql.enabled }}
+        {{- if (or .Values.postgresql.enabled .Values.postgresql.useExternal) }}
         - name: pgchecker
           image: "{{ .Values.pgchecker.image.repository }}:{{ .Values.pgchecker.image.tag }}"
           imagePullPolicy: {{ .Values.pgchecker.image.pullPolicy }}
@@ -86,7 +86,7 @@ spec:
           {{- tpl . $ | nindent 12 }}
           {{- end }}
           env:
-            {{- if .Values.postgresql.enabled }}
+            {{- if (or .Values.postgresql.enabled .Values.postgresql.useExternal) }}
             - name: KC_DB    # vendor
               value: postgres
             - name: KC_DB_URL_HOST

@@ -452,6 +452,8 @@ pgchecker:
 postgresql:
   # If `true`, the Postgresql dependency is enabled
   enabled: true
+  # set to true if using with opal-helm. This enables pg connection when using separate pg
+  useExternal: false
   namespace: *ns
   # PostgreSQL User to create
   postgresqlUsername: keycloak
