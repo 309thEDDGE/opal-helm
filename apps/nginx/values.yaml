@@ -240,7 +240,7 @@ containerSecurityContext:
   enabled: true
   seLinuxOptions: {}
   runAsUser: 1001
-  runAsNonRoot: true
+  runAsNonRoot: false
   privileged: true
   readOnlyRootFilesystem: false
   allowPrivilegeEscalation: true
