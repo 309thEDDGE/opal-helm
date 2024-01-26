@@ -243,7 +243,7 @@ containerSecurityContext:
   runAsNonRoot: true
   privileged: true
   readOnlyRootFilesystem: false
-  allowPrivilegeEscalation: false
+  allowPrivilegeEscalation: true
   capabilities:
     drop: ["ALL"]
   seccompProfile:
