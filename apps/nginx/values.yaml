@@ -518,23 +518,22 @@ cloneStaticSiteFromGit:
   ##
   extraVolumeMounts: []
 ## @param serverBlock Custom server block to be added to NGINX configuration
-PHP-FPM example server block:
-serverBlock: |-
-  server {
-    listen 80;
-    root apps;
+# serverBlock: |-
+#   server {
+#     listen 80;
+#     root apps;
 
-    access_log /dev/stdout;
-    error_log /dev/stderr;
+#     access_log /dev/stdout;
+#     error_log /dev/stderr;
 
-    location ~/.(conda|bz2|json) {
-      root apps/nginx/conda
-      autoindex on;
-      autoindex_exact_size on;
-      autoindex_format html;
-      autoindex_localtime on;
-      expires -1;   
-  }
+#     location ~/.(conda|bz2|json) {
+#       root apps/nginx/conda
+#       autoindex on;
+#       autoindex_exact_size on;
+#       autoindex_format html;
+#       autoindex_localtime on;
+#       expires -1;   
+#   }
 
 serverBlock: ""
 ## @param existingServerBlockConfigmap ConfigMap with custom server block to be added to NGINX configuration
