@@ -214,4 +214,5 @@ jupyterhub:
         host: "opal-k8s.{{ .Values.baseDns }}"
     # metaflow datastore size
     resources:
+      useAzureFile: false
       storage: 2Gi

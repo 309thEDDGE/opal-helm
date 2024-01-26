@@ -6,7 +6,9 @@ metadata:
 spec:
   accessModes:
     - ReadWriteMany
+  {{- if .Values.resources.useAzureFile }}
   storageClassName: azurefile-csi
+  {{- end }}
   resources:
     requests:
       storage: {{ .Values.resources.storage }}
