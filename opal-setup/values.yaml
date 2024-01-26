@@ -23,12 +23,20 @@ valuesFile: test-values.yaml
 
 source: &appSource
   url: "https://github.com/309thEDDGE/opal-helm.git"
-  targetRevision: "OPAL-1119_randomize_creds"
+  targetRevision: "main"
 
 appValues:
   source: *appSource
   mongodb:
     enabled: true
+    auth:
+      enabled: true
+      rootUser: rootuser
+      rootPassword: ""
+      usernames: []
+      passwords: []
+      databases: []
+    replicaCount: 2
   keycloak:
     enabled: true
     # bootstrapper admin credentials. Should be deleted after post-install setup
@@ -41,6 +49,10 @@ appValues:
             KEYCLOAK_ADMIN_PASSWORD: "password"
             JAVA_OPTS_APPEND: -Djgroups.dns.query=opal-setup-keycloak-headless
   traefik:
+    enabled: true
+  minio-operator:
+    enabled: true
+  minio-instance:
     enabled: true
   minioOperator:
     enabled: true
