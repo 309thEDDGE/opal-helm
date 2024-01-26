@@ -7,3 +7,6 @@ spec:
   accessModes:
     - ReadWriteMany
   storageClassName: azurefile-csi
+  resources:
+    requests:
+      storage: {{ .Values.resources.storage }}
