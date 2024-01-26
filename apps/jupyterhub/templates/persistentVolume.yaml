@@ -7,7 +7,7 @@ spec:
   accessModes:
     - ReadWriteMany
   volumeMode: Block
-  storageClass: managed-csi
+  storageClassName: azurefile-csi
   resources:
     requests:
       storage: 256Gi
