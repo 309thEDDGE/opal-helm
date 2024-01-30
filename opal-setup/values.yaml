@@ -78,8 +78,6 @@ appValues:
     enabled: true
     namespace: *minioNS
     appValues:
-      oauth:
-        name: "opal-oauth-common"
       creds:
         name: "minio-creds-secret"
         existingSecret: true
