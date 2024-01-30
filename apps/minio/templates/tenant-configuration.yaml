@@ -1,6 +1,7 @@
 {{ $secretName := .Values.secrets.name }}
+{{ $creds := .Values.creds }}
 
-{{- if not creds.existingSecret }}
+{{- if not $creds.existingSecret }}
 {{- if dig "secrets" true (.Values | merge (dict)) }}
 {{- $ROOT_PASSWORD := (randAlphaNum 16 | quote)}}
 
