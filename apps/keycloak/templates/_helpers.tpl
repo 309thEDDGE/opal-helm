@@ -80,7 +80,3 @@ Create the service DNS name.
 {{- $secretName = printf "%s-oauth" (include "keycloak.fullname" .) }}
 {{- $secretName }}
 {{- end}}
-
-{{- define "get.postgresql.existingSecret" }}
-{{- default "false" secrets.postgresql.existingSecret }}
-{{- end }}
