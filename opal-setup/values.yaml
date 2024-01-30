@@ -18,8 +18,32 @@ tls:
 
 oauth:
   name: opal-oauth-common
+  namespaces:
+    - *opalNS
+    - *minioNS
 
 valuesFile: test-values.yaml
+
+token:
+  name: "token-env"
+  namespaces:
+    - *opalNS
+
+postgresql:
+  namespaces:
+    - *opalNS
+
+keycloakenv:
+  name: "opal-setup-keycloak-env"
+  namespaces:
+    - *opalNS
+    - *minioNS
+
+postgresql:
+  name: "opal-setup-keycloak-postgres"
+  namespaces:
+    - *opalNS
+    - *minioNS
 
 source: &appSource
   url: "https://github.com/309thEDDGE/opal-helm.git"
@@ -29,29 +53,39 @@ appValues:
   source: *appSource
   mongodb:
     enabled: true
+    existingSecret: true
   keycloak:
     enabled: true
     # bootstrapper admin credentials. Should be deleted after post-install setup
     appValues:
       secrets:
         env:
+          existingSecret: true
           annotations: {}
           stringData:
             KEYCLOAK_ADMIN: "admin"
             KEYCLOAK_ADMIN_PASSWORD: "password"
             JAVA_OPTS_APPEND: -Djgroups.dns.query=opal-setup-keycloak-headless
+        oauth:
+          existingSecret: true
+        postgresql:
+          existingSecret: true
   traefik:
     enabled: true
   minioOperator:
     enabled: true
   minioInstance:
     enabled: true
-    creds:
-      namespace: *minioNS
-    secrets:
-      accessKey: opal-administrator
+    namespace: *minioNS
     appValues:
       oauth:
-        existingSecret: minio-creds-secret
+        name: "opal-oauth-common"
+        existingSecret: true
+      creds:
+        name: "minio-creds-secret"
+        existingSecret: true
+        accessKey: opal-administrator
   jupyterhub:
     enabled: true
+    appValues:
+      existingSecret: true
