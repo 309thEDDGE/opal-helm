@@ -34,8 +34,8 @@ mongodb:
       imagePullSecrets: *dockerSecret
     auth:
       enabled: true
-      rootUser: user
-      rootPassword: "fill_this_in"
+      rootUser: rootuser
+      rootPassword: ""
       usernames: []
       passwords: []
       databases: []
@@ -114,6 +114,10 @@ traefik:
       rules:
         host: "traefik-k8s.10.96.30.9.nip.io"
 
+minio-operator:
+  enabled: true
+minio-instance:
+  enabled: true
 minioOperator:
   enabled: false
   appValues:
@@ -203,7 +207,6 @@ minioInstance:
       console:
         enabled: true
         host: "minio-k8s.{{ .Values.baseDns }}"
-
 jupyterhub:
   enabled: true
   appValues:
