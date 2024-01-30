@@ -451,7 +451,6 @@ pgchecker:
       memory: "32Mi"
 
 postgresql:
-  exisitingSecret: {{ tpl (secrets.postgresql.existingSecret) }}
   # If `true`, the Postgresql dependency is enabled
   enabled: true
   namespace: *ns
