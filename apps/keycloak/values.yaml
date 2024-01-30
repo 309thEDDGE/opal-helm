@@ -289,9 +289,6 @@ secrets:
       # https://www.keycloak.org/server/caching
       JAVA_OPTS_APPEND: -Djgroups.dns.query={{ include "keycloak.fullname" . }}-headless
 
-postgresql:
-  useExistingSecret: {{ .secrets.postgresql.existingSecret }}
-
 service:
   # Annotations for headless and HTTP Services
   annotations: {}
