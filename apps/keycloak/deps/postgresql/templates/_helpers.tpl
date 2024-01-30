@@ -142,7 +142,7 @@ Return true if we should use an existingSecret.
 Return true if a secret object should be created
 */}}
 {{- define "postgresql.createSecret" -}}
-{{- if not (include "postgresql.useExistingSecret" .) -}}
+{{- if not (include "secrets.postgresql.useExistingSecret" .) -}}
     {{- true -}}
 {{- end -}}
 {{- end -}}
