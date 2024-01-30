@@ -80,7 +80,6 @@ appValues:
     appValues:
       oauth:
         name: "opal-oauth-common"
-        existingSecret: true
       creds:
         name: "minio-creds-secret"
         existingSecret: true

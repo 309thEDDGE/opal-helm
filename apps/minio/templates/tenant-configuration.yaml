@@ -1,8 +1,6 @@
 {{ $secretName := .Values.secrets.name }}
-{{ $secret := lookup "v1" "Secret" .Values.tenant.namespace $secretName }}
-{{ $secret := "true" }}
 
-{{- if not $secret }}
+{{- if not creds.existingSecret }}
 {{- if dig "secrets" true (.Values | merge (dict)) }}
 {{- $ROOT_PASSWORD := (randAlphaNum 16 | quote)}}
 
