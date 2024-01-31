@@ -191,6 +191,8 @@ jupyterhub:
     namespace: *opalNS
     baseDns: ""
     secrets:
+      tokenenv:
+        existingSecret: "token-env"
       oauth:
         existingSecret: *oauthSecret
     image:
