@@ -133,7 +133,7 @@ Get the password secret.
 Return true if we should use an existingSecret.
 */}}
 {{- define "postgresql.useExistingSecret" -}}
-{{- if or .Values.global.secrets.postgresql.existingSecret .Values.existingSecret -}}
+{{- if or .Values.postgresql.existingSecret .Values.existingSecret -}}
     {{- true -}}
 {{- end -}}
 {{- end -}}
@@ -142,7 +142,7 @@ Return true if we should use an existingSecret.
 Return true if a secret object should be created
 */}}
 {{- define "postgresql.createSecret" -}}
-{{- if not (include ".Values.global.secrets.postgresql.existingSecret" .) -}}
+{{- if not (include ".Values.postgresql.existingSecret" .) -}}
     {{- true -}}
 {{- end -}}
 {{- end -}}
