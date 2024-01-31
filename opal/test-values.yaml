@@ -5,6 +5,8 @@
 
 argoProject: default
 
+appPrefix: opal
+
 imagePullSecrets: &dockerSecret regcred
 
 oauth: &oauthSecret "opal-oauth-common"
@@ -119,24 +121,26 @@ minio-instance:
 minioOperator:
   enabled: false
   appValues:
-    namespace: *opalNS
-    tenantNamespace: *minioNS
-    imagePullSecrets: *dockerSecret
-    containerSecurityContext:
-      runAsUser: 1001
-      runAsGroup: 1001
-      runAsNonRoot: true
-      capabilities:
-        drop:
-          - ALL
-    resources:
-      requests:
-        cpu: 200m
-        memory: 256Mi
-        ephemeral-storage: 500Mi
-      limits:
-        cpu: 200m
-        memory: 256Mi
+    operator:
+      namespace: *opalNS
+      tenantNamespace: *minioNS
+      imagePullSecrets:
+        - name: *dockerSecret
+      containerSecurityContext:
+        runAsUser: 1001
+        runAsGroup: 1001
+        runAsNonRoot: true
+        capabilities:
+          drop:
+            - ALL
+      resources:
+        requests:
+          cpu: 200m
+          memory: 256Mi
+          ephemeral-storage: 500Mi
+        limits:
+          cpu: 200m
+          memory: 256Mi
 
 minioInstance:
   enabled: false
@@ -154,7 +158,7 @@ minioInstance:
     tenant:
       namespace: *minioNS
       imagePullSecrets:
-        - *dockerSecret
+        - name: *dockerSecret
       pools:
         - servers: 4
           volumesPerServer: 4

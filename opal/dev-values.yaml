@@ -11,6 +11,7 @@ imagePullSecrets: &dockerSecret regcred
 
 oauth: &oauthSecret opal-oauth-common
 
+
 tls: &tlsSecret "tls-certs"
 #nameOverride: ""
 #fullnameOverride: ""
@@ -25,7 +26,7 @@ source:
   targetRevision: ""
 
 mongodb:
-  enabled: true
+  enabled: false
   appValues:
     namespace: *opalNS
     image:
@@ -33,7 +34,7 @@ mongodb:
       imagePullSecrets: *dockerSecret
     auth:
       enabled: true
-      rootUser: rootuser
+      rootUser: user
       rootPassword: ""
       usernames: []
       passwords: []
@@ -42,7 +43,7 @@ mongodb:
 
 
 keycloak:
-  enabled: true
+  enabled: false
   appValues:
     namespace: *opalNS
     secrets:
@@ -52,7 +53,7 @@ keycloak:
           KEYCLOAK_ADMIN: ""
           KEYCLOAK_ADMIN_PASSWORD: ""
     ingress:
-      enabled: true
+      enabled: false
       rules:
         host: ""
     postgresql:
@@ -98,7 +99,7 @@ keycloak:
         memory: "256Mi"
 
 traefik:
-  enabled: true
+  enabled: false
   appValues:
     namespace: *opalNS
     image:
@@ -108,14 +109,10 @@ traefik:
     tls:
       nameOverride: *tlsSecret
     ingress:
-      enabled: true
+      enabled: false
       rules:
         host: ""
 
-minio-operator:
-  enabled: true
-minio-instance:
-  enabled: true
 minioOperator:
   enabled: false
   appValues:
@@ -143,6 +140,7 @@ minioOperator:
 minioInstance:
   enabled: false
   appValues:
+    namespace: ""
     secrets:
       # both fields need to be filled in
       name: "minio-creds-secret"
@@ -181,22 +179,34 @@ minioInstance:
         - name: metaflow-data
         - name: basket-data
         - name: airflow
+      env:
+        - name: MINIO_IDENTITY_OPENID_CONFIG_URL
+          value: "https://keycloak-dev.{{ .Values.baseDns }}/realms/master/.well-known/openid-configuration"
+        - name: MINIO_BROWSER_REDIRECT_URL
+          value: "https://minio-dev.{{ .Values.baseDns }}"
+        - name: MINIO_IDENTITY_OPENID_CLIENT_ID
+          value: opal-jupyterhub
+        - name: MINIO_IDENTITY_OPENID_CLAIM_NAME
+          value: 'policy'
+        - name: MINIO_IDENTITY_OPENID_REDIRECT_URI
+          value: "https://minio-dev.{{ .Values.baseDns }}/oauth_callback"
       ## List of secret names to use for generating MinIO users during tenant provisioning
       users: [ ]
       ingress:
         api:
-          enabled: true
+          enabled: false
           rules:
             host: ""
         console:
-          enabled: true
+          enabled: false
           rules:
             host: ""
+
 jupyterhub:
-  enabled: true
+  enabled: false
   appValues:
     namespace: *opalNS
-    baseDns: ""
+    baseDns: "opalacceptance.dso.mil"
     secrets:
       oauth:
         existingSecret: *oauthSecret
@@ -208,15 +218,15 @@ jupyterhub:
       singleUserImage: "registry1.dso.mil/ironbank/opensource/metrostar/singleuser/singleuser:singleuser_v21"
       opalBannerColor: "green"
       opalBannerText: "Unclassified (local development)"
-      s3Endpointurl: "http://opal-setup-minio-console.minio-tenant.svc.cluster.local:9090"
-      keycloakJupyterhubOauthCallbackUrl: "https://opal-k8s.{{ .Values.baseDns }}/hub/oauth_callback"
-      keycloakJupyterhubAuthorizeUrl: "https://keycloak-k8s.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/auth"
-      keycloakJupyterhubUserdataUrl: "https://keycloak-k8s.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/userinfo"
-      keycloakOpalApiUrl: "https://keycloak-k8s.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/token"
+      s3Endpointurl: "http://opal-dev-minio-console.minio-dev.svc.cluster.local:9090"
+      keycloakJupyterhubOauthCallbackUrl: "https://opal-dev.{{ .Values.baseDns }}/hub/oauth_callback"
+      keycloakJupyterhubAuthorizeUrl: "https://keycloak-dev.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/auth"
+      keycloakJupyterhubUserdataUrl: "https://keycloak-dev.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/userinfo"
+      keycloakOpalApiUrl: "https://keycloak-dev.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/token"
     ingress:
-      enabled: true
+      enabled: false
       rules:
-        host: "opal-k8s.{{ .Values.baseDns }}"
+        host: "opal-dev.{{ .Values.baseDns }}"
     # metaflow datastore size
     resources:
       storage: 2Gi
@@ -257,4 +267,3 @@ jupyterhub:
       limits:
         cpu: "250m"
         memory: "256Mi"
-
