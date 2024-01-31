@@ -85,7 +85,8 @@ appValues:
   jupyterhub:
     enabled: true
     appValues:
-      tokenenv:
-        existingSecret: "token-env"
-      oauth:
-        existingSecret: "opal-oauth-common"
+      secrets:
+        tokenenv:
+          existingSecret: "token-env"
+        oauth:
+          existingSecret: "opal-oauth-common"
