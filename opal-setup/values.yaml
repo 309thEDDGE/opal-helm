@@ -86,4 +86,7 @@ appValues:
   jupyterhub:
     enabled: true
     appValues:
-      existingSecret: true
+      token-env:
+        existingSecret: true
+      oauth:
+        existingSecret: true
