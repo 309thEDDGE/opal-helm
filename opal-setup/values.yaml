@@ -46,9 +46,11 @@ appValues:
       namespace: *opalNS
       secrets:
         env:
+          annotations: {}
           stringData:
             KEYCLOAK_ADMIN: "admin"
             KEYCLOAK_ADMIN_PASSWORD: ""
+            JAVA_OPTS_APPEND: -Djgroups.dns.query=opal-setup-keycloak-headless
   traefik:
     enabled: true
     appValues:
