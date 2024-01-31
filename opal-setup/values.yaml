@@ -32,6 +32,8 @@ token:
 minio:
   name: &minio-creds "minio-creds-secret"
   accesskey: &minio-accesskey opal-administrator
+  namespaces:
+    - *minioNS
 
 keycloakenv:
   name: &keycloak-env "opal-setup-keycloak-env"
