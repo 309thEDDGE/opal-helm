@@ -110,7 +110,7 @@ traefik:
     tls:
       nameOverride: *tlsSecret
     ingress:
-      enabled: true
+      enabled: false
       rules:
         host: "traefik-k8s.10.96.30.9.nip.io"
 
