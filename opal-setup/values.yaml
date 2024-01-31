@@ -53,8 +53,9 @@ appValues:
   source: *appSource
   mongodb:
     enabled: true
-    auth:
-      existingSecret: "opal-setup-mongodb"
+    appValues:
+      auth:
+        existingSecret: "opal-setup-mongodb"
   keycloak:
     enabled: true
     # bootstrapper admin credentials. Should be deleted after post-install setup
