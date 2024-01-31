@@ -53,7 +53,8 @@ appValues:
   source: *appSource
   mongodb:
     enabled: true
-    existingSecret: true
+    auth:
+      existingSecret: true
   keycloak:
     enabled: true
     # bootstrapper admin credentials. Should be deleted after post-install setup
