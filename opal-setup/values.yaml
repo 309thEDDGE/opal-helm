@@ -54,23 +54,23 @@ appValues:
   mongodb:
     enabled: true
     auth:
-      existingSecret: true
+      existingSecret: "opal-setup-mongodb"
   keycloak:
     enabled: true
     # bootstrapper admin credentials. Should be deleted after post-install setup
     appValues:
       secrets:
         env:
-          existingSecret: true
+          existingSecret: "opal-setup-keycloak-env"
           annotations: {}
           stringData:
             KEYCLOAK_ADMIN: "admin"
             KEYCLOAK_ADMIN_PASSWORD: "password"
             JAVA_OPTS_APPEND: -Djgroups.dns.query=opal-setup-keycloak-headless
         oauth:
-          existingSecret: true
+          existingSecret: "opal-oauth-common"
         postgresql:
-          existingSecret: true
+          existingSecret: "opal-setup-keycloak-postgres"
   traefik:
     enabled: true
   minioOperator:
@@ -80,13 +80,10 @@ appValues:
     namespace: *minioNS
     appValues:
       creds:
-        name: "minio-creds-secret"
-        existingSecret: true
+        existingSecret: "minio-creds-secret"
         accessKey: opal-administrator
   jupyterhub:
     enabled: true
     appValues:
       token-env:
-        existingSecret: true
-      oauth:
-        existingSecret: true
+        existingSecret: "token-env"
