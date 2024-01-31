@@ -49,6 +49,7 @@ postgresql:
 
 mongodb:
   name: &mongo-secret "opal-setup-mongodb"
+  architecture: &mongodb-architecture standalone
   namespaces:
     - *opalNS
 
@@ -62,6 +63,7 @@ appValues:
   mongodb:
     enabled: true
     appValues:
+      architecture: *mongodb-architecture
       auth:
         existingSecret: *mongo-secret
   keycloak:
