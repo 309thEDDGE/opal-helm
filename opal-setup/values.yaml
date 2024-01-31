@@ -23,7 +23,7 @@ valuesFile: test-values.yaml
 
 source: &appSource
   url: "https://github.com/309thEDDGE/opal-helm.git"
-  targetRevision: "OPAL-1125-mongo-user-creation"
+  targetRevision: "main"
 
 appValues:
   source: *appSource
@@ -43,9 +43,11 @@ appValues:
     appValues:
       secrets:
         env:
+          annotations: {}
           stringData:
             KEYCLOAK_ADMIN: "admin"
             KEYCLOAK_ADMIN_PASSWORD: "password"
+            JAVA_OPTS_APPEND: -Djgroups.dns.query=opal-setup-keycloak-headless
   traefik:
     enabled: true
   minio-operator:
