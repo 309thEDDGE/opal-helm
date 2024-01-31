@@ -1,4 +1,5 @@
-argoProject: default
+argoProject: &argoProj default
+appPrefix: &appPrefix default
 
 namespaces:
   - &minioNS minio-tenant
@@ -23,38 +24,41 @@ valuesFile: test-values.yaml
 
 source: &appSource
   url: "https://github.com/309thEDDGE/opal-helm.git"
-  targetRevision: "OPAL-1165-sql-server-backend"
-
+  targetRevision: "main"
 
 appValues:
+  namespaces:
+    - *opalNS
+    - *minioNS
+  argoProject: *argoProj
+  appPrefix: *appPrefix
   source: *appSource
   mongodb:
     enabled: true
-    auth:
-      enabled: true
-      rootUser: rootuser
-      rootPassword: ""
-      usernames: []
-      passwords: []
-      databases: []
-    replicaCount: 2
+    appValues:
+      namespace: *opalNS
+      global:
+        namespaceOverride: *opalNS
   keycloak:
     enabled: true
     # bootstrapper admin credentials. Should be deleted after post-install setup
     appValues:
+      namespace: *opalNS
       secrets:
         env:
           stringData:
             KEYCLOAK_ADMIN: "admin"
-            KEYCLOAK_ADMIN_PASSWORD: "password"
+            KEYCLOAK_ADMIN_PASSWORD: ""
   traefik:
     enabled: true
-  minio-operator:
-    enabled: true
-  minio-instance:
-    enabled: true
+    appValues:
+      namespace: *opalNS
   minioOperator:
     enabled: true
+    appValues:
+      operator:
+        namespace: *opalNS
+        tenantNamespace: *minioNS
   minioInstance:
     enabled: true
     creds:
@@ -62,7 +66,13 @@ appValues:
     secrets:
       accessKey: opal-administrator
     appValues:
+      tenant:
+        namespace: *minioNS
       oauth:
         existingSecret: minio-creds-secret
   jupyterhub:
     enabled: true
+    appValues:
+      namespace: *opalNS
+    postgres:
+      namespace: *opalNS
