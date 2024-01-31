@@ -25,7 +25,7 @@ oauth:
 valuesFile: test-values.yaml
 
 token:
-  name: "token-env"
+  name: &token-env "token-env"
   namespaces:
     - *opalNS
 
@@ -68,7 +68,7 @@ appValues:
             KEYCLOAK_ADMIN_PASSWORD: "password"
             JAVA_OPTS_APPEND: -Djgroups.dns.query=opal-setup-keycloak-headless
         oauth:
-          existingSecret: "opal-oauth-common"
+          existingSecret: &oauthSecret "opal-oauth-common"
     postgresql:
       existingSecret: "opal-setup-keycloak-postgres"
   traefik:
@@ -87,6 +87,6 @@ appValues:
     appValues:
       secrets:
         tokenenv:
-          existingSecret: "token-env"
+          existingSecret: *token-env
         oauth:
-          existingSecret: "opal-oauth-common"
+          existingSecret: *oauthSecret
