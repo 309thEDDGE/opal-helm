@@ -88,3 +88,5 @@ appValues:
     appValues:
       tokenenv:
         existingSecret: "token-env"
+      oauth:
+        existingSecret: "opal-oauth-common"
