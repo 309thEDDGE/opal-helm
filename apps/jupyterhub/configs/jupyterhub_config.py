@@ -83,13 +83,15 @@ c.KubeSpawner.volumes = [
     {
         'name': 'opal-sync-mnt',
         'persistentVolumeClaim': {
-            'claimName': 'opal-sync-pvc'
+            'claimName': 'opal-sync-pvc',
+            "defaultMode": 0o766 # octal permission number
         }
     },
     {
         'name': 'weave-sync-mnt',
         'persistentVolumeClaim': {
-            'claimName': 'weave-sync-pvc'
+            'claimName': 'weave-sync-pvc',
+            "defaultMode": 0o766 # octal permission number
         }
     }
 ]
