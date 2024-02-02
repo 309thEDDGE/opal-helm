@@ -135,7 +135,6 @@ spec:
           args:
             - "--repo=https://github.com/309theddge/opal.git"
             - "--depth=1"
-            - "--add-user"
             - "--max-failures=-1"
             - "--username={{ .Values.gitSync.username }}"
             - "--password-file=/etc/git-secret/token"
@@ -150,14 +149,12 @@ spec:
               mountPath: /repos
               readOnly: false
           securityContext:
-            #runAsUser: 65533 # git-sync-user
-            runAsUser: 1000
+            runAsUser: 65533 # git-sync-user
         - image: "{{ .Values.gitSync.image.repository }}:{{ .Values.gitSync.image.tag }}"
           name: weave-repo-sync
           args:
             - "--repo=https://github.com/309theddge/weave.git"
             - "--depth=1"
-            - "--add-user"
             - "--max-failures=-1"
             - "--username={{ .Values.gitSync.username }}"
             - "--password-file=/etc/git-secret/token"
@@ -172,11 +169,9 @@ spec:
               mountPath: /repos
               readOnly: false
           securityContext:
-            #runAsUser: 65533 # git-sync-user
-            runAsUser: 1000
+            runAsUser: 65533 # git-sync-user
       securityContext:
-        #fsGroup: 65533
-        fsGroup: 100
+        fsGroup: 65533
 {{- end }}
       volumes:
       - name: jupyterhub-config-py-mnt
