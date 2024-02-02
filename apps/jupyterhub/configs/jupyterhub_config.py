@@ -83,15 +83,13 @@ c.KubeSpawner.volumes = [
     {
         'name': 'opal-sync-mnt',
         'persistentVolumeClaim': {
-            'claimName': 'opal-sync-pvc',
-            "defaultMode": 0o766 # octal permission number
+            'claimName': 'opal-sync-pvc'
         }
     },
     {
         'name': 'weave-sync-mnt',
         'persistentVolumeClaim': {
-            'claimName': 'weave-sync-pvc',
-            "defaultMode": 0o766 # octal permission number
+            'claimName': 'weave-sync-pvc'
         }
     }
 ]
@@ -114,13 +112,11 @@ c.KubeSpawner.volume_mounts = [
     },
     {
         'mountPath': '/home/jovyan/opal',
-        'name': 'opal-sync-mnt',
-        'readOnly': False
+        'name': 'opal-sync-mnt'
     },
     {
         'mountPath': '/home/jovyan/weave',
-        'name': 'weave-sync-mnt',
-        'readOnly': False
+        'name': 'weave-sync-mnt'
     }
 ]
 
