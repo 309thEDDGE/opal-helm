@@ -111,11 +111,11 @@ c.KubeSpawner.volume_mounts = [
         "readOnly": False
     },
     {
-        'mountPath': '/home/jovyan/opal',
+        'mountPath': '/home/jovyan',
         'name': 'opal-sync-mnt'
     },
     {
-        'mountPath': '/home/jovyan/weave',
+        'mountPath': '/home/jovyan',
         'name': 'weave-sync-mnt'
     }
 ]
