@@ -125,6 +125,9 @@ spec:
           resources:
             requests: 
               cpu: 500m
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 100
           volumeMounts:
             - name: jupyterhub-config-py-mnt
               mountPath: /home/jovyan/jupyterhub_config.py
