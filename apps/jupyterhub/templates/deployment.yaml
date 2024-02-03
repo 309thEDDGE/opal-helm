@@ -151,6 +151,7 @@ spec:
               readOnly: false
           securityContext:
             runAsUser: 65533 # git-sync-user
+            runAsGroup: 100
         - image: "{{ .Values.gitSync.image.repository }}:{{ .Values.gitSync.image.tag }}"
           name: weave-repo-sync
           args:
@@ -172,7 +173,9 @@ spec:
               readOnly: false
           securityContext:
             runAsUser: 65533 # git-sync-user
+            runAsGroup: 100
       securityContext:
+        runAsNonRoot: true
         fsGroup: 100
 {{- end }}
       volumes:
