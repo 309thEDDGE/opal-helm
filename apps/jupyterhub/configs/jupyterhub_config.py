@@ -58,6 +58,7 @@ c.KubeSpawner.storage_pvc_ensure = True
 c.KubeSpawner.storage_class = 'default'
 c.KubeSpawner.storage_access_modes = ['ReadWriteOnce']
 c.KubeSpawner.storage_capacity = '1Gi'
+c.KubeSpawner.storage_selector = {'matchLabels': {'content': 'hub.jupyter.org/username={username}'}}
 
 # Add volumes to singleuser pods
 c.KubeSpawner.volumes = [
