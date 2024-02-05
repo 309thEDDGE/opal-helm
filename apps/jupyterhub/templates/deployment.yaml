@@ -108,7 +108,7 @@ spec:
             - name: KEYCLOAK_JUPYTERHUB_USERNAME_KEY
               value: {{ .keycloakJupyterhubUsernameKey }}
             {{- end }}
-            {{- if $values. resources.useAzureFile }}
+            {{- if $values.resources.useAzureFile }}
             - name: USE_AZUREFILE
               value: "true"
             {{- end }}
