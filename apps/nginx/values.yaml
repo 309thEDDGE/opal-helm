@@ -27,7 +27,7 @@ ingress:
           pathType: Prefix
           backend:
             service:
-              name: proxy-public
+              name: nginx
               port:
-                number: 8080
+                number: 80
   tls: []
