@@ -70,7 +70,7 @@ c.KubeSpawner.volumes = [
     {
         'name': "home-jovyan-mnt",
         "pesistentVolumeClaim": {
-            "claimname": pvc_name_template
+            "claimName": pvc_name_template
         }
     },
     {
