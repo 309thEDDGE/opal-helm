@@ -28,10 +28,6 @@ cp -r /opt/config/opalbanner /opt/conda/envs/singleuser/share/jupyter/labextensi
 bash /opt/config/init_banner.bash "$OPAL_BANNER_TEXT" "$OPAL_BANNER_COLOR"
 log_to_file "Initialize banner extension"
 
-# 5
-ln -sfn /opt/data/opal /home/jovyan/opal
-log_to_file "Link directories to home"
-
 # 6
 mkdir -p /home/jovyan/.metaflowconfig
 envsubst < /opt/config/metaflow_config.json > /home/jovyan/.metaflowconfig/config.json
