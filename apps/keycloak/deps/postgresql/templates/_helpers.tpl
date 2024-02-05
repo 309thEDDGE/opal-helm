@@ -53,26 +53,14 @@ Return the proper Docker Image Registry Secret Names
 Return PostgreSQL postgres user password
 */}}
 {{- define "postgresql.postgres.password" -}}
-{{- if .Values.global.postgresql.postgresqlPostgresPassword }}
-    {{- .Values.global.postgresql.postgresqlPostgresPassword -}}
-{{- else if .Values.postgresqlPostgresPassword -}}
-    {{- .Values.postgresqlPostgresPassword -}}
-{{- else -}}
-    {{- randAlphaNum 10 -}}
-{{- end -}}
+{{- randAlphaNum 10 -}}
 {{- end -}}
 
 {{/*
 Return PostgreSQL password
 */}}
 {{- define "postgresql.password" -}}
-{{- if .Values.global.postgresql.postgresqlPassword }}
-    {{- .Values.global.postgresql.postgresqlPassword -}}
-{{- else if .Values.postgresqlPassword -}}
-    {{- .Values.postgresqlPassword -}}
-{{- else -}}
-    {{- randAlphaNum 10 -}}
-{{- end -}}
+{{- randAlphaNum 10 -}}
 {{- end -}}
 
 {{/*
@@ -92,11 +80,7 @@ Return PostgreSQL replication password
 Return PostgreSQL username
 */}}
 {{- define "postgresql.username" -}}
-{{- if .Values.global.postgresql.postgresqlUsername }}
-    {{- .Values.global.postgresql.postgresqlUsername -}}
-{{- else -}}
-    {{- .Values.postgresqlUsername -}}
-{{- end -}}
+{{- randAlphaNum 10 -}}
 {{- end -}}
 
 {{/*
