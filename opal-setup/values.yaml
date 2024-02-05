@@ -68,8 +68,4 @@ appValues:
   nginx:
     enabled: true
     restart: always
-    ports:
-      - "80:80"
-    volumes: 
-      - /var/docker-data/nginx/data/:/etc/nginx/html:ro
-      - /var/docker-data/nginx/conf.d/nginx.conf:/etc/nginx/nginx.conf:ro
+    
