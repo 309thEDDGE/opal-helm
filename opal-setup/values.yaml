@@ -53,10 +53,9 @@ mongodb:
   namespaces:
     - *opalNS
 
-
 source: &appSource
   url: "https://github.com/309thEDDGE/opal-helm.git"
-  targetRevision: "OPAL-1175-argocd-secrets-sync"
+  targetRevision: "main"
 
 appValues:
   source: *appSource
@@ -66,6 +65,13 @@ appValues:
       architecture: *mongodb-architecture
       auth:
         existingSecret: *mongo-secret
+        enabled: true
+        rootUser: rootuser
+        rootPassword: ""
+        usernames: []
+        passwords: []
+        databases: []
+      replicaCount: 2
   keycloak:
     enabled: true
     # bootstrapper admin credentials. Should be deleted after post-install setup
@@ -82,7 +88,12 @@ appValues:
           existingSecret: &oauthSecret "opal-oauth-common"
     postgresql:
       existingSecret: *keycloak-postgres
+
   traefik:
+    enabled: true
+  minio-operator:
+    enabled: true
+  minio-instance:
     enabled: true
   minioOperator:
     enabled: true
