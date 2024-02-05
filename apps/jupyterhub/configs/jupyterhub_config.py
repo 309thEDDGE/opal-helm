@@ -34,13 +34,13 @@ c.KubeSpawner.env_keep = [
     "OPAL_BANNER_COLOR",
     "MINIO_IDENTITY_OPENID_CLIENT_ID",
     "KEYCLOAK_MINIO_CLIENT_SECRET",
-    "KEYCLOAK_OPAL_API_URL"
+    "KEYCLOAK_OPAL_API_URL",
+    "S3_ENDPOINT"
 ]
 
 metaflow_mount_path = "/opt/opal/metaflow-metadata"
 # add some extra environment variables
 c.KubeSpawner.environment = {
-    "S3_ENDPOINT": "http://minio:9000",
     "USERNAME": "jovyan",
     "METAFLOW_DATASTORE_SYSROOT_LOCAL":metaflow_mount_path,
 }
@@ -55,7 +55,7 @@ pvc_name_template = 'claim-{username}'
 c.KubeSpawner.pvc_name_template = pvc_name_template
 
 c.KubeSpawner.storage_pvc_ensure = True
-c.KubeSpawner.storage_class = 'standard'
+c.KubeSpawner.storage_class = 'default'
 c.KubeSpawner.storage_access_modes = ['ReadWriteOnce']
 c.KubeSpawner.storage_capacity = '1Gi'
 
