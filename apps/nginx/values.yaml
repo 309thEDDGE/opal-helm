@@ -29,5 +29,5 @@ ingress:
             service:
               name: proxy-public
               port:
-                number: 80
+                number: 8080
   tls: []
