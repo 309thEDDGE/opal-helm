@@ -55,7 +55,7 @@ pvc_name_template = 'claim-{username}'
 c.KubeSpawner.pvc_name_template = pvc_name_template
 
 c.KubeSpawner.storage_pvc_ensure = True
-c.KubeSpawner.storage_class = 'default'
+c.KubeSpawner.storage_class = 'azurefile-csi'
 c.KubeSpawner.storage_access_modes = ['ReadWriteOnce']
 c.KubeSpawner.storage_capacity = '1Gi'
 
