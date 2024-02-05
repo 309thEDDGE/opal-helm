@@ -55,7 +55,11 @@ pvc_name_template = 'claim-{username}'
 c.KubeSpawner.pvc_name_template = pvc_name_template
 
 c.KubeSpawner.storage_pvc_ensure = True
-c.KubeSpawner.storage_class = 'azurefile-csi'
+if os.environ['USE_AZUREFILE']:
+    c.KubeSpawner.storage_class = 'azurefile-csi-singleuser'
+else:
+    c.KubeSpawner.storage_class = 'default'
+
 c.KubeSpawner.storage_access_modes = ['ReadWriteOnce']
 c.KubeSpawner.storage_capacity = '1Gi'
 
@@ -70,7 +74,7 @@ c.KubeSpawner.volumes = [
     {
         'name': "home-jovyan-mnt",
         "persistentVolumeClaim": {
-            "claimName": "claim-{username}"
+            "claimName": pvc_name_template
         }
     },
     {

@@ -68,7 +68,7 @@ spec:
       {{- if not .existingSecret }}
       imagePullSecrets:
         - name: {{ .name }}
-      {{- else}}
+      {{- else }}
       imagePullSecrets:
         - name: {{ .existingSecret }}
       {{- end }}
@@ -101,12 +101,16 @@ spec:
               value: {{ .singleUserImage }}
             - name: PYTHONPATH
               value: {{ .pythonPath }}
-            - name: opalBannerColor
+            - name: OPAL_BANNER_COLOR
               value: {{ .opalBannerColor }}
             - name: OPAL_BANNER_TEXT
               value: {{ .opalBannerText }}
             - name: KEYCLOAK_JUPYTERHUB_USERNAME_KEY
               value: {{ .keycloakJupyterhubUsernameKey }}
+            {{- end }}
+            {{- if $values. resources.useAzureFile }}
+            - name: USE_AZUREFILE
+              value: "true"
             {{- end }}
             - name: CONFIGPROXY_AUTH_TOKEN
               value: {{($CONFIGPROXY_AUTH_TOKEN | quote)}}
