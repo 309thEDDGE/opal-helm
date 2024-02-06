@@ -21,7 +21,7 @@ tls:
     - *opalNS
 
 oauth:
-  name: opal-oauth-common
+  name: &oauthSecret opal-oauth-common
   namespaces:
     - *opalNS
     - *minioNS
@@ -89,7 +89,7 @@ appValues:
             KEYCLOAK_ADMIN_PASSWORD: ""
             JAVA_OPTS_APPEND: -Djgroups.dns.query=opal-setup-keycloak-headless
         oauth:
-          existingSecret: &oauthSecret "opal-oauth-common"
+          existingSecret: *oauthSecret
     postgresql:
       existingSecret: *keycloak-postgres
 
