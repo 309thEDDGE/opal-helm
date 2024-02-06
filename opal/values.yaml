@@ -193,6 +193,10 @@ jupyterhub:
   appValues:
     namespace: *opalNS
     baseDns: ""
+    gitSync:
+      enabled: true
+      gitSecret:
+        secretName: "git-creds"
     secrets:
       tokenenv:
         existingSecret: "token-env"

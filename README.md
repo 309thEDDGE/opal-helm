@@ -12,6 +12,7 @@
   - [Deploying OPAL](#deploying-opal)
     - [TLS certs](#tls-certs)
     - [Add docker configuration JSON](#add-docker-configuration-json)
+    - [Prepare git credentials](#git-sync-setup)
     - [Helm install OPAL](#helm-install-opal)
     - [Patching argoCD](#patching-argocd)
     - [Important URLs](#important-urls)
@@ -84,7 +85,8 @@ Access the argoCD interface by opening a browser and navigate to the following:
 
 there should be a login page for argoCD
 >username: **admin**
->password: output from the last section 
+>password: output from the last section (remove the trailing '%' symbol if present)
+
 
 once logged in go to the settings>repository>connect repo
 Next change the connection method to :
@@ -114,6 +116,12 @@ Supply TLS certs in the same directory as opal-helm/opal-setup
 
 ### Add docker configuration JSON
 In order for the helm install to work properly in a local instance, it is necessary to add the docker config json file in the opal-helm/opal-setup directory.  This is needed for the helm chart to pull the appropriate image from a private repository.
+
+### Git Sync
+If enabled in the values.yaml, jupyterhub will add sidecars containers to the hub pod that will periodically pull in updates from the `opal` and `weave` repositories. 
+**NOTE**: A github account and access token with repo scope is currently required to use this functionality.
+
+To use git-sync, place your token in opal-setup, and rename it to `git-creds`. In opal-setup/values, fill in your username in jupyterhub:appValues:gitSync
 
 ### Helm install OPAL
 

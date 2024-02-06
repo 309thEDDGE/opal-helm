@@ -10,6 +10,10 @@ imagePullSecrets:
     - *opalNS
     - *minioNS
 
+gitSyncSecret:
+  namespace: *opalNS
+  secretName: &gitSyncSecret "git-creds"
+
 tls:
   name: tls-certs
   namespaces:
@@ -82,7 +86,7 @@ appValues:
           annotations: {}
           stringData:
             KEYCLOAK_ADMIN: "admin"
-            KEYCLOAK_ADMIN_PASSWORD: "password"
+            KEYCLOAK_ADMIN_PASSWORD: ""
             JAVA_OPTS_APPEND: -Djgroups.dns.query=opal-setup-keycloak-headless
         oauth:
           existingSecret: &oauthSecret "opal-oauth-common"
@@ -103,12 +107,24 @@ appValues:
     appValues:
       creds:
         existingSecret: *minio-creds
-        accessKey: *minio-accesskey
+        accessKey: *minio-accesskey   
+        
   jupyterhub:
     enabled: true
     appValues:
+      namespace: *opalNS
       secrets:
         tokenenv:
           existingSecret: *token-env
         oauth:
           existingSecret: *oauthSecret
+      instance:
+        namespace: *minioNS
+      gitSync:
+        enabled: true
+        username: ""
+        gitSecret:
+          secretName: *gitSyncSecret
+        image:
+          repository: registry.k8s.io/git-sync/git-sync
+          tag: v4.0.0
