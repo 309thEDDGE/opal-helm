@@ -59,7 +59,7 @@ use_azure = os.getenv('USE_AZUREFILE', False)
 if use_azure:
     c.KubeSpawner.storage_class = 'azurefile-csi-singleuser'
 else:
-    c.KubeSpawner.storage_class = 'default'
+    c.KubeSpawner.storage_class = 'standard'
 
 c.KubeSpawner.storage_access_modes = ['ReadWriteOnce']
 c.KubeSpawner.storage_capacity = '1Gi'
