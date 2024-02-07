@@ -111,6 +111,9 @@ spec:
             {{- if .Values.resources.useAzureFile }}
             - name: USE_AZUREFILE
               value: "true"
+            {{- else }}
+            - name: USE_AZUREFILE
+              value: "false"
             {{- end }}
             - name: CONFIGPROXY_AUTH_TOKEN
               value: {{($CONFIGPROXY_AUTH_TOKEN | quote)}}
