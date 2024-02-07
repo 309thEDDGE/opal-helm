@@ -55,7 +55,8 @@ pvc_name_template = 'claim-{username}'
 c.KubeSpawner.pvc_name_template = pvc_name_template
 
 c.KubeSpawner.storage_pvc_ensure = True
-if os.environ['USE_AZUREFILE']:
+use_azure = os.getenv('USE_AZUREFILE', False)
+if use_azure:
     c.KubeSpawner.storage_class = 'azurefile-csi-singleuser'
 else:
     c.KubeSpawner.storage_class = 'default'
