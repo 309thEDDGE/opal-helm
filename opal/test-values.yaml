@@ -159,7 +159,7 @@ minioInstance:
           resources:
             requests:
               memory: 1Gi
-              cpu: 5555
+              cpu: 500m
             limits:
               memory: 1Gi
               cpu: 500m
