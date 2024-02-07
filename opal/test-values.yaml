@@ -9,7 +9,6 @@ imagePullSecrets: &dockerSecret regcred
 
 oauth: &oauthSecret "opal-oauth-common"
 
-
 tls: &tlsSecret "tls-certs"
 #nameOverride: ""
 #fullnameOverride: ""
@@ -17,7 +16,6 @@ tls: &tlsSecret "tls-certs"
 namespaces:
   - &opalNS opal
   - &minioNS minio-tenant
-
 
 source:
   url: ""
@@ -32,8 +30,8 @@ mongodb:
       imagePullSecrets: *dockerSecret
     auth:
       enabled: true
-      rootUser: user
-      rootPassword: "fill_this_in"
+      rootUser: rootuser
+      rootPassword: ""
       usernames: []
       passwords: []
       databases: []
@@ -56,11 +54,13 @@ keycloak:
         host: "keycloak-k8s.10.96.30.9.nip.io"
     postgresql:
       enabled: false
+      useExternal: true
+      nameOverride: &keycloakPostgresName keycloak-postgres
     keycloakSetup:
       enabled: true
       existingSecret: *oauthSecret
   postgres:
-    nameOverride: keycloak-postgres
+    nameOverride: *keycloakPostgresName
     namespace: *opalNS
     # PostgreSQL User to create
     postgresqlUsername: keycloak
@@ -152,16 +152,17 @@ minioInstance:
       imagePullSecrets:
         - *dockerSecret
       pools:
+      # don't change these for local dev, or risk system overload
         - servers: 4
           volumesPerServer: 4
           size: 1Gi
           resources:
             requests:
-              memory: 2Gi
-              cpu: 1000m
+              memory: 1Gi
+              cpu: 5555
             limits:
-              memory: 2Gi
-              cpu: 1000m
+              memory: 1Gi
+              cpu: 500m
           securityContext:
             runAsUser: 1001
             runAsGroup: 1001
@@ -194,17 +195,22 @@ minioInstance:
       users: [ ]
     ingress:
       api:
-        enabled: true
-        host: "s3-k8s.{{ .Values.baseDns }}"
+        enabled: false
+        host: ""
       console:
         enabled: true
-        host: "minio-k8s.{{ .Values.baseDns }}"
-
+        host: "minio.{{ .Values.baseDns }}"
 jupyterhub:
   enabled: true
   appValues:
     namespace: *opalNS
     baseDns: "10.96.30.9.nip.io"
+    gitSync:
+      enabled: true
+      # Leave this empty, only fill it in the opal-setup chart values
+      username: ""
+      gitSecret:
+        secretName: "git-creds"
     secrets:
       oauth:
         existingSecret: *oauthSecret
@@ -217,6 +223,7 @@ jupyterhub:
       #singleUserImage: "registry1.dso.mil/ironbank/opensource/metrostar/singleuser/singleuser:singleuser_v22"
       opalBannerColor: "green"
       opalBannerText: "Unclassified (local development)"
+      #change this based on minio's target namespace, and the name of the helm release
       s3Endpointurl: "http://opal-setup-minio-hl.minio-tenant.svc.cluster.local:9000"
       keycloakJupyterhubOauthCallbackUrl: "https://opal-k8s.{{ .Values.baseDns }}/hub/oauth_callback"
       keycloakJupyterhubAuthorizeUrl: "https://keycloak-k8s.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/auth"
@@ -228,4 +235,5 @@ jupyterhub:
         host: "opal-k8s.{{ .Values.baseDns }}"
     # metaflow datastore size
     resources:
+      useAzureFile: false
       storage: 2Gi

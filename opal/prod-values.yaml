@@ -9,7 +9,6 @@ imagePullSecrets: &dockerSecret regcred
 
 oauth: &oauthSecret opal-oauth-common
 
-
 tls: &tlsSecret "tls-certs"
 #nameOverride: ""
 #fullnameOverride: ""
@@ -17,7 +16,6 @@ tls: &tlsSecret "tls-certs"
 namespaces:
   - &opalNS opal
   - &minioNS minio-tenant
-
 
 source:
   url: ""
@@ -32,7 +30,7 @@ mongodb:
       imagePullSecrets: *dockerSecret
     auth:
       enabled: true
-      rootUser: user
+      rootUser: rootuser
       rootPassword: ""
       usernames: []
       passwords: []
@@ -47,19 +45,22 @@ keycloak:
     secrets:
       env:
         stringData:
-          # both fields need to be filled in
+          # set these in the opal-setup values. ADMIN_PASSWORD is ignored
           KEYCLOAK_ADMIN: ""
           KEYCLOAK_ADMIN_PASSWORD: ""
     ingress:
-      enabled: false
+      enabled: true
       rules:
-        host: ""
+        host: "keycloak-prod.opalacceptance.dso.mil"
     postgresql:
       enabled: false
+      useExternal: true
+      nameOverride: &keycloakPostgresName keycloak-postgres
     keycloakSetup:
+      enabled: true
       existingSecret: *oauthSecret
   postgres:
-    nameOverride: keycloak-postgres
+    nameOverride: *keycloakPostgresName
     namespace: *opalNS
     # PostgreSQL User to create
     postgresqlUsername: keycloak
@@ -97,7 +98,7 @@ keycloak:
         memory: "256Mi"
 
 traefik:
-  enabled: false
+  enabled: true
   appValues:
     namespace: *opalNS
     image:
@@ -137,6 +138,9 @@ minioInstance:
   enabled: false
   appValues:
     namespace: ""
+    oauth:
+      existingSecret: *oauthSecret
+    baseDns: ""
     secrets:
       # both fields need to be filled in
       name: "minio-creds-secret"
@@ -150,6 +154,7 @@ minioInstance:
       pools:
         - servers: 4
           volumesPerServer: 4
+          # make this value much larger if a production deployment
           size: 10Gi
           resources:
             requests:
@@ -175,6 +180,7 @@ minioInstance:
         - name: metaflow-data
         - name: basket-data
         - name: airflow
+      #change these to reflect desired domain names
       env:
         - name: MINIO_IDENTITY_OPENID_CONFIG_URL
           value: "https://keycloak-prod.{{ .Values.baseDns }}/realms/master/.well-known/openid-configuration"
@@ -194,16 +200,21 @@ minioInstance:
           rules:
             host: ""
         console:
-          enabled: false
+          enabled: true
           rules:
-            host: ""
-
+            host: "minio-prod.{{ .Values.baseDns }}"
 jupyterhub:
-  enabled: false
+  enabled: true
   appValues:
     namespace: *opalNS
     baseDns: "opalacceptance.dso.mil"
     secrets:
+    gitSync:
+      enabled: true
+      # Leave this empty, only fill it in the opal-setup chart values
+      username: ""
+      gitSecret:
+        secretName: "git-creds"
       oauth:
         existingSecret: *oauthSecret
     image:
@@ -211,18 +222,20 @@ jupyterhub:
     imagePullSecrets:
       existingSecret: regcred
     env:
-      singleUserImage: "registry1.dso.mil/ironbank/opensource/metrostar/singleuser/singleuser:singleuser_v21"
+      singleUserImage: "jupyterhub/singleuser"
+      #singleUserImage: "registry1.dso.mil/ironbank/opensource/metrostar/singleuser/singleuser:singleuser_v22"
       opalBannerColor: "green"
-      opalBannerText: "Unclassified (local development)"
+      opalBannerText: "Unclassified"
       s3Endpointurl: "http://opal-minio-console.minio-tenant.svc.cluster.local:9090"
       keycloakJupyterhubOauthCallbackUrl: "https://opal-prod.{{ .Values.baseDns }}/hub/oauth_callback"
       keycloakJupyterhubAuthorizeUrl: "https://keycloak-prod.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/auth"
       keycloakJupyterhubUserdataUrl: "https://keycloak-prod.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/userinfo"
       keycloakOpalApiUrl: "https://keycloak-prod.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/token"
     ingress:
-      enabled: false
+      enabled: true
       rules:
         host: "opal-prod.{{ .Values.baseDns }}"
     # metaflow datastore size
     resources:
+      useAzureFile: false
       storage: 2Gi

@@ -10,6 +10,12 @@ imagePullSecrets:
     - *opalNS
     - *minioNS
 
+useAzureFile: &useAzure false
+
+gitSyncSecret:
+  namespace: *opalNS
+  secretName: &gitSyncSecret "git-creds"
+
 tls:
   name: tls-certs
   namespaces:
@@ -19,25 +25,35 @@ tls:
 oauth:
   name: opal-oauth-common
 
-valuesFile: test-values.yaml
+valuesFile: values.yaml
 
 source: &appSource
   url: "https://github.com/309thEDDGE/opal-helm.git"
-  targetRevision: "OPAL-1148-argo-minio"
+  targetRevision: "main"
 
 appValues:
   source: *appSource
   mongodb:
     enabled: true
+    auth:
+      enabled: true
+      rootUser: rootuser
+      rootPassword: ""
+      usernames: []
+      passwords: []
+      databases: []
+    replicaCount: 2
   keycloak:
     enabled: true
-    # bootstrapper admin credentials. Should be deleted after post-install setup
+    namespace: *opalNS
+    # bootstrapper admin credentials. User should be disabled after post-install setup
     appValues:
       secrets:
         env:
           stringData:
             KEYCLOAK_ADMIN: "admin"
-            KEYCLOAK_ADMIN_PASSWORD: "password"
+            KEYCLOAK_ADMIN_PASSWORD: ""
+            JAVA_OPTS_APPEND: -Djgroups.dns.query=""
   traefik:
     enabled: true
   minioOperator:
@@ -49,7 +65,21 @@ appValues:
     secrets:
       accessKey: opal-administrator
     appValues:
+      tenant:
+        namespace: *minioNS
       oauth:
-        existingSecret: minio-creds-secret
+        existingSecret: "minio-creds-secret"
   jupyterhub:
     enabled: true
+    appValues:
+      namespace: *opalNS
+      resources:
+        useAzureFile: *useAzure
+      gitSync:
+        enabled: true
+        username: ""
+        gitSecret:
+          secretName: *gitSyncSecret
+        image:
+          repository: registry.k8s.io/git-sync/git-sync
+          tag: v4.0.0
