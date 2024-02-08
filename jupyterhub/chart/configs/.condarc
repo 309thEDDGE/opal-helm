@@ -2,7 +2,7 @@ auto_update_conda: false
 show_channel_urls: true
 
 channels:
-- http://ngins-k8.10.96.30.9.nip.io/condapkg/
+- http://nginx-k8.10.96.30.9.nip.io/condapkg/
 
 ssl_verify: false
 

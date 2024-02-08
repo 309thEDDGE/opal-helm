@@ -113,8 +113,8 @@ spec:
               mountPath: /home/jovyan/jupyterhub_config.py
               subPath: jupyterhub_config.py
             -name: jupyterhub-condarc-mnt
-              mountPath: /home/jovyan/condarc
-              subPath: condarc
+              mountPath: /home/jovyan/condarc.txt
+              subPath: condarc.txt
       volumes:
       - name: jupyterhub-config-py-mnt
         configMap:
