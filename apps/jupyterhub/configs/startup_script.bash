@@ -20,7 +20,9 @@ conda init bash
 log_to_file "Initialize conda"
 
 # 3
-echo 'source /home/jovyan/.bashrc && conda activate singleuser' > /home/jovyan/.profile
+# Singleuser env is no longer baked into the image
+echo 'source /home/jovyan/.bashrc' > /home/jovyan/.profile
+#echo 'source /home/jovyan/.bashrc && conda activate singleuser' > /home/jovyan/.profile
 log_to_file "Add conda activate to .profile"
 
 # 4
