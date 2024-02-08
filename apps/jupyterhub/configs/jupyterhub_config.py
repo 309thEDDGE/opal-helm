@@ -136,17 +136,17 @@ c.KubeSpawner.volume_mounts = [
         "readOnly": False
     },
     {
-        'mountPath': '/home/jovyan/opal',
+        'mountPath': '/opt/data/opal',
         "subPath": "opal",
         'name': 'opal-sync-mnt'
     },
     {
-        'mountPath': '/home/jovyan/data-discovery-api',
+        'mountPath': '/opt/data/data-discovery-api',
         "subPath": "data-discovery-api",
         'name': 'ddapi-sync-mnt'
     },
     {
-        'mountPath': '/home/jovyan/weave',
+        'mountPath': '/opt/data/weave',
         "subPath": "weave",
         'name': 'weave-sync-mnt'
     }
