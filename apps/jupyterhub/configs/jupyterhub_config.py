@@ -70,7 +70,7 @@ else:
 c.KubeSpawner.storage_access_modes = ['ReadWriteOnce']
 #singleuser_storage = int(os.env['SINGLE_USER_STORAGE_CAPACITY'])
 #c.KubeSpawner.storage_capacity = '{}Gi'.format(singleuser_storage)
-c.KubeSpawner.storage_capacity = os.env['SINGLE_USER_STORAGE_CAPACITY']
+c.KubeSpawner.storage_capacity = os.environment['SINGLE_USER_STORAGE_CAPACITY']
 
 # Add volumes to singleuser pods
 c.KubeSpawner.volumes = [
