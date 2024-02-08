@@ -28,6 +28,7 @@ c.Jupyterhub.cleanup_servers = False
 
 # set the user's server image
 #c.KubeSpawner.image_pull_policy = "Never"
+c.KubeSpawner.image_pull_policy = "IfNotPresent"
 c.KubeSpawner.image_pull_secrets = ["regcred"]
 # c.KubeSpawner.image = "registry.il2.dso.mil/skicamp/project-opal/tip:f970c010"
 c.KubeSpawner.image = os.environ["SINGLE_USER_IMAGE"]
