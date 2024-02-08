@@ -157,7 +157,8 @@ spec:
               mountPath: /repos
               readOnly: false
           securityContext:
-            runAsUser: 65533 # git-sync-user
+            #runAsUser: 65533 # git-sync-user
+            runAsUser: 1000 #jovyan
             runAsGroup: 100
         - image: "{{ .Values.gitSync.image.repository }}:{{ .Values.gitSync.image.tag }}"
           name: weave-repo-sync
@@ -179,7 +180,8 @@ spec:
               mountPath: /repos
               readOnly: false
           securityContext:
-            runAsUser: 65533 # git-sync-user
+            #runAsUser: 65533 # git-sync-user
+            runAsUser: 1000 #jovyan
             runAsGroup: 100
         - image: "{{ .Values.gitSync.image.repository }}:{{ .Values.gitSync.image.tag }}"
           name: ddapi-repo-sync
@@ -201,7 +203,8 @@ spec:
               mountPath: /repos
               readOnly: false
           securityContext:
-            runAsUser: 65533 # git-sync-user
+            #runAsUser: 65533 # git-sync-user
+            runAsUser: 1000 #jovyan
             runAsGroup: 100
       securityContext:
         runAsNonRoot: true
