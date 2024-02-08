@@ -182,7 +182,7 @@ spec:
             runAsUser: 65533 # git-sync-user
             runAsGroup: 100
         - image: "{{ .Values.gitSync.image.repository }}:{{ .Values.gitSync.image.tag }}"
-          name: weave-repo-sync
+          name: ddapi-repo-sync
           args:
             - "--repo=https://github.com/309theddge/data-discovery-api.git"
             - "--depth=1"
