@@ -112,6 +112,7 @@ env:
 
 resources:
   storage: 2Gi
+  singleuser_storage: 1Gi
 
   # Azure requires a specific storageclass to be used to enable 'readwritemany'
   useAzureFile: false

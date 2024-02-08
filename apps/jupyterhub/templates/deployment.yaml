@@ -114,6 +114,8 @@ spec:
             {{- end }}
             - name: CONFIGPROXY_AUTH_TOKEN
               value: {{($CONFIGPROXY_AUTH_TOKEN | quote)}}
+            - name: SINGLE_USER_STORAGE_CAPACITY
+              value: {{ .Values.resources.singleuser_storage }}
             - name: PROXY_ADDRESS_FORWARDING
               value: "true"
           envFrom:
