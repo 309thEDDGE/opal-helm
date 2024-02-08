@@ -98,6 +98,12 @@ c.KubeSpawner.volumes = [
         }
     },
     {
+        'name': 'ddapi-sync-mnt',
+        'persistentVolumeClaim': {
+            'claimName': 'ddapi-sync-pvc'
+        }
+    },
+    {
         'name': 'weave-sync-mnt',
         'persistentVolumeClaim': {
             'claimName': 'weave-sync-pvc'
@@ -129,6 +135,11 @@ c.KubeSpawner.volume_mounts = [
         'mountPath': '/home/jovyan/opal',
         "subPath": "opal",
         'name': 'opal-sync-mnt'
+    },
+    {
+        'mountPath': '/home/jovyan/data-discovery-api',
+        "subPath": "data-discovery-api",
+        'name': 'ddapi-sync-mnt'
     },
     {
         'mountPath': '/home/jovyan/weave',

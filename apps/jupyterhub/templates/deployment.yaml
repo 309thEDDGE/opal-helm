@@ -181,6 +181,28 @@ spec:
           securityContext:
             runAsUser: 65533 # git-sync-user
             runAsGroup: 100
+        - image: "{{ .Values.gitSync.image.repository }}:{{ .Values.gitSync.image.tag }}"
+          name: weave-repo-sync
+          args:
+            - "--repo=https://github.com/309theddge/data-discovery-api.git"
+            - "--depth=1"
+            - "--max-failures=-1"
+            - "--group-write"
+            - "--username={{ .Values.gitSync.username }}"
+            - "--password-file=/etc/git-secret/token"
+            - "--root=/repos"
+            - "--link=/repos/data-discovery-api"
+            - "--period=120s"
+          volumeMounts:
+            - name: git-creds-mnt
+              mountPath: /etc/git-secret
+              readOnly: true
+            - name: ddapi-sync-mnt
+              mountPath: /repos
+              readOnly: false
+          securityContext:
+            runAsUser: 65533 # git-sync-user
+            runAsGroup: 100
       securityContext:
         runAsNonRoot: true
         fsGroup: 100
@@ -192,12 +214,17 @@ spec:
       - name: metaflow-datastore-mnt
         persistentVolumeClaim:
           claimName: metaflow-datastore
+{{- if .Values.gitSync.enabled }}
       - name: opal-sync-mnt
         persistentVolumeClaim:
           claimName: opal-sync-pvc
       - name: weave-sync-mnt
         persistentVolumeClaim:
           claimName: weave-sync-pvc
+      - name: ddapi-sync-mnt
+        persistentVolumeClaim:
+          claimName: ddapi-sync-pvc
+{{- end }}
       - name: git-creds-mnt
         secret:
           secretName: {{ .Values.gitSync.gitSecret.secretName }}

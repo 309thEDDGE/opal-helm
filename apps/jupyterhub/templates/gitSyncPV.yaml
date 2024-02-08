@@ -1,3 +1,4 @@
+{{- if .Values.gitSync.enabled }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -6,13 +7,12 @@ metadata:
 spec:
   accessModes:
     - ReadWriteMany
+{{- if .Values.resources.useAzureFile }}
+  storageClassName: azurefile-csi
+{{- end }}
   resources:
     requests:
-      {{- if .Values.gitSync.enabled }}
       storage: {{ .Values.resources.gitStorage }}
-      {{- else }}
-      storage: 4Mi
-      {{- end }}
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -22,10 +22,25 @@ metadata:
 spec:
   accessModes:
     - ReadWriteMany
+{{- if .Values.resources.useAzureFile }}
+  storageClassName: azurefile-csi
+{{- end }}
   resources:
     requests:
-      {{- if .Values.gitSync.enabled }}
       storage: {{ .Values.resources.gitStorage }}
-      {{- else }}
-      storage: 4Mi
-      {{- end }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  namespace: {{ .Values.namespace }}
+  name: ddapi-sync-pvc
+spec:
+  accessModes:
+    - ReadWriteMany
+{{- if .Values.resources.useAzureFile }}
+  storageClassName: azurefile-csi
+{{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.resources.gitStorage }}
+{{- end }}
