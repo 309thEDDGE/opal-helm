@@ -102,6 +102,8 @@ spec:
               value: {{($CONFIGPROXY_AUTH_TOKEN | quote)}}
             - name: PROXY_ADDRESS_FORWARDING
               value: "true"
+            - name: CONDA_OVERRIDE_CUDA
+              value: "12.0"
           envFrom:
             - secretRef:
                 name: {{ printf "%s-token-env" (include "jupyterhub.fullname" .)}}
@@ -112,13 +114,7 @@ spec:
             - name: jupyterhub-config-py-mnt
               mountPath: /home/jovyan/jupyterhub_config.py
               subPath: jupyterhub_config.py
-            -name: jupyterhub-condarc-mnt
-              mountPath: /home/jovyan/condarc.txt
-              subPath: condarc.txt
       volumes:
       - name: jupyterhub-config-py-mnt
         configMap:
           name: jupyterhub-config-py
-      - name: jupyterhub-condarc-mnt
-        configmap:
-          name: jupyterhub-condarc
