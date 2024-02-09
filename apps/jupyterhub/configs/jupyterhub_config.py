@@ -22,8 +22,7 @@ c.JupyterHub.port = int(os.environ['PROXY_PUBLIC_SERVICE_PORT'])
 # the hub should listen on all interfaces, so the proxy can access it
 c.JupyterHub.hub_ip = '0.0.0.0'
 
-# Leave singleuser/proxy running if hub shuts down
-c.Jupyterhub.cleanup_proxy = False
+# Leave singleuser running if hub shuts down
 c.Jupyterhub.cleanup_servers = False
 
 # set the user's server image
@@ -32,6 +31,8 @@ c.KubeSpawner.image_pull_policy = "IfNotPresent"
 c.KubeSpawner.image_pull_secrets = ["regcred"]
 # c.KubeSpawner.image = "registry.il2.dso.mil/skicamp/project-opal/tip:f970c010"
 c.KubeSpawner.image = os.environ["SINGLE_USER_IMAGE"]
+# wait a bit longer for spawn
+c.KubeSpawner.http_timeout = 120
 
 # inherit some jupyterhub environment variables
 c.KubeSpawner.env_keep = [
