@@ -1,8 +1,8 @@
-apiVersion: v1
+apiVersion1
 kind: ConfigMap
 metadata:
   namespace: {{ .Values.namespace }}
   name: jupyter-notebook-config-py
 data:
-  jupyterhub_config.py: |-
+  jupyter_notebook_config.py: |-
     {{- .Files.Get "configs/jupyter_notebook_config.py" | nindent 6 }}

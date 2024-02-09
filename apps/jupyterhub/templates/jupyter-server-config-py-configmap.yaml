@@ -4,5 +4,5 @@ metadata:
   namespace: {{ .Values.namespace }}
   name: jupyter-server-config-py
 data:
-  jupyterhub_config.py: |-
+  jupyter_server_config.py: |-
     {{- .Files.Get "configs/jupyter_server_config.py" | nindent 6 }}
