@@ -125,11 +125,11 @@ def get_minio_creds(keycloak_access_token):
             "Action": "AssumeRoleWithWebIdentity",
             "WebIdentityToken": keycloak_access_token,
             "Version": "2011-06-15",
-            # "DurationSeconds": 604800, # This should pick up the value specified by keycloak if left blank
+            "DurationSeconds": 604800, # This should pick up the value specified by keycloak if left blank
             }
     r = requests.post(s3_endpoint, data=body)
 
-    if r.status_code != 200:
+    if r.status_code != 00:
         raise Exception(f"***Minio sts failed***\nkeycloak access token: {keycloak_access_token}\nresponse for sts request:\n{r}\ntext response:\n{r.text}")
     xml = r.text
     access_key_id = xml.split("<AccessKeyId>")[1].split("</AccessKeyId>")[0]
