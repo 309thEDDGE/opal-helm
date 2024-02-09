@@ -26,7 +26,7 @@ echo 'source /home/jovyan/.bashrc' > /home/jovyan/.profile
 log_to_file "Add conda activate to .profile"
 
 # 4
-cp -r /opt/config/opalbanner /opt/conda/envs/singleuser/share/jupyter/labextensions
+cp -r /opt/config/opalbanner /opt/conda/envs/base/share/jupyter/labextensions
 bash /opt/config/init_banner.bash "$OPAL_BANNER_TEXT" "$OPAL_BANNER_COLOR"
 log_to_file "Initialize banner extension"
 
@@ -51,6 +51,10 @@ log_to_file "Fill in metaflow config file"
 # 9
 python /opt/config/python_setup.py
 log_to_file "Custom python setup"
+
+#10
+# need this for accessing servers running in individual singleusers
+conda install -c conda-forge jupyter-server-proxy -y
 
 # Start the singleuser server (has to be last)
 /usr/local/bin/start-singleuser.sh

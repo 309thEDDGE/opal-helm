@@ -94,6 +94,20 @@ c.KubeSpawner.volumes = [
         }
     },
     {
+        'name': "jupyter-notebook-config",
+        "configMap": {
+            "name": "jupyter-notebook-config-py",
+            "defaultMode": 0o755 # octal permission number
+        }
+    },
+    {
+        'name': "jupyter-server-config",
+        "configMap": {
+            "name": "jupyter-server-config-py",
+            "defaultMode": 0o755 # octal permission number
+        }
+    },
+    {
         'name': "metaflow-store",
         "persistentVolumeClaim": {
             "claimName": "metaflow-datastore"
@@ -133,6 +147,16 @@ c.KubeSpawner.volume_mounts = [
         'mountPath': '/tmp/startup_script.bash',
         "subPath": "startup_script.bash",
         "name": "startup-script"
+    },
+    {
+        'mountPath': '/home/jovyan/.jupyter/jupyter_notebook_config.py',
+        "subPath": "jupyter_notebook_config.py",
+        "name": "jupyter-notebook-config"
+    },
+    {
+        'mountPath': '/etc/.jupyter/jupyter_server_config.py',
+        "subPath": "jupyter_server_config.py",
+        "name": "jupyter-server-config"
     },
     {
         'mountPath': metaflow_mount_path,
