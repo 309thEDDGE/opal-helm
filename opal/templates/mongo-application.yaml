@@ -82,4 +82,9 @@ spec:
   # space used to store the history, so we do not recommend increasing it.
   revisionHistoryLimit: 10
 
+  ignoreDifferences:
+  - kind: Secret
+    jsonPointers:
+    - /data
+
 {{- end }}
