@@ -114,5 +114,8 @@ spec:
   - kind: Secret
     jsonPointers:
     - /data
+  - kind: Job
+    jsonPointers:
+    - /spec
 
 {{- end }}
