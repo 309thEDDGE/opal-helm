@@ -112,10 +112,6 @@ traefik:
       rules:
         host: "traefik-k8s.10.96.30.9.nip.io"
 
-minio-operator:
-  enabled: true
-minio-instance:
-  enabled: true
 minioOperator:
   enabled: false
   appValues:
