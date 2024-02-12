@@ -95,10 +95,6 @@ appValues:
 
   traefik:
     enabled: true
-  minio-operator:
-    enabled: true
-  minio-instance:
-    enabled: true
   minioOperator:
     enabled: true
   minioInstance:
