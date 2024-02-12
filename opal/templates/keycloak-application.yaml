@@ -116,6 +116,6 @@ spec:
     - /data
   - kind: Job
     jsonPointers:
-    - /spec
+    - *
 
 {{- end }}
