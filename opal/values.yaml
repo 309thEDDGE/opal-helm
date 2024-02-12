@@ -31,8 +31,8 @@ mongodb:
       imagePullSecrets: *dockerSecret
     auth:
       enabled: true
-      rootUser: user
-      rootPassword: "fill_this_in"
+      rootUser: rootuser
+      rootPassword: ""
       usernames: []
       passwords: []
       databases: []
@@ -184,13 +184,18 @@ minioInstance:
           enabled: true
           rules:
             host: ""
-
 jupyterhub:
   enabled: true
   appValues:
     namespace: *opalNS
     baseDns: ""
+    gitSync:
+      enabled: true
+      gitSecret:
+        secretName: "git-creds"
     secrets:
+      tokenenv:
+        existingSecret: "token-env"
       oauth:
         existingSecret: *oauthSecret
     image:
