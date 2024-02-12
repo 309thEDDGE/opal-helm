@@ -21,9 +21,41 @@ tls:
     - *opalNS
 
 oauth:
-  name: opal-oauth-common
+  name: &oauthSecret opal-oauth-common
+  namespaces:
+    - *opalNS
+    - *minioNS
 
 valuesFile: test-values.yaml
+
+token:
+  name: &token-env "token-env"
+  namespaces:
+    - *opalNS
+
+minio:
+  name: &minio-creds "minio-creds-secret"
+  accesskey: &minio-accesskey opal-administrator
+  namespaces:
+    - *minioNS
+
+keycloakenv:
+  name: &keycloak-env "opal-setup-keycloak-env"
+  namespaces:
+    - *opalNS
+    - *minioNS
+
+postgresql:
+  name: &keycloak-postgres "opal-setup-keycloak-postgres"
+  namespaces:
+    - *opalNS
+    - *minioNS
+
+mongodb:
+  name: &mongo-secret "opal-setup-mongodb"
+  architecture: &mongodb-architecture standalone
+  namespaces:
+    - *opalNS
 
 source: &appSource
   url: "https://github.com/309thEDDGE/opal-helm.git"
@@ -33,48 +65,57 @@ appValues:
   source: *appSource
   mongodb:
     enabled: true
-    auth:
-      enabled: true
-      rootUser: rootuser
-      rootPassword: ""
-      usernames: []
-      passwords: []
-      databases: []
-    replicaCount: 2
+    appValues:
+      architecture: *mongodb-architecture
+      auth:
+        existingSecret: *mongo-secret
+        enabled: true
+        rootUser: rootuser
+        rootPassword: ""
+        usernames: []
+        passwords: []
+        databases: []
+      replicaCount: 2
   keycloak:
     enabled: true
     # bootstrapper admin credentials. Should be deleted after post-install setup
     appValues:
       secrets:
         env:
+          existingSecret: *keycloak-env
           annotations: {}
           stringData:
             KEYCLOAK_ADMIN: "admin"
             KEYCLOAK_ADMIN_PASSWORD: ""
             JAVA_OPTS_APPEND: -Djgroups.dns.query=opal-setup-keycloak-headless
+        oauth:
+          existingSecret: *oauthSecret
+    postgresql:
+      existingSecret: *keycloak-postgres
+
   traefik:
-    enabled: true
-  minio-operator:
-    enabled: true
-  minio-instance:
     enabled: true
   minioOperator:
     enabled: true
   minioInstance:
     enabled: true
-    creds:
-      namespace: *minioNS
-    secrets:
-      accessKey: opal-administrator
+    namespace: *minioNS
     appValues:
-      instance:
-        namespace: *minioNS
-      oauth:
-        existingSecret: minio-creds-secret
+      creds:
+        existingSecret: *minio-creds
+        accessKey: *minio-accesskey   
+        
   jupyterhub:
     enabled: true
     appValues:
       namespace: *opalNS
+      secrets:
+        tokenenv:
+          existingSecret: *token-env
+        oauth:
+          existingSecret: *oauthSecret
+      instance:
+        namespace: *minioNS
       gitSync:
         enabled: true
         username: ""

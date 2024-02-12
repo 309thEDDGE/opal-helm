@@ -112,11 +112,6 @@ traefik:
       rules:
         host: ""
 
-minio-operator:
-  enabled: true
-
-minio-instance:
-  enabled: true
 minioOperator:
   enabled: false
   appValues:

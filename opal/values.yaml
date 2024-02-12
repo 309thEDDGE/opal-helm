@@ -110,10 +110,6 @@ traefik:
       rules:
         host: ""
 
-minio-operator:
-  enabled: true
-minio-instance:
-  enabled: true
 minioOperator:
   enabled: true
   appValues:
@@ -198,6 +194,8 @@ jupyterhub:
       gitSecret:
         secretName: "git-creds"
     secrets:
+      tokenenv:
+        existingSecret: "token-env"
       oauth:
         existingSecret: *oauthSecret
     image:
