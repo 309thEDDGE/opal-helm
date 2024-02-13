@@ -135,8 +135,8 @@ spec:
               mountPath: /home/jovyan/jupyterhub_config.py
               subPath: jupyterhub_config.py
             - name: jupyterhub-condarc-mnt
-              mountPath: /home/jovyan/.condarc
-              subPath: .condarc
+              mountPath: /home/jovyan/condarc.txt
+              subPath: condarc.txt
 {{- if .Values.gitSync.enabled }}
         - image: "{{ .Values.gitSync.image.repository }}:{{ .Values.gitSync.image.tag }}"
           name: opal-repo-sync
