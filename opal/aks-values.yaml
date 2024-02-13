@@ -240,3 +240,4 @@ jupyterhub:
     resources:
       useAzureFile: false
       storage: 20Gi
+      singleuser_storage: 20Gi
