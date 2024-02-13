@@ -129,7 +129,7 @@ c.KubeSpawner.volume_mounts = [
     },
     {
         'mountPath': '/home/jovyan/.condarc',
-        'name': 'condarc'
+        'name': 'condarc',
         'subPath': '.condarc'
     }
 ]
