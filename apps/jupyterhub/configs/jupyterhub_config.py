@@ -82,6 +82,12 @@ c.KubeSpawner.volumes = [
         }
     },
     {
+        'name': "local_channel",
+        "configMap": {
+            "name": "jupyterhub-local_channel"
+        }
+    },
+    {
         'name': "metaflow-store",
         "persistentVolumeClaim": {
             "claimName": "metaflow-datastore"
@@ -131,6 +137,11 @@ c.KubeSpawner.volume_mounts = [
         'mountPath': '/home/jovyan/.condarc',
         'name': 'condarc',
         'subPath': '.condarc'
+    },
+    {
+        'mountPath': '/home/jovyan/local_channel_env.yaml',
+        'name': 'local_channel',
+        'subPath': 'local_channel_env.yaml'
     }
 ]
 
