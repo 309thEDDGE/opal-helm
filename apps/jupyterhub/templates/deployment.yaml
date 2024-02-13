@@ -135,7 +135,7 @@ spec:
               mountPath: /home/jovyan/jupyterhub_config.py
               subPath: jupyterhub_config.py
             - name: jupyterhub-condarc-mnt
-              mountPath: /home/jovyan/.condarc
+              mountPath: /opt/conda/.condarc
               subPath: .condarc
 {{- if .Values.gitSync.enabled }}
         - image: "{{ .Values.gitSync.image.repository }}:{{ .Values.gitSync.image.tag }}"
