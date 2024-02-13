@@ -204,6 +204,6 @@ spec:
       - name: jupyterhub-condarc-mnt
         configMap:
           name: jupyterhub-condarc
-      - name: jupyterhub-local_channel-mnt
+      - name: jupyterhub-local-channel-mnt
         configMap:
-          name: jupyterhub-local_channel
+          name: jupyterhub-local-channel
