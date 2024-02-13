@@ -151,7 +151,7 @@ def get_minio_creds(keycloak_access_token):
             }
     r = requests.post(s3_endpoint, data=body)
 
-    if r.status_code != 00:
+    if r.status_code != 200:
         raise Exception(f"***Minio sts failed***\nkeycloak access token: {keycloak_access_token}\nresponse for sts request:\n{r}\ntext response:\n{r.text}")
     xml = r.text
     access_key_id = xml.split("<AccessKeyId>")[1].split("</AccessKeyId>")[0]
