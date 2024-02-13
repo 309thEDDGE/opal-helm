@@ -13,6 +13,8 @@ namespace: &ns opal
 
 secrets:
   nameOverride: "token-env"
+  tokenenv:
+    existingSecret: ""
   oauth:
     # Leave blank to have jupyterhub create its own secret
     existingSecret: ""
