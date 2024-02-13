@@ -130,6 +130,7 @@ spec:
           securityContext:
             runAsUser: 1000
             runAsGroup: 100
+            fsGroup: 100
           volumeMounts:
             - name: jupyterhub-config-py-mnt
               mountPath: /home/jovyan/jupyterhub_config.py
