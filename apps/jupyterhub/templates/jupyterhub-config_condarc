@@ -4,5 +4,5 @@ metadata:
   namespace: {{ .Values.namespace }}
   name: jupyterhub-condarc
 data:
-  local_channel_env.yaml: |-
-    {{- .Files.Get "configs/local_channel_env.yaml" | nindent 6 }}
+  .condarc: |-
+    {{- .Files.Get "configs/.condarc" | nindent 6 }}
