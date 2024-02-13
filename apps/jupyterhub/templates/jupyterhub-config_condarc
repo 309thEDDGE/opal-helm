@@ -4,5 +4,5 @@ metadata:
   namespace: {{ .Values.namespace }}
   name: jupyterhub-condarc
 data:
-  condarc.txt: |-
+  .condarc: |-
     {{- .Files.Get "configs/.condarc" | nindent 6 }}
