@@ -140,7 +140,7 @@ c.KubeSpawner.volume_mounts = [
     },
     {
         'mountPath': '/home/jovyan/local_channel_env.yaml',
-        'name': 'local-channel',
+        'name': 'jupyterhub-local-channel-mnt',
         'subPath': 'local_channel_env.yaml'
     }
 ]
