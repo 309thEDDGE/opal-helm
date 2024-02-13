@@ -136,7 +136,7 @@ spec:
               subPath: jupyterhub_config.py
             - name: jupyterhub-condarc-mnt
               mountPath: /home/jovyan/.condarc
-            - name: jupyterhub-local_channel-mnt
+            - name: jupyterhub-local-channel-mnt
               mountPath: /home/jovyan/local_channel_env.yaml
 {{- if .Values.gitSync.enabled }}
         - image: "{{ .Values.gitSync.image.repository }}:{{ .Values.gitSync.image.tag }}"
