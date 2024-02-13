@@ -104,10 +104,14 @@ appValues:
       creds:
         existingSecret: *minio-creds
         accessKey: *minio-accesskey   
+
+  nginx:
+    enabled: true
+    restart: always
         
   jupyterhub:
     enabled: true
-        appValues:
+    appValues:
       namespace: *opalNS
       secrets:
         tokenenv:

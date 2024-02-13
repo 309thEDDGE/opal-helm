@@ -34,7 +34,8 @@ c.KubeSpawner.env_keep = [
     "OPAL_BANNER_COLOR",
     "MINIO_IDENTITY_OPENID_CLIENT_ID",
     "KEYCLOAK_MINIO_CLIENT_SECRET",
-    "KEYCLOAK_OPAL_API_URL"
+    "KEYCLOAK_OPAL_API_URL",
+    "CONDA_OVERRIDE_CUDA"
 ]
 
 metaflow_mount_path = "/opt/opal/metaflow-metadata"
@@ -75,6 +76,12 @@ c.KubeSpawner.volumes = [
         }
     },
     {
+        'name': "condarc",
+        "configMap": {
+            "name": "jupyterhub-condarc"
+        }
+    },
+    {
         'name': "metaflow-store",
         "persistentVolumeClaim": {
             "claimName": "metaflow-datastore"
@@ -91,6 +98,10 @@ c.KubeSpawner.volumes = [
         'persistentVolumeClaim': {
             'claimName': 'weave-sync-pvc'
         }
+    },
+    {
+        'mountPath': '/home/jovyan/.condarc'
+        'name': 'condarc'
     }
 ]
 
