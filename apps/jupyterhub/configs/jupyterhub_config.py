@@ -98,10 +98,6 @@ c.KubeSpawner.volumes = [
         'persistentVolumeClaim': {
             'claimName': 'weave-sync-pvc'
         }
-    },
-    {
-        'mountPath': '/home/jovyan/.condarc'
-        'name': 'condarc'
     }
 ]
 
@@ -130,6 +126,10 @@ c.KubeSpawner.volume_mounts = [
         'mountPath': '/home/jovyan/weave',
         "subPath": "weave",
         'name': 'weave-sync-mnt'
+    },
+    {
+        'mountPath': '/home/jovyan/.condarc',
+        'name': 'condarc'
     }
 ]
 
