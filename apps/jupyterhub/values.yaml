@@ -99,6 +99,7 @@ ingress:
   tls: []
 env:
   keycloakJupyterhubOauthCallbackUrl: "https://opal-k8.{{ .Values.baseDns }}/hub/oauth_callback"
+  jupyterhubBaseUrl: "https://opal-k8.{{ .Values.baseDns }}"
   s3Endpointurl: "https://minio-k8.{{ .Values.baseDns }}"
   keycloakJupyterhubAuthorizeUrl: "https://keycloak-k8.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/auth"
   keycloakJupyterhubUserdataUrl: "https://keycloak-k8.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/userinfo"

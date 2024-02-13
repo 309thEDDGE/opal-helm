@@ -229,6 +229,7 @@ jupyterhub:
       #change this based on minio's target namespace, and the name of the helm release
       s3Endpointurl: "http://opal-setup-minio-console.minio-tenant.svc.cluster.local:9090"
       keycloakJupyterhubOauthCallbackUrl: "https://opal.{{ .Values.baseDns }}/hub/oauth_callback"
+      jupyterhubBaseUrl: "https://opal.{{ .Values.baseDns }}"
       keycloakJupyterhubAuthorizeUrl: "https://keycloak.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/auth"
       keycloakJupyterhubUserdataUrl: "https://keycloak.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/userinfo"
       keycloakOpalApiUrl: "https://keycloak.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/token"

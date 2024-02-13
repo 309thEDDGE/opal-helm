@@ -49,7 +49,8 @@ metaflow_mount_path = "/opt/opal/metaflow-metadata"
 c.KubeSpawner.environment = {
     "USERNAME": "jovyan",
     "METAFLOW_DATASTORE_SYSROOT_LOCAL": metaflow_mount_path,
-    "CONDA_ENVS_PATH": "$HOME/.conda/envs/"
+    "CONDA_ENVS_PATH": "$HOME/.conda/envs/",
+    "DDA_ROOT_PATH": os.environ["BASE_URL"]
 }
 
 # assign a security context for write permissions to

@@ -228,6 +228,7 @@ jupyterhub:
       opalBannerText: "Unclassified"
       s3Endpointurl: "http://opal-minio-console.minio-tenant.svc.cluster.local:9090"
       keycloakJupyterhubOauthCallbackUrl: "https://opal-prod.{{ .Values.baseDns }}/hub/oauth_callback"
+      jupyterhubBaseUrl: "https://opal-prod.{{ .Values.baseDns }}"
       keycloakJupyterhubAuthorizeUrl: "https://keycloak-prod.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/auth"
       keycloakJupyterhubUserdataUrl: "https://keycloak-prod.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/userinfo"
       keycloakOpalApiUrl: "https://keycloak-prod.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/token"

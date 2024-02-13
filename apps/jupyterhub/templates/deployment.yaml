@@ -93,6 +93,8 @@ spec:
               value: {{ include "render-url" ( dict "value" .keycloakJupyterhubUserdataUrl "context" $values ) }}
             - name: KEYCLOAK_OPAL_API_URL
               value: {{ include "render-url" ( dict "value" .keycloakOpalApiUrl "context" $values ) }}
+            - name: BASE_URL
+              value: {{ include "render-url" ( dict "value" .jupyterhubBaseUrl "context" $values ) }}
             - name: MINIO_IDENTITY_OPENID_CLIENT_ID
               value: {{ .openidClientId }}
             - name: KEYCLOAK_JUPYTERHUB_CLIENT_ID
