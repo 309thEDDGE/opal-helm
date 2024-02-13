@@ -109,10 +109,6 @@ traefik:
       rules:
         host: ""
 
-minio-operator:
-  enabled: true
-minio-instance:
-  enabled: true
 minioOperator:
   enabled: true
   appValues:
@@ -192,7 +188,13 @@ jupyterhub:
   appValues:
     namespace: *opalNS
     baseDns: ""
+    gitSync:
+      enabled: true
+      gitSecret:
+        secretName: "git-creds"
     secrets:
+      tokenenv:
+        existingSecret: "token-env"
       oauth:
         existingSecret: *oauthSecret
     image:

@@ -79,6 +79,18 @@ c.KubeSpawner.volumes = [
         "persistentVolumeClaim": {
             "claimName": "metaflow-datastore"
         }
+    },
+    {
+        'name': 'opal-sync-mnt',
+        'persistentVolumeClaim': {
+            'claimName': 'opal-sync-pvc'
+        }
+    },
+    {
+        'name': 'weave-sync-mnt',
+        'persistentVolumeClaim': {
+            'claimName': 'weave-sync-pvc'
+        }
     }
 ]
 
@@ -97,6 +109,16 @@ c.KubeSpawner.volume_mounts = [
         'mountPath': metaflow_mount_path,
         "name": "metaflow-store",
         "readOnly": False
+    },
+    {
+        'mountPath': '/home/jovyan/opal',
+        "subPath": "opal",
+        'name': 'opal-sync-mnt'
+    },
+    {
+        'mountPath': '/home/jovyan/weave',
+        "subPath": "weave",
+        'name': 'weave-sync-mnt'
     }
 ]
 

@@ -53,26 +53,14 @@ Return the proper Docker Image Registry Secret Names
 Return PostgreSQL postgres user password
 */}}
 {{- define "postgresql.postgres.password" -}}
-{{- if .Values.global.postgresql.postgresqlPostgresPassword }}
-    {{- .Values.global.postgresql.postgresqlPostgresPassword -}}
-{{- else if .Values.postgresqlPostgresPassword -}}
-    {{- .Values.postgresqlPostgresPassword -}}
-{{- else -}}
-    {{- randAlphaNum 10 -}}
-{{- end -}}
+{{- randAlphaNum 10 -}}
 {{- end -}}
 
 {{/*
 Return PostgreSQL password
 */}}
 {{- define "postgresql.password" -}}
-{{- if .Values.global.postgresql.postgresqlPassword }}
-    {{- .Values.global.postgresql.postgresqlPassword -}}
-{{- else if .Values.postgresqlPassword -}}
-    {{- .Values.postgresqlPassword -}}
-{{- else -}}
-    {{- randAlphaNum 10 -}}
-{{- end -}}
+{{- randAlphaNum 10 -}}
 {{- end -}}
 
 {{/*
@@ -92,11 +80,7 @@ Return PostgreSQL replication password
 Return PostgreSQL username
 */}}
 {{- define "postgresql.username" -}}
-{{- if .Values.global.postgresql.postgresqlUsername }}
-    {{- .Values.global.postgresql.postgresqlUsername -}}
-{{- else -}}
-    {{- .Values.postgresqlUsername -}}
-{{- end -}}
+{{- randAlphaNum 10 -}}
 {{- end -}}
 
 {{/*
@@ -149,7 +133,7 @@ Get the password secret.
 Return true if we should use an existingSecret.
 */}}
 {{- define "postgresql.useExistingSecret" -}}
-{{- if or .Values.global.postgresql.existingSecret .Values.existingSecret -}}
+{{- if or .Values.existingSecret .Values.existingSecret -}}
     {{- true -}}
 {{- end -}}
 {{- end -}}
@@ -158,7 +142,7 @@ Return true if we should use an existingSecret.
 Return true if a secret object should be created
 */}}
 {{- define "postgresql.createSecret" -}}
-{{- if not (include "postgresql.useExistingSecret" .) -}}
+{{- if not .Values.existingSecret -}}
     {{- true -}}
 {{- end -}}
 {{- end -}}

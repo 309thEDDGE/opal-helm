@@ -22,7 +22,7 @@ serviceAccount:
   name: "tenant"
 
 
-oauth:
+creds:
   existingSecret: ""
 
 
