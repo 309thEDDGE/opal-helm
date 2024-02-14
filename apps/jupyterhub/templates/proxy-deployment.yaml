@@ -37,7 +37,7 @@ spec:
             allowPrivilegeEscalation: {{ .Values.securityContext.allowPrivilegeEscalation }}
           envFrom:
             - secretRef:
-                name: {{( include "get.tokenName" )}}
+                name: {{( include "get.tokenName" . )}}
           ports:
             - containerPort: 8000
               name: proxy-public

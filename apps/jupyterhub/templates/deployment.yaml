@@ -73,13 +73,13 @@ spec:
               value: "true"
           envFrom:
             - secretRef:
-                name: {{( include "get.tokenName" .)}}
+                name: {{( include "get.tokenName" . )}}
             {{- if .Values.secrets.oauth.existingSecret }}
             - secretRef:
                 name: {{ .Values.secrets.oauth.existingSecret }}
             {{- else }}
             - secretRef:
-                name: {{( include "get.oauthName" )}}
+                name: {{( include "get.oauthName" . )}}
             {{- end }}
           resources:
             requests: 
