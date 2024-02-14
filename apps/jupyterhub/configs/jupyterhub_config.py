@@ -82,7 +82,7 @@ c.KubeSpawner.volumes = [
         }
     },
     {
-        'name': "local-channel",
+        'name': "local-channel-mnt",
         "configMap": {
             "name": "jupyterhub-local-channel"
         }
