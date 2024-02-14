@@ -38,9 +38,6 @@ spec:
           envFrom:
             - secretRef:
                 name: {{( include "get.tokenName" )}}
-#          env:
-#            - name: CONFIGPROXY_AUTH_TOKEN
-#              value: {{($CONFIGPROXY_AUTH_TOKEN | quote)}}
           ports:
             - containerPort: 8000
               name: proxy-public
