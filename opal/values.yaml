@@ -227,5 +227,5 @@ nginx:
       imagePullSecrets: *dockerSecret
     ingress:
       enabled: true
-        rules:
-          host: "nginx-k8s.{{ .Values.baseDns }}"
+      rules:
+        host: "nginx-k8s.{{ .Values.baseDns }}"
