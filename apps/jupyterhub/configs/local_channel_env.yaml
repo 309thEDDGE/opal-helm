@@ -1,6 +1,6 @@
 name: singleuser
 channels: 
-  - http://nginx-k8.10.96.30.9.nip.io/condapkg/
+  - http://nginx-k8s.10.96.30.9.nip.io/condapkg/
 dependencies:
   - bokeh==2.4.3
   - cartopy==0.21.1
