@@ -1,0 +1,31 @@
+{{- $values := . -}}
+
+{{if .Values.ingress.enabled}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  namespace: {{ .Values.namespace }}
+  name: {{ include "nginx.fullname" }}
+  {{- with .Values.ingress.annotations }}
+  annotations:
+    {{- range $key, $value := . }}
+    {{- printf "%s: %s" $key (tpl $value $ | quote) | nindent 4 }}
+    {{- end }}
+  {{- end }}
+spec:
+  rules:
+  {{- with .Values.ingress.rules }}
+    - host: {{ include "render-url" ( dict "value" .host "context" $values ) }}
+      http: 
+        paths: 
+        {{- range .http.paths }}
+          - path: {{ .path }}
+            pathType: {{ .pathType }}
+            backend:
+              service:
+                name: {{ .backend.service.name }}
+                port: 
+                  number: {{ .backend.service.port.number}}
+        {{- end }}
+  {{- end }}
+{{- end }}
