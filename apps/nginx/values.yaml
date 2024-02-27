@@ -4,9 +4,12 @@ fullnameOverride: ""
 # Optionally override the name
 nameOverride: ""
 
-namespace: opal
+# Namespace to install nginx
+namespace: "opal"
 
-baseDns: "10.96.30.9.nip.io"
+name: nginx
+
+baseDns: ""
 
 image:
   registry: registry1.dso.mil
