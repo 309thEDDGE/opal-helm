@@ -6,7 +6,7 @@ metadata:
     kompose.version: 1.32.0 (765fde254)
   labels:
     io.kompose.service: nginx
-  name: nginx
+  name: {{ include "nginx.fullname" . }}
 spec:
   ports:
     - name: "80"
