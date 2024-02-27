@@ -9,7 +9,7 @@ namespace: "opal"
 
 name: nginx
 
-baseDns: ""
+baseDns: "10.96.30.9.nip.io"
 
 image:
   registry: registry1.dso.mil
