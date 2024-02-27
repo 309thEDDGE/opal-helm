@@ -1,4 +1,8 @@
-name: nginx
+# Optionally override the fully qualified name
+fullnameOverride: ""
+
+# Optionally override the name
+nameOverride: ""
 
 namespace: opal
 
