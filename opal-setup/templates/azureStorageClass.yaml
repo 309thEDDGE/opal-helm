@@ -3,10 +3,10 @@ allowVolumeExpansion: true
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-  name: azurefile-csi-singleuser
+  name: azurefile-csi-gitsync
 mountOptions:
 - dir_mode=0755
-- file_mode=0600
+- file_mode=0755
 - uid=1000
 - gid=100
 - mfsymlinks

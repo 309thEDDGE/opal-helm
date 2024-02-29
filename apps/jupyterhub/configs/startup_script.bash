@@ -12,7 +12,7 @@ date >> $LOG_FILE
 log_to_file "Start setup"
 
 # 1
-tar -xf /tmp/tars/jhub-conf.tar -C /opt
+tar -xf /tmp/tars/jhub-conf.tar -C /tmp
 log_to_file "Copy jupyterhub config directory"
 
 # 2
@@ -26,31 +26,32 @@ echo 'source /home/jovyan/.bashrc' > /home/jovyan/.profile
 log_to_file "Add conda activate to .profile"
 
 # 4
-cp -r /opt/config/opalbanner /opt/conda/envs/base/share/jupyter/labextensions
-bash /opt/config/init_banner.bash "$OPAL_BANNER_TEXT" "$OPAL_BANNER_COLOR"
+cp -r /tmp/config/opalbanner /opt/conda/share/jupyter/labextensions
+bash /tmp/config/init_banner.bash "$OPAL_BANNER_TEXT" "$OPAL_BANNER_COLOR"
 log_to_file "Initialize banner extension"
 
 # copy from gitsync mount so user-facing directories are not constantly updated
 # 5
-cp -r /opt/data/opal /home/jovyan/opal
+cp -r /opt/data/opal /home/jovyan/
 log_to_file "Link directories to home"
 
 # 6
-cp -r /opt/data/data-discovery-api /home/jovyan/data-discovery-api
+cp -r /opt/data/data-discovery-api /home/jovyan/
 log_to_file "Link directories to home"
 
 # 7
-cp -r /opt/data/weave /home/jovyan/weave
+cp -r /opt/data/weave /home/jovyan/
 log_to_file "Link directories to home"
 
 # 8
 mkdir -p /home/jovyan/.metaflowconfig
-envsubst < /opt/config/metaflow_config.json > /home/jovyan/.metaflowconfig/config.json
+cat /tmp/config/metaflow_config.json > /home/jovyan/.metaflowconfig/config.json
+#envsubst < /tmp/config/metaflow_config.json > /home/jovyan/.metaflowconfig/config.json
 log_to_file "Fill in metaflow config file"
 
-# 9
-python /opt/config/python_setup.py
-log_to_file "Custom python setup"
+## 9
+#python /tmp/config/python_setup.py
+#log_to_file "Custom python setup"
 
 #10
 # need this for accessing servers running in individual singleusers

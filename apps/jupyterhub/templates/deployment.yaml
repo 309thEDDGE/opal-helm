@@ -71,6 +71,10 @@ spec:
               value: {{ .Values.resources.singleuser_storage }}
             - name: PROXY_ADDRESS_FORWARDING
               value: "true"
+            - name: MONGODB_USERNAME
+              value: "rootuser"
+            - name: MONGODB_HOST
+              value: {{ .Release.Name }}-mongodb:27017
           envFrom:
             - secretRef:
                 name: {{( include "get.tokenName" . )}}
@@ -81,6 +85,8 @@ spec:
             - secretRef:
                 name: {{( include "get.oauthName" . )}}
             {{- end }}
+            - secretRef:
+                name: {{ .Release.Name }}-mongodb
           resources:
             requests: 
               cpu: 500m

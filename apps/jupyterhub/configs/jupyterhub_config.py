@@ -32,7 +32,7 @@ c.KubeSpawner.image_pull_secrets = ["regcred"]
 # c.KubeSpawner.image = "registry.il2.dso.mil/skicamp/project-opal/tip:f970c010"
 c.KubeSpawner.image = os.environ["SINGLE_USER_IMAGE"]
 # wait a bit longer for spawn
-c.KubeSpawner.http_timeout = 120
+c.KubeSpawner.http_timeout = 60 * 2
 
 # inherit some jupyterhub environment variables
 c.KubeSpawner.env_keep = [
@@ -41,18 +41,35 @@ c.KubeSpawner.env_keep = [
     "MINIO_IDENTITY_OPENID_CLIENT_ID",
     "KEYCLOAK_MINIO_CLIENT_SECRET",
     "KEYCLOAK_OPAL_API_URL",
-    "S3_ENDPOINT"
+    "S3_ENDPOINT",
+    "MONGODB_HOST",
+    "MONGODB_USERNAME"
 ]
 
 metaflow_mount_path = "/opt/opal/metaflow-metadata"
+dda_url_name = os.environ["BASE_URL"] + "/user/{unescaped_username}/proxy/8000"
+mongo_password = os.environ["mongodb-root-password"]
 # add some extra environment variables
 c.KubeSpawner.environment = {
     "USERNAME": "jovyan",
     "METAFLOW_DATASTORE_SYSROOT_LOCAL": metaflow_mount_path,
     "CONDA_ENVS_PATH": "$HOME/.conda/envs/",
-    "DDA_ROOT_PATH": os.environ["BASE_URL"]
+    "JUPYTER_RUNTIME_DIR": "/tmp",
+    "DDA_ROOT_PATH": dda_url_name,
+    "MONGODB_PASSWORD": mongo_password
 }
 
+# init container for fixing permissions in home/jovyan
+c.KubeSpawner.init_containers = [{
+    "name": "fix-permissions",
+    "image": "busybox",
+    "command": ["sh", "-c", "chown -R 1000:100 /jovyan"],
+    "volume_mounts": [{
+        'mountPath': '/jovyan',
+        'name': "home-jovyan-mnt"
+        }]
+    }
+]
 # assign a security context for write permissions to
 # the attached volumes
 c.KubeSpawner.fs_gid = 100
@@ -65,7 +82,9 @@ c.KubeSpawner.pvc_name_template = pvc_name_template
 c.KubeSpawner.storage_pvc_ensure = True
 use_azure = os.getenv('USE_AZUREFILE', False)
 if use_azure:
-    c.KubeSpawner.storage_class = 'azurefile-csi-singleuser'
+    c.KubeSpawner.storage_class = 'azuredisk-csi-singleuser'
+    # sometimes azuredisk attach is crazy slow
+    c.KubeSpawner.start_timeout = 60 * 2
 else:
     c.KubeSpawner.storage_class = 'standard'
 
