@@ -32,7 +32,7 @@ c.KubeSpawner.image_pull_secrets = ["regcred"]
 # c.KubeSpawner.image = "registry.il2.dso.mil/skicamp/project-opal/tip:f970c010"
 c.KubeSpawner.image = os.environ["SINGLE_USER_IMAGE"]
 # wait a bit longer for spawn
-c.KubeSpawner.http_timeout = 60 * 2
+c.KubeSpawner.http_timeout = 60 * 5
 
 # inherit some jupyterhub environment variables
 c.KubeSpawner.env_keep = [
@@ -63,7 +63,7 @@ c.KubeSpawner.environment = {
 c.KubeSpawner.init_containers = [{
     "name": "fix-permissions",
     "image": "busybox",
-    "command": ["sh", "-c", "chown -R 1000:100 /jovyan"],
+    "command": ["sh", "-c", "chown -v -R 1000:100 /jovyan"],
     "volume_mounts": [{
         'mountPath': '/jovyan',
         'name': "home-jovyan-mnt"
@@ -84,7 +84,7 @@ use_azure = os.getenv('USE_AZUREFILE', False)
 if use_azure:
     c.KubeSpawner.storage_class = 'azuredisk-csi-singleuser'
     # sometimes azuredisk attach is crazy slow
-    c.KubeSpawner.start_timeout = 60 * 2
+    c.KubeSpawner.start_timeout = 60 * 5
 else:
     c.KubeSpawner.storage_class = 'standard'
 
