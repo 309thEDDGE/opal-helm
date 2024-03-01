@@ -45,6 +45,7 @@ c.KubeSpawner.environment = {
     "METAFLOW_DATASTORE_SYSROOT_LOCAL":metaflow_mount_path,
 }
 
+
 # assign a security context for write permissions to
 # the attached volumes
 c.KubeSpawner.fs_gid = 100
@@ -120,6 +121,7 @@ c.KubeSpawner.volume_mounts = [
         "subPath": "weave",
         'name': 'weave-sync-mnt'
     }
+
 ]
 
 # set the startup bash script

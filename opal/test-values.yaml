@@ -5,6 +5,8 @@
 
 argoProject: default
 
+appPrefix: opal
+
 imagePullSecrets: &dockerSecret regcred
 
 oauth: &oauthSecret "opal-oauth-common"
@@ -108,31 +110,33 @@ traefik:
     tls:
       nameOverride: *tlsSecret
     ingress:
-      enabled: true
+      enabled: false
       rules:
         host: "traefik-k8s.10.96.30.9.nip.io"
 
 minioOperator:
   enabled: false
   appValues:
-    namespace: *opalNS
-    tenantNamespace: *minioNS
-    imagePullSecrets: *dockerSecret
-    containerSecurityContext:
-      runAsUser: 1001
-      runAsGroup: 1001
-      runAsNonRoot: true
-      capabilities:
-        drop:
-          - ALL
-    resources:
-      requests:
-        cpu: 200m
-        memory: 256Mi
-        ephemeral-storage: 500Mi
-      limits:
-        cpu: 200m
-        memory: 256Mi
+    operator:
+      namespace: *opalNS
+      tenantNamespace: *minioNS
+      imagePullSecrets:
+        - name: *dockerSecret
+      containerSecurityContext:
+        runAsUser: 1001
+        runAsGroup: 1001
+        runAsNonRoot: true
+        capabilities:
+          drop:
+            - ALL
+      resources:
+        requests:
+          cpu: 200m
+          memory: 256Mi
+          ephemeral-storage: 500Mi
+        limits:
+          cpu: 200m
+          memory: 256Mi
 
 minioInstance:
   enabled: false
@@ -150,7 +154,7 @@ minioInstance:
     tenant:
       namespace: *minioNS
       imagePullSecrets:
-        - *dockerSecret
+        - name: *dockerSecret
       pools:
         - servers: 4
           volumesPerServer: 4
@@ -228,3 +232,40 @@ jupyterhub:
     # metaflow datastore size
     resources:
       storage: 2Gi
+  postgres:
+    nameOverride: jupyterhub-postgres
+    namespace: *opalNS
+    # PostgreSQL User to create
+    postgresqlUsername: jupyterhub
+    # PostgreSQL Password for the new user
+    postgresqlPassword: jupyterhub
+    # PostgreSQL Database to create
+    postgresqlDatabase: jupyterhub
+    # PostgreSQL network policy configuration
+    networkPolicy:
+      enabled: false
+    global:
+      imagePullSecrets:
+        - *dockerSecret
+    image:
+      registry: registry1.dso.mil
+      repository: ironbank/opensource/postgres/postgresql12
+      tag: 12.15
+    securityContext:
+      enabled: true
+      fsGroup: 26
+      runAsUser: 26
+      runAsGroup: 26
+    containerSecurityContext:
+      enabled: true
+      runAsUser: 26
+      capabilities:
+        drop:
+          - ALL
+    resources:
+      requests:
+        cpu: "250m"
+        memory: "256Mi"
+      limits:
+        cpu: "250m"
+        memory: "256Mi"
