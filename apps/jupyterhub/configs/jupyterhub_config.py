@@ -63,7 +63,7 @@ c.KubeSpawner.environment = {
 c.KubeSpawner.init_containers = [{
     "name": "fix-permissions",
     "image": "busybox",
-    "command": ["sh", "-c", "chown -v -R 1000:100 /jovyan"],
+    "command": ["sh", "-c", "find /jovyan -type d \( -path /jovyan/.conda -o -path /jovyan/opal -o -path /jovyan/data-discovery-api -o -path /jovyan/weave \) -prune -o -exec chown -v 1000:100 {} \;"],
     "volume_mounts": [{
         'mountPath': '/jovyan',
         'name': "home-jovyan-mnt"
