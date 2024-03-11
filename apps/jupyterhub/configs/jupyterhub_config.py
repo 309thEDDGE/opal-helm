@@ -175,7 +175,7 @@ c.KubeSpawner.volume_mounts = [
         "name": "jupyter-notebook-config"
     },
     {
-        'mountPath': '/etc/.jupyter/jupyter_server_config.py',
+        'mountPath': '/etc/jupyter/jupyter_server_config.py',
         "subPath": "jupyter_server_config.py",
         "name": "jupyter-server-config"
     },

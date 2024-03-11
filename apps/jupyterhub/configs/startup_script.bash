@@ -44,9 +44,15 @@ cp -r /opt/data/weave /home/jovyan/
 log_to_file "Link directories to home"
 
 # 8
+# envsubst is pretty important here, so we need to make sure it's therePYTHON3=$(get_python_3 $PYTHON3 $PYTHON $(which python) $(which python3))
+SUB=$(which envsubst)
+if [[ -z "${SUB}" ]] ; then
+    log_to_file "attempting install of missing envsubst command"
+    pip install envsubst
+fi
 mkdir -p /home/jovyan/.metaflowconfig
-cat /tmp/config/metaflow_config.json > /home/jovyan/.metaflowconfig/config.json
-#envsubst < /tmp/config/metaflow_config.json > /home/jovyan/.metaflowconfig/config.json
+#cat /tmp/config/metaflow_config.json > /home/jovyan/.metaflowconfig/config.json
+envsubst < /tmp/config/metaflow_config.json > /home/jovyan/.metaflowconfig/config.json
 log_to_file "Fill in metaflow config file"
 
 ## 9
