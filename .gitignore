@@ -3,6 +3,7 @@
 .vscode
 .DS_Store
 dockerconfig.json
+git-creds
 
 # Certificates
 *.crt

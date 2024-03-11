@@ -1,0 +1,6 @@
+dependencies:
+- name: minio-operator-crds
+  repository: file://./charts/minio-operator-crds
+  version: 5.0.5
+digest: sha256:597ebcdd95ce4ee1d10d9dd979df38acf7bc5b8a8ce2ec8708703ac34804b8aa
+generated: "2024-01-25T11:02:18.724122841-05:00"

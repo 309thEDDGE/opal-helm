@@ -60,7 +60,7 @@ mongodb:
 
 source: &appSource
   url: "https://github.com/309thEDDGE/opal-helm.git"
-  targetRevision: "main"
+  targetRevision: "OPAL-1174-nginx-fileserver"
 
 appValues:
   namespaces:
@@ -115,6 +115,12 @@ appValues:
       creds:
         existingSecret: *minio-creds
         accessKey: *minio-accesskey   
+
+  nginx:
+    enabled: true
+    appValues:
+      namespace: *opalNS
+    restart: always
         
   jupyterhub:
     enabled: true

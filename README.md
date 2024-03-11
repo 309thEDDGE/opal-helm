@@ -16,6 +16,8 @@
     - [Helm install OPAL](#helm-install-opal)
     - [Patching argoCD](#patching-argocd)
     - [Important URLs](#important-urls)
+  - [Nginx](#nginx)
+    - [Setting up the file server](#nginx-setup)
   - [Mongodb](#mongodb)
     - [Mongodb documentation](#mongodb-documentation)
     - [Mongodb configuration and user creation](#mongodb-configuration-and-user-creation)
@@ -160,6 +162,23 @@ if there is a reason to update any of the helm values while argoCD is running, t
 
 **Traefik**
 >traefik-k8s.10.96.30.9.nip.io
+
+**Nginx**
+>nginx-k8s.10.96.30.9.nip.io
+
+## Nginx
+Nginx is being used as a file server for all of the conda packages used in Opal.
+
+### Nginx setup
+When setting up Nginx the files **must** be in the correct format. The folder that is copied up to the server has to be named condapkg. There should also be a linux-64 and noarch subfolder in condapkg. There also needs to be a corresponding repodata.json file in each subfolder as well as all the conda files.
+
+To copy the files up use the following command.
+
+```kubectl cp <path_to_condapkg> opal/<nginx-podname>:/usr/share/nginx/html```
+
+After Jupyterhub is running, you will also need to create the conda environment by using the following command.
+
+```conda env create -f local_channel_env.yaml```
 
 ## Mongodb
 Mongodb is a document database designed for ease of application development and scaling.  In the instance of OPAL, it is used in conjuction with pyMongo in a jupyterhub notebook to provide data analyst access to important collections within the database.

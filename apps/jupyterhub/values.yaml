@@ -110,6 +110,7 @@ env:
   openidClientId: opal-jupyterhub
   singleUserImage: "deploytime_singleuser"
   pythonPath: "/python-packages/:$PYTHONPATH"
+  condaPath: "/conda-packages/:$CONDAPATH"
   opalBannerColor: "Red"
   opalBannerText: "Kubernetes Local Environment"
   keycloakJupyterhubUsernameKey: "preferred_username"

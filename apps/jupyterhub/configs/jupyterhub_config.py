@@ -34,7 +34,8 @@ c.KubeSpawner.env_keep = [
     "OPAL_BANNER_COLOR",
     "MINIO_IDENTITY_OPENID_CLIENT_ID",
     "KEYCLOAK_MINIO_CLIENT_SECRET",
-    "KEYCLOAK_OPAL_API_URL"
+    "KEYCLOAK_OPAL_API_URL",
+    "CONDA_OVERRIDE_CUDA"
 ]
 
 metaflow_mount_path = "/opt/opal/metaflow-metadata"
@@ -73,6 +74,18 @@ c.KubeSpawner.volumes = [
         "configMap": {
             "name": "jupyterhub-startup-script",
             "defaultMode": 0o755 # octal permission number
+        }
+    },
+    {
+        'name': "condarc",
+        "configMap": {
+            "name": "jupyterhub-condarc"
+        }
+    },
+    {
+        'name': "local-channel-mnt",
+        "configMap": {
+            "name": "jupyterhub-local-channel"
         }
     },
     {
@@ -120,6 +133,16 @@ c.KubeSpawner.volume_mounts = [
         'mountPath': '/home/jovyan/weave',
         "subPath": "weave",
         'name': 'weave-sync-mnt'
+    },
+    {
+        'mountPath': '/home/jovyan/.condarc',
+        'name': 'condarc',
+        'subPath': '.condarc'
+    },
+    {
+        'mountPath': '/home/jovyan/local_channel_env.yaml',
+        'name': 'local-channel-mnt',
+        'subPath': 'local_channel_env.yaml'
     }
 
 ]
@@ -138,7 +161,7 @@ def get_minio_creds(keycloak_access_token):
             "Action": "AssumeRoleWithWebIdentity",
             "WebIdentityToken": keycloak_access_token,
             "Version": "2011-06-15",
-            # "DurationSeconds": 604800, # This should pick up the value specified by keycloak if left blank
+            "DurationSeconds": 604800, # This should pick up the value specified by keycloak if left blank
             }
     r = requests.post(s3_endpoint, data=body)
 

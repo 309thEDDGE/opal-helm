@@ -42,7 +42,6 @@ mongodb:
       databases: []
     replicaCount: 2
 
-
 keycloak:
   enabled: false
   appValues:
@@ -267,3 +266,11 @@ jupyterhub:
       limits:
         cpu: "250m"
         memory: "256Mi"
+
+nginx:
+  enabled: true
+  appValues:
+    namespace: *opalNS
+    image:
+      tag: 1.25.3
+      imagePullSecrets: *dockerSecret
