@@ -292,6 +292,10 @@ c.OAuthenticator.scope = ['openid', 'profile', 'roles']
 
 jupyterhub_api_token = os.environ['JUPYTERHUB_API_TOKEN']
 
+c.JupyterHub.services = [
+    {"name": "dask-gateway", "api_token": jupyterhub_api_token}
+]
+
 # Cdsdashboards stuff
 from cdsdashboards.app import CDS_TEMPLATE_PATHS
 from cdsdashboards.hubextension import cds_extra_handlers
