@@ -240,12 +240,3 @@ jupyterhub:
     resources:
       useAzureFile: false
       storage: 2Gi
-
-daskGateway:
-  enabled: true
-  appValues:
-    namespace: *opalNS
-    gateway:
-      auth:
-        apiTokenFromSecretName: *tokenEnv
-        apiTokenFromSecretKey: "JUPYTERHUB_API_TOKEN"
