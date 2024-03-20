@@ -32,7 +32,7 @@ valuesFile: test-values.yaml
 
 source: &appSource
   url: "https://github.com/309thEDDGE/opal-helm.git"
-  targetRevision: "aks-comp-rebase-test"
+  targetRevision: "OPAL-1229-dask-argo"
 
 appValues:
   source: *appSource
