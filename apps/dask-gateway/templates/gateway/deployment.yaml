@@ -1,7 +1,6 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  namespace: {{ .Values.namespace | default "default" | quote }}
   name: {{ include "dask-gateway.apiName" . }}
   labels:
     {{- include "dask-gateway.labels" . | nindent 4 }}

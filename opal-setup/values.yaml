@@ -89,7 +89,6 @@ appValues:
   daskGateway:
     enabled: true
     appValues:
-      namespace: *opalNS
       gateway:
         auth:
           apiTokenFromSecretName: *tokenEnv

@@ -243,7 +243,6 @@ jupyterhub:
 daskGateway:
   enabled: true
   appValues:
-    namespace: *opalNS
     gateway:
       auth:
         apiTokenFromSecretName: *tokenEnv
