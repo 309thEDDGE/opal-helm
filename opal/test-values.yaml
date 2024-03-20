@@ -245,5 +245,6 @@ daskGateway:
   appValues:
     gateway:
       auth:
-        apiTokenFromSecretName: *tokenEnv
-        apiTokenFromSecretKey: "JUPYTERHUB_API_TOKEN"
+        jupyterhub:
+          apiTokenFromSecretName: *tokenEnv
+          apiTokenFromSecretKey: "JUPYTERHUB_API_TOKEN"
