@@ -25,11 +25,11 @@ tls:
 oauth:
   name: opal-oauth-common
 
-valuesFile: values.yaml
+valuesFile: test-values.yaml
 
 source: &appSource
   url: "https://github.com/309thEDDGE/opal-helm.git"
-  targetRevision: "main"
+  targetRevision: "aks-comp-rebase-test"
 
 appValues:
   source: *appSource
