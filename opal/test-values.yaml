@@ -214,6 +214,7 @@ jupyterhub:
       gitSecret:
         secretName: "git-creds"
     secrets:
+      nameOverride: *tokenEnv
       oauth:
         existingSecret: *oauthSecret
     image:

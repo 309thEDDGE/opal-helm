@@ -26,7 +26,7 @@ oauth:
   name: opal-oauth-common
 
 tokenEnv:
-  name: &tokenEnv "token-env"
+  name: &tokenEnv "token-env-1"
 
 valuesFile: test-values.yaml
 
@@ -86,6 +86,8 @@ appValues:
         image:
           repository: registry.k8s.io/git-sync/git-sync
           tag: v4.0.0
+      secrets:
+        nameOverride: *tokenEnv
   daskGateway:
     enabled: true
     appValues:
