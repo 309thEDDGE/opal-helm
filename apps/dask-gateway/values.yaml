@@ -6,7 +6,7 @@ nameOverride: ""
 ##
 fullnameOverride: ""
 
-namespace: "opal"
+namespace: ""
 
 # gateway nested config relates to the api Pod and the dask-gateway-server
 # running within it, the k8s Service exposing it, as well as the schedulers
