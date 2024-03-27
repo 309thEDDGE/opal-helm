@@ -65,7 +65,7 @@ Traefik name
 */}}
 {{- define "dask-gateway.traefikName" -}}
 {{- $fullname := (include "dask-gateway.fullname" . ) -}}
-{{ print $fullname "-traefik"  | trunc 63 | trimSuffix "-" }}
+{{ print $fullname "-traefik"  | trunc 63 }}
 {{- end -}}
 
 {{/*
