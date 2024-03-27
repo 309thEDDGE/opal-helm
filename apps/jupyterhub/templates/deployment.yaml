@@ -136,6 +136,7 @@ spec:
               subPath: jupyterhub_config.py
             - name: jupyterhub-condarc-mnt
               mountPath: /home/jovyan/.condarc
+              subPath: .condarc
             - name: jupyterhub-local-channel-mnt
               mountPath: /home/jovyan/local_channel_env.yaml
               subPath: local_channel_env.yaml
