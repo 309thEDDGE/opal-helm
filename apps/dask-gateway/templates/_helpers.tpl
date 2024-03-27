@@ -64,7 +64,7 @@ API Server name
 Traefik name
 */}}
 {{- define "dask-gateway.traefikName" -}}
-{{ default (include "dask-gateway.fullname" . ) "traefik" | trunc 63 | trimSuffix "-" }}
+{{ (include "dask-gateway.fullname" . ) "traefik" | trunc 63 | trimSuffix "-" }}
 {{- end -}}
 
 {{/*
