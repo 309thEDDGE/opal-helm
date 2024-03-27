@@ -25,14 +25,11 @@ tls:
 oauth:
   name: opal-oauth-common
 
-tokenEnv:
-  name: &tokenEnv "token-env"
-
 valuesFile: test-values.yaml
 
 source: &appSource
   url: "https://github.com/309thEDDGE/opal-helm.git"
-  targetRevision: "aks-comp-rebase-test"
+  targetRevision: "OPAL-1229-dask-argo"
 
 appValues:
   source: *appSource
@@ -86,16 +83,7 @@ appValues:
         image:
           repository: registry.k8s.io/git-sync/git-sync
           tag: v4.0.0
-      secrets:
-        nameOverride: *tokenEnv
   daskGateway:
     enabled: true
     appValues:
       namespace: *opalNS
-      gateway:
-        auth:
-          jupyterhub:
-            apiTokenFromSecretName: *tokenEnv
-            apiTokenFromSecretKey: "JUPYTERHUB_API_TOKEN"
-
-

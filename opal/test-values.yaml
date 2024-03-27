@@ -214,7 +214,6 @@ jupyterhub:
       gitSecret:
         secretName: "git-creds"
     secrets:
-      nameOverride: *tokenEnv
       oauth:
         existingSecret: *oauthSecret
     image:
@@ -245,8 +244,3 @@ daskGateway:
   enabled: true
   appValues:
     namespace: *opalNS
-    gateway:
-      auth:
-        jupyterhub:
-          apiTokenFromSecretName: *tokenEnv
-          apiTokenFromSecretKey: "JUPYTERHUB_API_TOKEN"
