@@ -1,0 +1,25 @@
+name: compliance-checks
+
+on:
+  push:
+  pull_request:
+    branches:
+      - main
+      - aks-comp-rebase-test
+
+jobs:
+  trufflehog:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: TruffleHog OSS
+        uses: trufflesecurity/trufflehog@latest
+        with:
+          path: ./
+          base: $GITHUB_REF_NAME
+          head: HEAD
+          extra_args: --debug --only-verified
