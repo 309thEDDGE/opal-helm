@@ -19,7 +19,4 @@ jobs:
       - name: TruffleHog OSS
         uses: trufflesecurity/trufflehog@v3.71.2
         with:
-          path: ./
-          base: $GITHUB_REF_NAME
-          head: HEAD
           extra_args: --debug --only-verified
