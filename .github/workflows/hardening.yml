@@ -20,3 +20,20 @@ jobs:
         uses: trufflesecurity/trufflehog@v3.71.2
         with:
           extra_args: --debug --only-verified
+
+  helm-lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install helm
+        uses: azure/setup-helm@v3
+        with:
+          version: 3.12.2
+      - name: run helm lint - apps
+        run: |
+          cd ${GITHUB_WORKSPACE}/apps/
+          find . -depth -maxdepth 1 -mindepth 1 -type d -exec helm lint {} \;
