@@ -76,6 +76,10 @@ jobs:
           cd ${GITHUB_WORKSPACE}/apps
           for dir in `find . -depth -maxdepth 1 -mindepth 1 -type d`
           do
-            helm template $RANDOM dir > app.yaml
+            pushd $dir > /dev/null
+            printf "$dir\n"
+            helm dependency build .
+            helm template $RANDOM . > app.yaml
             grep -q "opal-setup" app.yaml
+            popd > /dev/null
           done
