@@ -36,4 +36,8 @@ jobs:
       - name: run helm lint - apps
         run: |
           cd ${GITHUB_WORKSPACE}/apps/
-          find . -depth -maxdepth 1 -mindepth 1 -type d -exec helm lint {} \;
+          for dir in `find . -depth -maxdepth 1 -mindepth 1 -type d`
+          # -exec helm lint {} \;
+          do
+            helm lint $dir
+          done
