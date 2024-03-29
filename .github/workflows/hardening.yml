@@ -33,6 +33,14 @@ jobs:
         uses: azure/setup-helm@v3
         with:
           version: 3.12.2
+      - name: run helm lint - setup
+        run: |
+          cd ${GITHUB_WORKSPACE}/opal-setup
+          helm lint
+      - name: run helm lint - app of apps
+        run: |
+          cd ${GITHUB_WORKSPACE}/opal
+          helm lint
       - name: run helm lint - apps
         run: |
           cd ${GITHUB_WORKSPACE}/apps/
