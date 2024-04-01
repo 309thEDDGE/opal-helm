@@ -85,11 +85,10 @@ jobs:
           do
             pushd $dir > /dev/null
             printf "$dir\n"
-            printf "build?\n"
             helm dependency build .
-            printf "template?\n"
             helm template $RANDOM . > app.yaml
-            printf "still working?\n"
             grep -q "opal-setup" app.yaml
+            printf "is this where it breaks?\n"
             popd > /dev/null
+            printf "or is this where it breaks?"
           done
