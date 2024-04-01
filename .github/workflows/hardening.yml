@@ -87,8 +87,6 @@ jobs:
             printf "$dir\n"
             helm dependency build .
             helm template $RANDOM . > app.yaml
-            grep -q "opal-setup" app.yaml
-            printf "is this where it breaks?\n"
+            grep -qP "opal-setup" app.yaml
             popd > /dev/null
-            printf "or is this where it breaks?"
           done
