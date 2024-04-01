@@ -89,7 +89,7 @@ jobs:
             helm dependency build .
             printf "template?\n"
             helm template $RANDOM . > app.yaml
-            print "still working?\n"
+            printf "still working?\n"
             grep -q "opal-setup" app.yaml
             popd > /dev/null
           done
