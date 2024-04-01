@@ -87,6 +87,6 @@ jobs:
             printf "$dir\n"
             helm dependency build .
             helm template $RANDOM . > app.yaml
-            grep -qP "opal-setup" app.yaml
+            grep "opal-setup" . | tee > wc -l
             popd > /dev/null
           done
