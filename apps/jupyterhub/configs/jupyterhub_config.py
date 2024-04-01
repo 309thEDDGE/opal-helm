@@ -43,7 +43,8 @@ c.KubeSpawner.env_keep = [
     "KEYCLOAK_OPAL_API_URL",
     "S3_ENDPOINT",
     "MONGODB_HOST",
-    "MONGODB_USERNAME"
+    "MONGODB_USERNAME",
+    "DASK_GATEWAY_SERVICE_NAME"
 ]
 
 metaflow_mount_path = "/opt/opal/metaflow-metadata"
