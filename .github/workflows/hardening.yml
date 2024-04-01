@@ -66,19 +66,19 @@ jobs:
         uses: azure/setup-helm@v3
         with:
           version: 3.12.2
-      - name: check for string 'opal-setup' - setup
+      - name: check for string 'opal-setup' in rendered opal-setup manifests
         run: |
           cd ${GITHUB_WORKSPACE}/opal-setup
           helm dependency build .
           helm template $RANDOM . > setup.yaml
           grep -q "opal-setup" setup.yaml
-      - name: check for string 'opal-setup' - opal
+      - name: check for string 'opal-setup' in rendered opal manifests
         run: |
           cd ${GITHUB_WORKSPACE}/opal
           helm dependency build .
           helm template $RANDOM . > opal.yaml
           grep -q "opal-setup" opal.yaml
-      - name: check for string 'opal-setup' - apps
+      - name: check for string 'opal-setup' in rendered app manifests
         run: |
           cd ${GITHUB_WORKSPACE}/apps
           for dir in `find . -depth -maxdepth 1 -mindepth 1 -type d`
