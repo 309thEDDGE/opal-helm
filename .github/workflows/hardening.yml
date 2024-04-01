@@ -48,8 +48,10 @@ jobs:
           cd ${GITHUB_WORKSPACE}/apps/
           for dir in `find . -depth -maxdepth 1 -mindepth 1 -type d`
           do
+            pushd $dir > /dev/null
             helm dependency build .
-            helm lint $dir
+            helm lint .
+            popd > /dev/null
           done
 
   check-for-hardcoded-vars:
