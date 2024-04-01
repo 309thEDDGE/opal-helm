@@ -85,8 +85,11 @@ jobs:
           do
             pushd $dir > /dev/null
             printf "$dir\n"
+            printf "build?\n"
             helm dependency build .
+            printf "template?\n"
             helm template $RANDOM . > app.yaml
+            print "still working?\n"
             grep -q "opal-setup" app.yaml
             popd > /dev/null
           done
