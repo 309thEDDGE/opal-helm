@@ -62,6 +62,8 @@ spec:
               value: {{ .opalBannerText }}
             - name: KEYCLOAK_JUPYTERHUB_USERNAME_KEY
               value: {{ .keycloakJupyterhubUsernameKey }}
+            - name: DASK_GATEWAY_SERVICE_NAME
+              value: {{ include "render-url" ( dict "value" .daskGatewayServiceName "context" $values ) }}
             {{- end }}
             {{- if .Values.resources.useAzureFile }}
             - name: USE_AZUREFILE
