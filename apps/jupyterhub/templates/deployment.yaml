@@ -68,7 +68,7 @@ spec:
               value: {{ .Values.env.daskGatewayServiceName }}
             {{- else }}
             - name: DASK_GATEWAY_ENDPOINT
-              value: http://{{ .Release.Name }}-dask-gateway-traefik.{{ .Namespace }}.svc.cluster.local
+              value: http://{{ .Release.Name }}-dask-gateway-traefik.{{ .Values.namespace }}.svc.cluster.local
             {{- end }}
             {{- if .Values.resources.useAzureFile }}
             - name: USE_AZUREFILE
