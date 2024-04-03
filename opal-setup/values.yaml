@@ -29,7 +29,7 @@ valuesFile: test-values.yaml
 
 source: &appSource
   url: "https://github.com/309thEDDGE/opal-helm.git"
-  targetRevision: "OPAL-1229-dask-argo"
+  targetRevision: "aks-comp-rebase-test"
 
 appValues:
   source: *appSource
@@ -83,7 +83,3 @@ appValues:
         image:
           repository: registry.k8s.io/git-sync/git-sync
           tag: v4.0.0
-  daskGateway:
-    enabled: true
-    appValues:
-      namespace: *opalNS

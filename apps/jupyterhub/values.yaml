@@ -110,7 +110,6 @@ env:
   opalBannerColor: "Red"
   opalBannerText: "Kubernetes Local Environment"
   keycloakJupyterhubUsernameKey: "preferred_username"
-  daskGatewayServiceName: "{{ .Release.name }}-dask-gateway-traefik"
 
 resources:
   storage: 2Gi

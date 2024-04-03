@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "dask-gateway.traefikName" . }}
-  namespace: {{ .Values.namespace }}
   labels:
     {{- include "dask-gateway.labels" . | nindent 4 }}
 spec:

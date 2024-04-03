@@ -8,7 +8,7 @@
 #
 $schema": http://json-schema.org/draft-07/schema#
 type: object
-additionalProperties: true
+additionalProperties: false
 required:
   - gateway
   - controller
@@ -25,10 +25,6 @@ properties:
     type: [string, "null"]
     description: |
       See the description of fullnameOverride.
-  namespace:
-    type: [string, "null"]
-    description: |
-      Allows you to specify the namespace dask-gateway is installed in 
 
   gateway:
     type: object

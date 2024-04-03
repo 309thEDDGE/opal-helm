@@ -57,22 +57,19 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 API Server name
 */}}
 {{- define "dask-gateway.apiName" -}}
-{{- $fullname := (include "dask-gateway.fullname" . ) -}}
-{{ print $fullname "-api"  | trunc 63 }}
+{{ include "dask-gateway.fullname" . | printf "api-%s" | trunc 63 | trimSuffix "-" }}
 {{- end -}}
 
 {{/*
 Traefik name
 */}}
 {{- define "dask-gateway.traefikName" -}}
-{{- $fullname := (include "dask-gateway.fullname" . ) -}}
-{{ print $fullname "-traefik"  | trunc 63 }}
+{{ include "dask-gateway.fullname" . | printf "traefik-%s" | trunc 63 | trimSuffix "-" }}
 {{- end -}}
 
 {{/*
 Controller name
 */}}
 {{- define "dask-gateway.controllerName" -}}
-{{- $fullname := (include "dask-gateway.fullname" . ) -}}
-{{ print $fullname "-controller"  | trunc 63 }}
+{{ include "dask-gateway.fullname" . | printf "controller-%s" | trunc 63 | trimSuffix "-" }}
 {{- end -}}

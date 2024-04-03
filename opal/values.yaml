@@ -37,6 +37,7 @@ mongodb:
       databases: []
     replicaCount: 2
 
+
 keycloak:
   enabled: true
   appValues:
