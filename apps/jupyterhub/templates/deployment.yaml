@@ -62,10 +62,10 @@ spec:
               value: {{ .opalBannerText }}
             - name: KEYCLOAK_JUPYTERHUB_USERNAME_KEY
               value: {{ .keycloakJupyterhubUsernameKey }}
-            {{- end }}
-            {{ - if .Values.daskGatewayServiceName }}
+          {{- end }}
+            {{ - if .Values.env.daskGatewayServiceName }}
             - name: DASK_GATEWAY_ENDPOINT
-              value: {{ .Values.daskGatewayServiceName }}
+              value: {{ .Values.env.daskGatewayServiceName }}
             {{ - else }}
             - name: DASK_GATEWAY_ENDPOINT
               value: http://{{ .Release.Name }}-dask-gateway-traefik.{{ .Namespace }}.svc.cluster.local
