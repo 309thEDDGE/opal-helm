@@ -63,13 +63,13 @@ spec:
             - name: KEYCLOAK_JUPYTERHUB_USERNAME_KEY
               value: {{ .keycloakJupyterhubUsernameKey }}
           {{- end }}
-            {{ - if .Values.env.daskGatewayServiceName }}
+            {{- if .Values.env.daskGatewayServiceName }}
             - name: DASK_GATEWAY_ENDPOINT
               value: {{ .Values.env.daskGatewayServiceName }}
-            {{ - else }}
+            {{- else }}
             - name: DASK_GATEWAY_ENDPOINT
               value: http://{{ .Release.Name }}-dask-gateway-traefik.{{ .Namespace }}.svc.cluster.local
-            {{ - end }}
+            {{- end }}
             {{- if .Values.resources.useAzureFile }}
             - name: USE_AZUREFILE
               value: "True"
