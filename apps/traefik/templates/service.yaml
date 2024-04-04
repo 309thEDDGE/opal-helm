@@ -17,6 +17,9 @@ spec:
     app: {{ include "traefik.fullname" . }}
   ports:
     - protocol: TCP
+      port: 9443
+      name: lbc-webhook
+    - protocol: TCP
       port: 80
       name: web
       targetPort: web
@@ -31,3 +34,7 @@ spec:
   {{- if .Values.service.loadBalancerIP }}
   clusterIP: {{ .Values.service.loadBalancerIP }}
   {{- end }}
+  externalIPs: {{ .Values.service.externalIPs }}
+  
+
+  

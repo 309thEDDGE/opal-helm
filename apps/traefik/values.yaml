@@ -5,7 +5,7 @@ fullnameOverride: ""
 nameOverride: ""
 
 # Namespace to install traefik
-namespace: "opal"
+namespace: "opal-prod"
 
 # The number of replicas to create (has no effect if autoscaling enabled)
 replicas: 1
@@ -90,15 +90,16 @@ podDisruptionBudget: {}
 
 service:
   # Annotations for headless and HTTP Services
-  annotations: {}
-  # Additional labels for headless and HTTP Services
+  annotations: 
+    
+ # Additional labels for headless and HTTP Services
   labels: {}
   # key: value
   # Optional IP for the load balancer. Used for services of type LoadBalancer only
   loadBalancerIP: ""
   # The http Service port
   httpPort: 80
-
+  externalIPs: 
   extraPorts: []
   # When using Service type LoadBalancer, you can restrict source ranges allowed
   # to connect to the LoadBalancer, e.g. will result in Security Groups

@@ -1,7 +1,8 @@
 {{- $values := . -}}
 {{- $files := .Files -}}
 {{- $oauth := .Values.oauth -}}
-
+{{ $tenant := (lookup "v1" "Tenant" "Minio" (include "minio-operator.fullname" .) )}}
+  {{ if not $tenant }}
 apiVersion: minio.min.io/v2
 kind: Tenant
 metadata:
@@ -358,4 +359,5 @@ spec:
   {{ if dig "priorityClassName" "" . }}
   priorityClassName: {{ dig "priorityClassName" "" . }}
   {{- end }}
+{{- end }}
 {{- end }}
