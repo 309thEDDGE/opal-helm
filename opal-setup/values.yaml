@@ -29,7 +29,7 @@ valuesFile: values.yaml
 
 source: &appSource
   url: "https://github.com/309thEDDGE/opal-helm.git"
-  targetRevision: "main"
+  targetRevision: "OPAL-1241-full-k8s-onprod"
 
 appValues:
   source: *appSource
