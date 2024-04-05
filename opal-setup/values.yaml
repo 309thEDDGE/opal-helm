@@ -32,6 +32,9 @@ source: &appSource
   targetRevision: "OPAL-1241-full-k8s-onprod"
 
 appValues:
+  namespaces:
+  - *opalNS 
+  - *minioNS 
   source: *appSource
   mongodb:
     enabled: true
@@ -57,14 +60,17 @@ appValues:
   traefik:
     enabled: true
     appValues:
+      namespace: *opalNS
       service:
         annotations:
+          # Uncomment for use in AWS
           service.beta.kubernetes.io/aws-load-balancer-type: "external"
           service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: "ip"
           service.beta.kubernetes.io/aws-load-balancer-subnets: subnet-03283225228a37928, subnet-014ea3b6f578bf649
-          service.beta.kubernetes.io/azure-load-balancer-resource-group: opal-eval_group
-          service.beta.kubernetes.io/azure-pip-name: opal-PIP
-          service.beta.kubernetes.io/azure-dns-label-name: opal-eval
+          # uncomment for use in Azure
+          # service.beta.kubernetes.io/azure-load-balancer-resource-group: opal-eval_group
+          # service.beta.kubernetes.io/azure-pip-name: opal-PIP
+          # service.beta.kubernetes.io/azure-dns-label-name: opal-eval
         externalIPs: 
         - 52.222.114.186
       ingress:
