@@ -148,7 +148,7 @@ gateway:
       # Cores request/limit for the scheduler.
       cores:
         request: 1
-        limit: 10
+        limit: 5
 
       # Memory request/limit for the scheduler.
       memory:
@@ -166,13 +166,13 @@ gateway:
 
       # Cores request/limit for each worker.
       cores:
-        request:
-        limit:
+        request: 1
+        limit: 1
 
       # Memory request/limit for each worker.
       memory:
-        request:
-        limit:
+        request: "2 G"
+        limit: "4 G"
 
       # Number of threads available for a worker. Sets
       # `c.KubeClusterConfig.worker_threads`
