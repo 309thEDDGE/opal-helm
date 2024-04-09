@@ -147,8 +147,8 @@ gateway:
 
       # Cores request/limit for the scheduler.
       cores:
-        request: "1"
-        limit: "10"
+        request: 1
+        limit: 10
 
       # Memory request/limit for the scheduler.
       memory:
