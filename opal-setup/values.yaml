@@ -69,6 +69,11 @@ appValues:
         namespace: *minioNS
       oauth:
         existingSecret: "minio-creds-secret"
+  nginx:
+    enabled: true
+    appValues:
+      namespace: *opalNS
+    restart: always
   jupyterhub:
     enabled: true
     appValues:
