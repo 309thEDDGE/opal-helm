@@ -140,7 +140,7 @@ minioInstance:
     namespace: ""
     oauth:
       existingSecret: *oauthSecret
-    baseDns: ""
+    baseDns: "opalacceptance.dso.mil"
     secrets:
       # both fields need to be filled in
       name: "minio-creds-secret"
@@ -207,7 +207,7 @@ jupyterhub:
   enabled: true
   appValues:
     namespace: *opalNS
-    baseDns: ""
+    baseDns: "opalacceptance.dso.mil"
     gitSync:
       enabled: true
       # Leave this empty, only fill it in the opal-setup chart values
