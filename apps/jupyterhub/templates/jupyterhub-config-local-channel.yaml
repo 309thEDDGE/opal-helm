@@ -4,7 +4,7 @@ metadata:
   namespace: {{ .Values.namespace }}
   name: jupyterhub-local-channel
 data:
-  .condarc: |
+  local_channel_env.yaml: |
     name: singleuser
     channels:
       - http://{{ .Release.Name }}-nginx.{{ .Values.namespace }}.svc.cluster.local/condapkg/
