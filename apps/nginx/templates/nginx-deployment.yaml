@@ -40,4 +40,4 @@ spec:
           name: {{ .Release.Name }}-nginxconfig
       - name: nginx-claim
         persistentVolumeClaim:
-          claimName: nginx-claim
+          claimName: {{ .Release.Name }}-nginx-claim
