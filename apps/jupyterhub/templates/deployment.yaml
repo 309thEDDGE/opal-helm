@@ -77,6 +77,8 @@ spec:
               value: {{ .Release.Name }}-mongodb:27017
             - name: NGINX_HOST
               value: http://{{ .Release.Name }}-nginx.{{ .Values.namespace }}.svc.cluster.local/condapkg/
+            - name: CONDA_OVERRIDE_CUDA
+              value: "12.0"
           envFrom:
             - secretRef:
                 name: {{( include "get.tokenName" . )}}
@@ -99,11 +101,6 @@ spec:
             - name: jupyterhub-config-py-mnt
               mountPath: /home/jovyan/jupyterhub_config.py
               subPath: jupyterhub_config.py
-            - name: jupyterhub-condarc-mnt
-              mountPath: /home/jovyan/.condarc
-            - name: jupyterhub-local-channel-mnt
-              mountPath: /home/jovyan/local_channel_env.yaml
-              subPath: local_channel_env.yaml
 {{- if .Values.gitSync.enabled }}
         - image: "{{ .Values.gitSync.image.repository }}:{{ .Values.gitSync.image.tag }}"
           name: opal-repo-sync
@@ -200,11 +197,3 @@ spec:
         secret:
           secretName: {{ .Values.gitSync.gitSecret.secretName }}
           defaultMode: 0400
-      - name: jupyterhub-condarc-mnt
-        configMap:
-          name: jupyterhub-condarc
-          defaultMode: 0755
-      - name: jupyterhub-local-channel-mnt
-        configMap:
-          name: jupyterhub-local-channel
-          defaultMode: 0755

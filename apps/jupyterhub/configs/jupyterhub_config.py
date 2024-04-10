@@ -44,7 +44,8 @@ c.KubeSpawner.env_keep = [
     "S3_ENDPOINT",
     "MONGODB_HOST",
     "MONGODB_USERNAME",
-    "NGINX_HOST"
+    "NGINX_HOST",
+    "CONDA_OVERRIDE_CUDA"
 ]
 
 metaflow_mount_path = "/opt/opal/metaflow-metadata"
@@ -152,6 +153,20 @@ c.KubeSpawner.volumes = [
         'persistentVolumeClaim': {
             'claimName': 'weave-sync-pvc'
         }
+    },
+    {
+        'name': "condarc",
+        "configMap": {
+            "name": "jupyterhub-condarc",
+            "defaultMode": 0o755 # octal permission number
+        }
+    },
+    {
+        'name': "local-channel-mnt",
+        "configMap": {
+            "name": "jupyterhub-local-channel",
+            "defaultMode": 0o755 # octal permission number
+        }
     }
 ]
 
@@ -199,6 +214,16 @@ c.KubeSpawner.volume_mounts = [
         'mountPath': '/opt/data/weave',
         "subPath": "weave",
         'name': 'weave-sync-mnt'
+    },
+    {
+        'mountPath': '/home/jovyan/.condarc',
+        'name': 'condarc',
+        'subPath': '.condarc'
+    },
+    {
+        'mountPath': '/home/jovyan/local_channel_env.yaml',
+        'name': 'local-channel-mnt',
+        'subPath': 'local_channel_env.yaml'
     }
 ]
 
