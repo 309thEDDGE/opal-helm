@@ -157,15 +157,13 @@ c.KubeSpawner.volumes = [
     {
         'name': "condarc",
         "configMap": {
-            "name": "jupyterhub-condarc",
-            "defaultMode": 0o775 # octal permission number
+            "name": "jupyterhub-condarc"
         }
     },
     {
         'name': "local-channel-mnt",
         "configMap": {
-            "name": "jupyterhub-local-channel",
-            "defaultMode": 0o775 # octal permission number
+            "name": "jupyterhub-local-channel"
         }
     }
 ]
@@ -216,16 +214,14 @@ c.KubeSpawner.volume_mounts = [
         'name': 'weave-sync-mnt'
     },
     {
-        'mountPath': '/home/jovyan/.condarc',
+        'mountPath': '/opt/conf/.condarc',
         'name': 'condarc',
-        'subPath': '.condarc',
-        "readOnly": False
+        'subPath': '.condarc'
     },
     {
-        'mountPath': '/home/jovyan/local_channel_env.yaml',
+        'mountPath': '/opt/conf/local_channel_env.yaml',
         'name': 'local-channel-mnt',
-        'subPath': 'local_channel_env.yaml',
-        "readOnly": False
+        'subPath': 'local_channel_env.yaml'
     }
 ]
 
