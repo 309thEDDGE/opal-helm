@@ -145,7 +145,7 @@ minioInstance:
       name: "minio-creds-secret"
       accessKey: "minio-admin"
     tls:
-      name: tls-certs
+      name: *tlsSecret
     tenant:
       namespace: *minioNS
       imagePullSecrets:
