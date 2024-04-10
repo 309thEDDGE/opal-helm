@@ -158,14 +158,14 @@ c.KubeSpawner.volumes = [
         'name': "condarc",
         "configMap": {
             "name": "jupyterhub-condarc",
-            "defaultMode": 0o755 # octal permission number
+            "defaultMode": 0o775 # octal permission number
         }
     },
     {
         'name': "local-channel-mnt",
         "configMap": {
             "name": "jupyterhub-local-channel",
-            "defaultMode": 0o755 # octal permission number
+            "defaultMode": 0o775 # octal permission number
         }
     }
 ]
