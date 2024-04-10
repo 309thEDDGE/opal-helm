@@ -218,12 +218,14 @@ c.KubeSpawner.volume_mounts = [
     {
         'mountPath': '/home/jovyan/.condarc',
         'name': 'condarc',
-        'subPath': '.condarc'
+        'subPath': '.condarc',
+        "readOnly": False
     },
     {
         'mountPath': '/home/jovyan/local_channel_env.yaml',
         'name': 'local-channel-mnt',
-        'subPath': 'local_channel_env.yaml'
+        'subPath': 'local_channel_env.yaml',
+        "readOnly": False
     }
 ]
 
