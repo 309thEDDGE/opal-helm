@@ -245,3 +245,7 @@ jupyterhub:
     resources:
       useAzureFile: false
       storage: 2Gi
+daskGateway:
+  enabled: true
+  appValues:
+    namespace: *opalNS
