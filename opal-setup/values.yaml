@@ -1,4 +1,6 @@
-argoProject: default
+# leave these empty to disable them in the rendered app yamls
+argoProject: &argoProj ""
+appPrefix: &appPrefix ""
 
 namespaces:
   - &minioNS minio-tenant
@@ -24,6 +26,9 @@ tls:
 
 oauth:
   name: opal-oauth-common
+  namespaces:
+    - *opalNS
+    - *minioNS
 
 valuesFile: test-values.yaml
 
@@ -31,23 +36,31 @@ source: &appSource
   url: "https://github.com/309thEDDGE/opal-helm.git"
   targetRevision: "OPAL-1229-dask-argo"
 
+# Most of this is just propagating settings from above, but change as needed for your use case
 appValues:
+  namespaces:
+    - *opalNS
+    - *minioNS
+  argoProject: *argoProj
+  appPrefix: *appPrefix
   source: *appSource
   mongodb:
     enabled: true
-    auth:
-      enabled: true
-      rootUser: rootuser
-      rootPassword: ""
-      usernames: []
-      passwords: []
-      databases: []
-    replicaCount: 2
+    appValues:
+      auth:
+        enabled: true
+        rootUser: rootuser
+        rootPassword: ""
+        usernames: []
+        passwords: []
+        databases: []
+      replicaCount: 2
   keycloak:
-    enabled: true
     namespace: *opalNS
+    enabled: true
     # bootstrapper admin credentials. User should be disabled after post-install setup
     appValues:
+      namespace: *opalNS
       secrets:
         env:
           stringData:
@@ -58,6 +71,10 @@ appValues:
     enabled: true
   minioOperator:
     enabled: true
+    appValues:
+      operator:
+        namespace: *opalNS
+        tenantNamespace: *minioNS
   minioInstance:
     enabled: true
     creds:

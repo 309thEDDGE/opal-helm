@@ -3,7 +3,11 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
+  {{- if $global.appPrefix }}
+  name: {{ $global.appPrefix }}-opal-application
+  {{- else }}
   name: opal-application
+  {{- end }}
   # You'll usually want to add your resources to the argocd namespace.
   namespace: argocd
   finalizers:
@@ -15,7 +19,7 @@ metadata:
     name: opal
 spec:
   # The project the application belongs to.
-  project: {{ $global.argoProject }}
+  project: {{ $global.argoProject | default "default" }}
 
   # Source of the application manifests
   source:

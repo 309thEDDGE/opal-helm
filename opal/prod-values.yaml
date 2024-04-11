@@ -3,7 +3,8 @@
 # Declare variables to be passed into your templates.
 
 
-argoProject: default
+argoProject: "prod"
+appPrefix: "prod"
 
 imagePullSecrets: &dockerSecret regcred
 
