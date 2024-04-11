@@ -6,6 +6,14 @@ metadata:
 spec:
   accessModes:
     - ReadWriteOnce
+  storageClassName: efs-sc
+  csi:
+    driver: efs.csi.aws.com
+    volumeHandle: fs-0d220ea8b1d91428d
   resources:
     requests:
       storage: {{ .Values.resources.storage }}
+
+
+
+      
