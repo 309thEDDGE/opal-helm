@@ -44,6 +44,7 @@ c.KubeSpawner.env_keep = [
     "S3_ENDPOINT",
     "MONGODB_HOST",
     "MONGODB_USERNAME",
+    "DASK_GATEWAY_ENDPOINT",
     "NGINX_HOST",
     "CONDA_OVERRIDE_CUDA"
 ]

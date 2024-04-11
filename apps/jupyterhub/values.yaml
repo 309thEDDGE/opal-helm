@@ -111,6 +111,7 @@ env:
   opalBannerColor: "Purple"
   opalBannerText: "Default OPAL Banner"
   keycloakJupyterhubUsernameKey: "preferred_username"
+  daskGatewayServiceName: ""
 
 resources:
   storage: 2Gi

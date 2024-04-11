@@ -2,6 +2,7 @@ kind: ConfigMap
 apiVersion: v1
 metadata:
   name: {{ include "dask-gateway.apiName" . }}
+  namespace: {{ .Values.namespace }}
   labels:
     {{- include "dask-gateway.labels" . | nindent 4 }}
 data:
