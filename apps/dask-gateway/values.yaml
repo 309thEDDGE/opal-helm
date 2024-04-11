@@ -117,9 +117,9 @@ gateway:
   # `values.yaml` files, but is unnecessary in other cases.
   extraConfig:
     resourceLimits: |
-      c.ClusterConfig.cluster_max_cores = 5
-      c.ClusterConfig.cluster_max_memory = "10 G"
-      c.ClusterConfig.cluster_max_workers = 5
+      c.KubeClusterConfig.cluster_max_cores = 5
+      c.KubeClusterConfig.cluster_max_memory = "10 G"
+      c.KubeClusterConfig.cluster_max_workers = 5
 
   # backend nested configuration relates to the scheduler and worker resources
   # created for DaskCluster k8s resources by the controller.
