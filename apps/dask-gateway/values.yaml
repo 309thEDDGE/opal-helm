@@ -115,7 +115,10 @@ gateway:
   # (code-blocks are run in alphabetical order by key, the key value itself is
   # meaningless). The map version is useful as it supports merging multiple
   # `values.yaml` files, but is unnecessary in other cases.
-  extraConfig: {}
+  extraConfig:
+    resourceLimits: |
+      c.ClusterConfig.cluster_max_cores = 10
+      c.ClusterConfig.cluster_max_memory = "10 G"
 
   # backend nested configuration relates to the scheduler and worker resources
   # created for DaskCluster k8s resources by the controller.
