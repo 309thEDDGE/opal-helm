@@ -51,6 +51,7 @@ appValues:
     enabled: true
     appValues:
       namespaceOverride: *opalNS
+      namespace: *opalNS
       auth:
         enabled: true
         rootUser: rootuser
