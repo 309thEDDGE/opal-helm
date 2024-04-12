@@ -52,6 +52,7 @@ spec:
   # Destination cluster and namespace to deploy the application
   destination:
     name: in-cluster
+    namespace: {{ $global.appNamespace }}
     # The namespace will only be set for namespace-scoped resources that have not set a value for .metadata.namespace
 
   # Extra information to show in the Argo CD Application details tab

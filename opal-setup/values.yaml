@@ -6,6 +6,9 @@ namespaces:
   - &minioNS minio-tenant
   - &opalNS opal
 
+# an unfortunate requirement of project-scoping the app-of-apps
+appNamespace: *opalNS
+
 imagePullSecrets:
   name: regcred
   namespaces:
@@ -47,6 +50,7 @@ appValues:
   mongodb:
     enabled: true
     appValues:
+      namespaceOverride: *opalNS
       auth:
         enabled: true
         rootUser: rootuser
@@ -67,8 +71,12 @@ appValues:
             KEYCLOAK_ADMIN: "admin"
             KEYCLOAK_ADMIN_PASSWORD: ""
             JAVA_OPTS_APPEND: -Djgroups.dns.query=""
+    postgres:
+      namespace: *opalNS
   traefik:
     enabled: true
+    appValues:
+      namespace: *opalNS
   minioOperator:
     enabled: true
     appValues:

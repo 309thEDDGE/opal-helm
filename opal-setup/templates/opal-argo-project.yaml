@@ -1,0 +1,52 @@
+{{- if .Values.argoProject }}
+{{- if not (lookup "argoproj.io/v1alpha1" "AppProject" "argocd" .Values.argoProject) }}
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: {{ .Values.argoProject }}
+  namespace: argocd
+  # Finalizer that ensures that project is not deleted until it is not referenced by any application
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  # Project description
+  description: {{ .Values.argoProject }} deployment of opal
+
+  # Use only the opal source repo defined in the values
+  sourceRepos:
+  - {{ .Values.source.url | quote }}
+
+  # Only permit applications to deploy to the specified namespaces in the same cluster
+  destinations:
+  - namespace: '!kube-system'
+    server: '*'
+  {{- range .Values.namespaces }}
+  - namespace: {{ . }}
+    server: https://kubernetes.default.svc
+    name: in-cluster
+  {{- end }}
+
+  # Deny all cluster-scoped resources from being created, except for Namespace
+  clusterResourceWhitelist:
+  - group: '*'
+    kind: '*'
+
+  # Allow all namespaced-scoped resources to be created, except for ResourceQuota, LimitRange, NetworkPolicy
+  namespaceResourceBlacklist:
+  - group: ''
+    kind: ResourceQuota
+  - group: ''
+    kind: LimitRange
+  - group: ''
+    kind: NetworkPolicy
+
+  # Enables namespace orphaned resource monitoring.
+  orphanedResources:
+    warn: false
+
+  # By default, apps may sync to any cluster specified under the `destinations` field, even if they are not
+  # scoped to this project. Set the following field to `true` to restrict apps in this cluster to only clusters
+  # scoped to this project.
+  permitOnlyProjectScopedClusters: false
+{{- end }}
+{{- end }}
