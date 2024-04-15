@@ -9,7 +9,6 @@ spec:
   {{- if .Values.resources.useAzureFile }}
   storageClassName: azurefile-csi
   {{- end }}
-  storageClassName: efs-sc
   volumeMode: Filesystem
   csi:
     driver: efs.csi.aws.com
