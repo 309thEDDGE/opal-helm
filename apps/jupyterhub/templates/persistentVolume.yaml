@@ -10,6 +10,7 @@ spec:
   storageClassName: azurefile-csi
   {{- end }}
   volumeMode: Filesystem
+  storageClassName: efs-sc
   csi:
     driver: efs.csi.aws.com
     volumeHandle: fs-0d220ea8b1d91428d
