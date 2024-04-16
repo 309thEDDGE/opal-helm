@@ -5,10 +5,8 @@ metadata:
   name: metaflow-datastore
 spec:
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   storageClassName: efs-sc
-  csi:
-    driver: efs.csi.aws.com
   resources:
     requests:
       storage: {{ .Values.resources.storage }}
