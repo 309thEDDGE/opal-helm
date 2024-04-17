@@ -11,6 +11,7 @@ imagePullSecrets:
     - *minioNS
 
 useAzureFile: &useAzure false
+useAmazonFile: &useAmazon true
 
 gitSyncSecret:
   namespace: *opalNS
@@ -94,6 +95,7 @@ appValues:
       namespace: *opalNS
       resources:
         useAzureFile: *useAzure
+        useAmazonFile: *useAmazon
       gitSync:
         enabled: true
         username: ""

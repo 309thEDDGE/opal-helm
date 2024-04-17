@@ -10,6 +10,9 @@ spec:
 {{- if .Values.resources.useAzureFile }}
   storageClassName: azurefile-csi-singleuser
 {{- end }}
+{{- if .Values.resources.useAmazonFile}}
+  storageClassName: efs-sc
+{{- end }}
   resources:
     requests:
       storage: {{ .Values.resources.gitStorage }}
@@ -25,6 +28,9 @@ spec:
 {{- if .Values.resources.useAzureFile }}
   storageClassName: azurefile-csi-singleuser
 {{- end }}
+{{- if .Values.resources.useAmazonFile}}
+  storageClassName: efs-sc
+{{- end }}
   resources:
     requests:
       storage: {{ .Values.resources.gitStorage }}
@@ -39,6 +45,9 @@ spec:
     - ReadWriteMany
 {{- if .Values.resources.useAzureFile }}
   storageClassName: azurefile-csi-singleuser
+{{- end }}
+{{- if .Values.resources.useAmazonFile}}
+  storageClassName: efs-sc
 {{- end }}
   resources:
     requests:

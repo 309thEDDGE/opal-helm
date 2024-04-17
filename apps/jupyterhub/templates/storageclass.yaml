@@ -1,3 +1,4 @@
+{{- if .Values.resources.useAmazonFile}}
 kind: StorageClass
 apiVersion: storage.k8s.io/v1
 metadata:
@@ -13,3 +14,4 @@ parameters:
   # subPathPattern: "${.PVC.namespace}/${.PVC.name}" # optional
   # ensureUniqueDirectory: "true" # optional
   # reuseAccessPoint: "false" # optional
+{{- end }}

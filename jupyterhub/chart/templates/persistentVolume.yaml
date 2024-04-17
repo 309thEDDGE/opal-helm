@@ -6,6 +6,12 @@ metadata:
 spec:
   accessModes:
     - ReadWriteMany
+{{- if .Values.resources.useAzureFile }}
+  storageClassName: azurefile-csi-singleuser
+{{- end }}
+{{- if .Values.resources.useAmazonFile}}
+  storageClassName: efs-sc
+{{- end }}  
   storageClassName: efs-sc
   resources:
     requests:
