@@ -7,8 +7,8 @@ provisioner: efs.csi.aws.com
 parameters:
   provisioningMode: efs-ap
   fileSystemId: fs-0d220ea8b1d91428d
-  directoryPerms: "700"
-  # gidRangeStart: "1000" # optional
+  directoryPerms: "755"
+  gidRangeStart: "100" # optional
   # gidRangeEnd: "2000" # optional
   # basePath: "/dynamic_provisioning" # optional
   # subPathPattern: "${.PVC.namespace}/${.PVC.name}" # optional
