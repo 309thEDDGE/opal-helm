@@ -16,40 +16,40 @@ spec:
   resources:
     requests:
       storage: {{ .Values.resources.gitStorage }}
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  namespace: {{ .Values.namespace }}
-  name: weave-sync-pvc
-spec:
-  accessModes:
-    - ReadWriteMany
-{{- if .Values.resources.useAzureFile }}
-  storageClassName: azurefile-csi-singleuser
-{{- end }}
-{{- if .Values.resources.useAmazonFile}}
-  storageClassName: efs-sc
-{{- end }}
-  resources:
-    requests:
-      storage: {{ .Values.resources.gitStorage }}
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  namespace: {{ .Values.namespace }}
-  name: ddapi-sync-pvc
-spec:
-  accessModes:
-    - ReadWriteMany
-{{- if .Values.resources.useAzureFile }}
-  storageClassName: azurefile-csi-singleuser
-{{- end }}
-{{- if .Values.resources.useAmazonFile}}
-  storageClassName: efs-sc
-{{- end }}
-  resources:
-    requests:
-      storage: {{ .Values.resources.gitStorage }}
+# ---
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   namespace: {{ .Values.namespace }}
+#   name: weave-sync-pvc
+# spec:
+#   accessModes:
+#     - ReadWriteMany
+# {{- if .Values.resources.useAzureFile }}
+#   storageClassName: azurefile-csi-singleuser
+# {{- end }}
+# {{- if .Values.resources.useAmazonFile}}
+#   storageClassName: efs-sc
+# {{- end }}
+#   resources:
+#     requests:
+#       storage: {{ .Values.resources.gitStorage }}
+# ---
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   namespace: {{ .Values.namespace }}
+#   name: ddapi-sync-pvc
+# spec:
+#   accessModes:
+#     - ReadWriteMany
+# {{- if .Values.resources.useAzureFile }}
+#   storageClassName: azurefile-csi-singleuser
+# {{- end }}
+# {{- if .Values.resources.useAmazonFile}}
+#   storageClassName: efs-sc
+# {{- end }}
+#   resources:
+#     requests:
+#       storage: {{ .Values.resources.gitStorage }}
 {{- end }}
