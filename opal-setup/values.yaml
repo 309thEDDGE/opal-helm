@@ -97,7 +97,7 @@ appValues:
         useAzureFile: *useAzure
         useAmazonFile: *useAmazon
       gitSync:
-        enabled: false
+        enabled: true
         username: ""
         gitSecret:
           secretName: *gitSyncSecret
