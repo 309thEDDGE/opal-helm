@@ -1,8 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  namespace: {{ .Values.namespace }}
-  name: jupyterhub-config-py
-data:
-  jupyterhub_config.py: |-
-    {{- .Files.Get "configs/jupyterhub_config.py" | nindent 6 }}

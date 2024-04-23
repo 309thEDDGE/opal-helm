@@ -1,30 +1,27 @@
-{{- if .Values.keycloak.enabled }}
-{{- $global := .Values }}
-{{- $values := .Values.keycloak }}
+{{- if .Values.nginx.enabled }}
+{{ $global := .Values }}
+{{ $values := .Values.nginx }}
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: keycloak
+  name: nginx
   # You'll usually want to add your resources to the argocd namespace.
   namespace: argocd
   # Add this finalizer ONLY if you want these to cascade delete.
   finalizers:
     # The default behaviour is foreground cascading deletion
     - resources-finalizer.argocd.argoproj.io
-  annotations:
-    #sync after things like keycloak have finished sync
-    argocd.argoproj.io/sync-wave: "-1"
   labels:
-    name: keycloak
+    name: nginx
 spec:
   # The project the application belongs to.
   project: {{ $global.argoProject }}
 
   # Source of the application manifests
-  sources:
-  - repoURL: {{ $global.source.url }}  # Can point to either a Helm chart repo or a git repo.
+  source:
+    repoURL: {{ $global.source.url }}  # Can point to either a Helm chart repo or a git repo.
     targetRevision: {{ $global.source.targetRevision }}  # For Helm, this refers to the chart version.
-    path: "apps/keycloak"  # This has no meaning for Helm charts pulled directly from a Helm repo instead of git.
+    path: "apps/nginx"  # This has no meaning for Helm charts pulled directly from a Helm repo instead of git.
 
     # helm specific config
     helm:
@@ -45,32 +42,7 @@ spec:
 
       # Values file as block file. This takes precedence over values
       valuesObject:
-{{- $values.appValues | toYaml | nindent 8 }}
-
-  - repoURL: {{ $global.source.url }}  # Can point to either a Helm chart repo or a git repo.
-    targetRevision: {{ $global.source.targetRevision }}  # For Helm, this refers to the chart version.
-    path: "apps/keycloak/deps/postgresql"  # This has no meaning for Helm charts pulled directly from a Helm repo instead of git.
-
-    # helm specific config
-    helm:
-      # Extra parameters to set (same as setting through values.yaml, but these take precedence)
-      #parameters:
-
-
-      # Release name override (defaults to application name)
-      releaseName: {{ .Release.Name }}
-
-      # Helm values files for overriding values in the helm chart
-      # The path is relative to the spec.source.path directory defined above
-      valueFiles:
-      - values.yaml
-
-      # Ignore locally missing valueFiles when installing Helm chart. Defaults to false
-      ignoreMissingValueFiles: false
-
-      # Values file as block file. This takes precedence over values
-      valuesObject:
-{{- $values.postgres | toYaml | nindent 8 }}
+{{ $values.appValues | toYaml | nindent 8}}
 
 
   # Destination cluster and namespace to deploy the application
@@ -84,7 +56,7 @@ spec:
   # Sync policy
   syncPolicy:
     automated: # automated sync by default retries failed attempts 5 times with following delays between attempts ( 5s, 10s, 20s, 40s, 80s ); retry controlled using `retry` field.
-      prune: false # Specifies if resources should be pruned during auto-syncing ( false by default ).
+      prune: true # Specifies if resources should be pruned during auto-syncing ( false by default ).
       selfHeal: true # Specifies if partial app sync should be executed when resources are changed only in target Kubernetes cluster and no git change detected ( false by default ).
       allowEmpty: false # Allows deleting all application resources during automatic syncing ( false by default ).
     syncOptions:     # Sync options which modifies sync behavior
@@ -109,13 +81,5 @@ spec:
   # circumstances. Setting to zero will store no history. This will reduce storage used. Increasing will increase the
   # space used to store the history, so we do not recommend increasing it.
   revisionHistoryLimit: 10
-
-  ignoreDifferences:
-  - kind: Secret
-    jsonPointers:
-    - /data
-  - kind: Job
-    jsonPointers:
-    - /spec
 
 {{- end }}

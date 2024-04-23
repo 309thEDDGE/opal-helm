@@ -37,7 +37,6 @@ mongodb:
       databases: []
     replicaCount: 2
 
-
 keycloak:
   enabled: true
   appValues:
@@ -146,7 +145,7 @@ minioInstance:
       name: "minio-creds-secret"
       accessKey: "minio-admin"
     tls:
-      name: tls-certs
+      name: *tlsSecret
     tenant:
       namespace: *minioNS
       imagePullSecrets:
@@ -203,6 +202,10 @@ minioInstance:
           enabled: true
           rules:
             host: "minio.{{ .Values.baseDns }}"
+nginx:
+  enabled: true
+  appValues:
+    namespace: *opalNS
 jupyterhub:
   enabled: true
   appValues:
@@ -222,8 +225,8 @@ jupyterhub:
     imagePullSecrets:
       existingSecret: regcred
     env:
-      singleUserImage: "jupyterhub/singleuser"
-      #singleUserImage: "registry1.dso.mil/ironbank/opensource/metrostar/singleuser/singleuser:singleuser_v22"
+      #singleUserImage: "jupyterhub/singleuser"
+      singleUserImage: "registry1.dso.mil/ironbank/opensource/metrostar/singleuser:core_singleuser_v2"
       opalBannerColor: "green"
       opalBannerText: "Unclassified"
       #change this based on minio's target namespace, and the name of the helm release

@@ -43,7 +43,10 @@ c.KubeSpawner.env_keep = [
     "KEYCLOAK_OPAL_API_URL",
     "S3_ENDPOINT",
     "MONGODB_HOST",
-    "MONGODB_USERNAME"
+    "MONGODB_USERNAME",
+    "DASK_GATEWAY_ENDPOINT",
+    "NGINX_HOST",
+    "CONDA_OVERRIDE_CUDA"
 ]
 
 metaflow_mount_path = "/opt/opal/metaflow-metadata"
@@ -151,6 +154,18 @@ c.KubeSpawner.volumes = [
         'persistentVolumeClaim': {
             'claimName': 'weave-sync-pvc'
         }
+    },
+    {
+        'name': "condarc",
+        "configMap": {
+            "name": "jupyterhub-condarc"
+        }
+    },
+    {
+        'name': "local-channel-mnt",
+        "configMap": {
+            "name": "jupyterhub-local-channel"
+        }
     }
 ]
 
@@ -198,6 +213,16 @@ c.KubeSpawner.volume_mounts = [
         'mountPath': '/opt/data/weave',
         "subPath": "weave",
         'name': 'weave-sync-mnt'
+    },
+    {
+        'mountPath': '/opt/conf/.condarc',
+        'name': 'condarc',
+        'subPath': '.condarc'
+    },
+    {
+        'mountPath': '/opt/conf/local_channel_env.yaml',
+        'name': 'local-channel-mnt',
+        'subPath': 'local_channel_env.yaml'
     }
 ]
 
@@ -291,6 +316,10 @@ c.OAuthenticator.scope = ['openid', 'profile', 'roles']
 ########## extra services ##########
 
 jupyterhub_api_token = os.environ['JUPYTERHUB_API_TOKEN']
+
+c.JupyterHub.services = [
+    {"name": "dask-gateway", "api_token": jupyterhub_api_token}
+]
 
 # Cdsdashboards stuff
 from cdsdashboards.app import CDS_TEMPLATE_PATHS
