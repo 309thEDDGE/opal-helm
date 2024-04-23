@@ -152,12 +152,12 @@ gateway:
       # Cores request/limit for the scheduler.
       cores:
         request: 1
-        limit: 6
+        limit: 1
 
       # Memory request/limit for the scheduler.
       memory:
         request: "2 G"
-        limit: "12 G"
+        limit: "2 G"
 
     worker:
       # Any extra configuration for the worker pod. Sets

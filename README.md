@@ -271,6 +271,25 @@ client = MongoClient('example.com',
 
 By default mongosh excludes all db.auth() operations from the saved history
 
+## Dask Gateway
+
+### Modifying Resource Limits
+
+Inorder to modify resource limits for dask gateway you will need to configure the values in the dask gateway helm chart values. Currently, by default they should be configured to allow the scheduler and workers 2 G of memory and one core a piece with the cluster total limits being 10 G of memory with 6 cores and 6 workers as a maximum. These values can be located at:
+- gateway
+  - extraConfig (This is where the cluster limits are defined)
+  - backend
+  
+    - scheduler
+    
+      - cores
+      - memory
+    
+    - worker
+    
+      - cores
+      - memory
+
 ## TODO
 add the regcred-init repo to opal-helm
 add the argoCD repo to opal-helm
