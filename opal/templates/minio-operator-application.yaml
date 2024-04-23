@@ -8,7 +8,11 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: minio-operator
+  {{- if $global.appPrefix }}
+  name: {{ $global.appPrefix }}-minio-operator-application
+  {{- else }}
+  name: minio-operator-application
+  {{- end }}
   # You'll usually want to add your resources to the argocd namespace.
   namespace: argocd
   # Add this finalizer ONLY if you want these to cascade delete.
@@ -23,7 +27,7 @@ metadata:
 
 spec:
   # The project the application belongs to.
-  project: {{ $global.argoProject }}
+  project: {{ $global.argoProject | default "default" }}
 
   # Source of the application manifests
   source:
