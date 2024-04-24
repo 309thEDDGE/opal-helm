@@ -10,6 +10,8 @@ imagePullSecrets:
     - *opalNS
     - *minioNS
 
+domainExtension: &domainExtension ""
+
 useAzureFile: &useAzure false
 
 gitSyncSecret:
@@ -65,6 +67,7 @@ appValues:
     secrets:
       accessKey: opal-administrator
     appValues:
+    domainExtension: *domainExtension
       tenant:
         namespace: *minioNS
       oauth:
@@ -73,6 +76,7 @@ appValues:
     enabled: true
     appValues:
       namespace: *opalNS
+      domainExtension: *domainExtension
       resources:
         useAzureFile: *useAzure
       gitSync:

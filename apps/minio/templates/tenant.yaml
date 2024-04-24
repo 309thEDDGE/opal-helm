@@ -158,12 +158,19 @@ spec:
   serviceMetadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- with (dig "env" (list) .) }}
+
+  {{- with .env }}
   env:
-  {{- range . }}
-    - name: {{ .name }}
-      value: {{ include "render-url" ( dict "value" .value "context" $values ) }}
-  {{- end }}
+    - name: MINIO_IDENTITY_OPENID_CONFIG_URL
+      value: {{ .minioIdentityOpenIDConfigURL | default (print (include "domains.keycloak" $values) "/realms/master/.well-known/openid-configuration")}}
+    - name: MINIO_BROWSER_REDIRECT_URL
+      value: {{ .minioBrowserRedirectURL | default (include "domains.minio" $values)}}
+    - name: MINIO_IDENTITY_OPENID_CLIENT_ID
+      value: {{ .minioIdentityOpenIDClientID }}
+    - name: MINIO_IDENTITY_OPENID_CLAIM_NAME
+      value: {{ .minioIdentityOpenIDClaimName }}
+    - name: MINIO_IDENTITY_OPENID_REDIRECT_URI
+      value: {{ .minioIdentityOpenIDRedirectURI | default (print (include "domains.keycloak" $values) "/oauth_callback")}}
   {{- end }}
   {{- if dig "priorityClassName" "" . }}
   priorityClassName: {{ dig "priorityClassName" "" . }}

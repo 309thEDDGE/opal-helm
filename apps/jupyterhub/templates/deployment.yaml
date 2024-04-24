@@ -37,17 +37,15 @@ spec:
           {{- with .Values.env }}
           env:
             - name: KEYCLOAK_JUPYTERHUB_OAUTH_CALLBACK_URL
-              value: {{ include "render-url" ( dict "value" .keycloakJupyterhubOauthCallbackUrl "context" $values ) }}
-            - name: S3_ENDPOINT
-              value: {{ include "render-url" ( dict "value" .s3Endpointurl "context" $values ) }}
+              value: {{ .keycloakJupyterhubOauthCallbackUrl | default (print (include "domains.jhub" $values) "/hub/oauth_callback")}}
             - name: KEYCLOAK_JUPYTERHUB_AUTHORIZE_URL
-              value: {{ include "render-url" ( dict "value" .keycloakJupyterhubAuthorizeUrl "context" $values ) }}
+              value: {{ .keycloakJupyterhubAuthorizeUrl | default (print (include "domains.keycloak" $values) "/realms/master/protocol/openid-connect/auth")}}
             - name: KEYCLOAK_JUPYTERHUB_USERDATA_URL
-              value: {{ include "render-url" ( dict "value" .keycloakJupyterhubUserdataUrl "context" $values ) }}
+              value: {{ .keycloakJupyterhubUserdataUrl | default (print (include "domains.keycloak" $values) "/realms/master/protocol/openid-connect/userinfo")}}
             - name: KEYCLOAK_OPAL_API_URL
-              value: {{ include "render-url" ( dict "value" .keycloakOpalApiUrl "context" $values ) }}
+              value: {{ .keycloakOpalApiUrl | default (print (include "domains.keycloak" $values) "/realms/master/protocol/openid-connect/token")}}
             - name: BASE_URL
-              value: {{ include "render-url" ( dict "value" .jupyterhubBaseUrl "context" $values ) }}
+              value: {{ .jupyterhubBaseUrl | default (include "domains.jhub" $values) }}
             - name: MINIO_IDENTITY_OPENID_CLIENT_ID
               value: {{ .openidClientId }}
             - name: KEYCLOAK_JUPYTERHUB_CLIENT_ID
@@ -63,6 +61,13 @@ spec:
             - name: KEYCLOAK_JUPYTERHUB_USERNAME_KEY
               value: {{ .keycloakJupyterhubUsernameKey }}
           {{- end }}
+            - name: S3_ENDPOINT
+              {{- if .Values.env.s3Endpointurl }}
+              value: {{ .Values.env.s3Endpointurl }}
+              {{- else }}
+              {{- $minioNS := .Values.minioNS | default "minio-tenant" }}
+              value: "http://{{ .Release.Name }}-minio-console.{{ $minioNS }}.svc.cluster.local:9090"
+              {{- end }}
             {{- if .Values.env.daskGatewayServiceName }}
             - name: DASK_GATEWAY_ENDPOINT
               value: {{ .Values.env.daskGatewayServiceName }}

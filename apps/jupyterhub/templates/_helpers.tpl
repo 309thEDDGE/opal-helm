@@ -97,3 +97,26 @@ Create the name of the service account to use
 {{- define "render-url" -}}
 {{- tpl .value .context }}
 {{- end }}
+
+{{- define "domains.base" -}}
+{{- $base := .Values.baseDns -}}
+{{- if not (hasPrefix .Values.baseDns ".") -}}
+{{- $base = print "." $base -}}
+{{- end -}}
+{{- if .Values.domainExtension -}}
+{{- $base = print "-" .Values.domainExtension -}}
+{{- end -}}
+{{- print $base -}}
+{{- end -}}
+
+{{- define "domains.minio" -}}
+{{- printf "%s%s" "https://minio" (include "domains.base" .) -}}
+{{- end -}}
+
+{{- define "domains.keycloak" -}}
+{{- printf "%s%s" "https://keycloak" (include "domains.base" .) -}}
+{{- end -}}
+
+{{- define "domains.jhub" -}}
+{{- printf "%s%s" "https://jhub" (include "domains.base" .) -}}
+{{- end -}}

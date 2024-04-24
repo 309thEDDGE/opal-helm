@@ -11,6 +11,10 @@ baseDns: ""
 
 namespace: opal
 
+minioNS: minio-tenant
+
+domainExtension: ""
+
 secrets:
   nameOverride: "token-env"
   oauth:
@@ -79,14 +83,33 @@ servicePublic:
       targetPort: 443
     - name: api
       port: 8001
+  tls: []
+env:
+  openidClientId: opal-jupyterhub
+  jupyterhubBaseUrl: &baseURL ""
+  singleUserImage: "deploytime_singleuser"
+  pythonPath: "/python-packages/:$PYTHONPATH"
+  opalBannerColor: "Red"
+  opalBannerText: "Kubernetes Local Environment"
+  keycloakJupyterhubUsernameKey: "preferred_username"
+  daskGatewayServiceName: ""
+  ## The following are example URLs
+  #keycloakJupyterhubOauthCallbackUrl: "https://opal-k8.{{ .Values.baseDns }}/hub/oauth_callback"
+  #jupyterhubBaseUrl: &baseURL "https://opal-k8.{{ .Values.baseDns }}"
+  #s3Endpointurl: "https://minio-k8.{{ .Values.baseDns }}"
+  #keycloakJupyterhubAuthorizeUrl: "https://keycloak-k8.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/auth"
+  #keycloakJupyterhubUserdataUrl: "https://keycloak-k8.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/userinfo"
+  #keycloakOpalApiUrl: "https://keycloak-k8.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/token"
+
 ingress:
   enabled: true
   className: ""
-  annotations: 
+  annotations:
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
     traefik.ingress.kubernetes.io/router.tls: "true"
   rules:
-    host: "opal-k8.{{ .Values.baseDns }}"
+    #host: "opal-k8.{{ .Values.baseDns }}"
+    host: *baseURL
     http:
       paths:
         - path: /
@@ -96,21 +119,6 @@ ingress:
               name: proxy-public
               port:
                 number: 80
-  tls: []
-env:
-  keycloakJupyterhubOauthCallbackUrl: "https://opal-k8.{{ .Values.baseDns }}/hub/oauth_callback"
-  jupyterhubBaseUrl: "https://opal-k8.{{ .Values.baseDns }}"
-  s3Endpointurl: "https://minio-k8.{{ .Values.baseDns }}"
-  keycloakJupyterhubAuthorizeUrl: "https://keycloak-k8.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/auth"
-  keycloakJupyterhubUserdataUrl: "https://keycloak-k8.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/userinfo"
-  keycloakOpalApiUrl: "https://keycloak-k8.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/token"
-  openidClientId: opal-jupyterhub
-  singleUserImage: "deploytime_singleuser"
-  pythonPath: "/python-packages/:$PYTHONPATH"
-  opalBannerColor: "Red"
-  opalBannerText: "Kubernetes Local Environment"
-  keycloakJupyterhubUsernameKey: "preferred_username"
-  daskGatewayServiceName: ""
 
 resources:
   storage: 2Gi
