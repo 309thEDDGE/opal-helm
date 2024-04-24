@@ -21,7 +21,7 @@ imagePullSecrets:
   name: regcred
 
 ingress:
-  enabled: false
+  enabled: true
   className: ""
   annotations: 
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
