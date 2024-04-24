@@ -15,7 +15,7 @@ tls: &tlsSecret "tls-certs"
 #fullnameOverride: ""
 
 namespaces:
-  - &opalNS opal
+  - &opalNS opal-prod
   - &minioNS minio-tenant
 
 tokenEnv: &tokenEnv "token-env"
