@@ -20,7 +20,7 @@ global:
   ##
   imagePullSecrets: [regcred]
   storageClass: ""
-  namespaceOverride: opal
+  namespaceOverride: opal-prod
 
 ## @section Common parameters
 ##
