@@ -24,8 +24,8 @@ spec:
           image: "{{ .Values.image.registry}}/{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
-            - containerPort: 80
-              hostPort: 80
+            - containerPort: 8080
+              hostPort: 8080
               protocol: TCP
           volumeMounts:
           - name: nginxconfig-mnt
