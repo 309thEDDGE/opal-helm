@@ -106,11 +106,11 @@ traefik:
     image:
       tag: "v2.10.4"
     service:
-      loadBalancerIP: "10.96.30.9"
+      loadBalancerIP: ""
     tls:
       nameOverride: *tlsSecret
     ingress:
-      enabled: true
+      enabled: false
       rules:
         host: "traefik-k8s.10.96.30.9.nip.io"
 
