@@ -269,7 +269,7 @@ traefik:
     ports:
       web:
         # The port HTTP(s) requests will be served on
-        port: 80
+        port: 8080
         nodePort:
       tcp:
         # The port TCP requests will be served on. Set to `web` to share the
