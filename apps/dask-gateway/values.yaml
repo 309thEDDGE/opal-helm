@@ -266,6 +266,7 @@ traefik:
     type: LoadBalancer
     annotations: {
       service.beta.kubernetes.io/aws-load-balancer-type: "nlb",
+      service.beta.kubernetes.io/aws-load-balancer-subnets: subnet-03283225228a37928, subnet-014ea3b6f578bf649
     }
     spec: {}
     ports:
