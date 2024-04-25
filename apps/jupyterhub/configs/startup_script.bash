@@ -48,7 +48,7 @@ cp /opt/conf/local_channel_env.yaml /home/jovyan/
 log_to_file "copy local_channel_env to home (allows for temporary user edits)"
 
 # 9
-cp /opt/conf/.condarc /home/jovyan/
+cp /opt/conda/.condarc /home/jovyan/
 log_to_file "copy condarc to home (allows for temporary user edits)"
 
 # 10
