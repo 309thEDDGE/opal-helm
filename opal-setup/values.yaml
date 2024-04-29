@@ -85,6 +85,7 @@ appValues:
           service.beta.kubernetes.io/aws-load-balancer-type: "external"
           service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: "ip"
           service.beta.kubernetes.io/aws-load-balancer-subnets: subnet-03283225228a37928, subnet-014ea3b6f578bf649
+          service.beta.kubernetes.io/aws-load-balancer-scheme: "internet-facing"
           # uncomment for use in Azure
           # service.beta.kubernetes.io/azure-load-balancer-resource-group: opal-eval_group
           # service.beta.kubernetes.io/azure-pip-name: opal-PIP
