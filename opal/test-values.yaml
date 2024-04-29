@@ -53,7 +53,7 @@ keycloak:
     ingress:
       enabled: true
       rules:
-        host: "keycloak-k8s.10.96.30.9.nip.io"
+        host: "keycloak-k8s.52.222.114.186.nip.io"
     postgresql:
       enabled: false
       useExternal: true
@@ -112,7 +112,7 @@ traefik:
     ingress:
       enabled: false
       rules:
-        host: "traefik-k8s.10.96.30.9.nip.io"
+        host: "traefik-k8s.52.222.114.186.nip.io"
 
 minioOperator:
   enabled: true
@@ -142,7 +142,7 @@ minioInstance:
     namespace: ""
     oauth:
       existingSecret: *oauthSecret
-    baseDns: "10.96.30.9.nip.io"
+    baseDns: "52.222.114.186.nip.io"
     secrets:
       # both fields need to be filled in
       name: "minio-creds-secret"
