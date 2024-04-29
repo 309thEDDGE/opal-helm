@@ -207,6 +207,7 @@ nginx:
   enabled: true
   appValues:
     namespace: *opalNS
+    baseDns: ""
 jupyterhub:
   enabled: true
   appValues:

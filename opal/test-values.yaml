@@ -206,6 +206,7 @@ nginx:
   enabled: true
   appValues:
     namespace: *opalNS
+    baseDns: "52.222.114.186.nip.io"
 jupyterhub:
   enabled: true
   appValues:
