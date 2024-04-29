@@ -73,11 +73,11 @@ spec:
             {{- if .Values.env.helmReleaseName }}
             - name: HELM_RELEASE_NAME
               value: {{ .Release.Name }}
-            {{- else }}
+            {{- end }}
             {{- if .Values.env.helmReleaseName }}
             - name: POD_NAMESPACE
               value: {{ .Values.namespace }}
-            {{- else }}
+            {{- end }}
             {{- if .Values.resources.useAzureFile }}
             - name: USE_AZUREFILE
               value: "True"
