@@ -210,7 +210,7 @@ jupyterhub:
   enabled: true
   appValues:
     namespace: *opalNS
-    baseDns: "10.96.30.9.nip.io"
+    baseDns: "52.222.114.186.nip.io"
     gitSync:
       enabled: true
       # Leave this empty, only fill it in the opal-setup chart values
