@@ -70,14 +70,14 @@ spec:
             - name: DASK_GATEWAY_ENDPOINT
               value: http://{{ .Release.Name }}-dask-gateway-traefik.{{ .Values.namespace }}.svc.cluster.local
             {{- end }}
-            {{ - if .Values.env.helmReleaseName }}
+            {{- if .Values.env.helmReleaseName }}
             - name: HELM_RELEASE_NAME
               value: {{ .Release.Name }}
-            {{ - else }}
-            {{ - if .Values.env.helmReleaseName }}
+            {{- else }}
+            {{- if .Values.env.helmReleaseName }}
             - name: POD_NAMESPACE
               value: {{ .Values.namespace }}
-            {{ - else }}
+            {{- else }}
             {{- if .Values.resources.useAzureFile }}
             - name: USE_AZUREFILE
               value: "True"
