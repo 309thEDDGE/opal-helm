@@ -91,8 +91,6 @@ appValues:
           # service.beta.kubernetes.io/azure-load-balancer-resource-group: opal-eval_group
           # service.beta.kubernetes.io/azure-pip-name: opal-PIP
           # service.beta.kubernetes.io/azure-dns-label-name: opal-eval
-        externalIPs: 
-        - 52.222.114.186
       ingress:
         enabled: false
   minioOperator:
