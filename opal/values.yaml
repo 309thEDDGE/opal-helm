@@ -29,14 +29,6 @@ mongodb:
     image:
       tag: 5.0.9
       imagePullSecrets: *dockerSecret
-    auth:
-      enabled: true
-      rootUser: rootuser
-      rootPassword: ""
-      usernames: []
-      passwords: []
-      databases: []
-    replicaCount: 2
 
 keycloak:
   enabled: true
@@ -78,24 +70,6 @@ keycloak:
       registry: registry1.dso.mil
       repository: ironbank/opensource/postgres/postgresql12
       tag: 12.15
-    securityContext:
-      enabled: true
-      fsGroup: 26
-      runAsUser: 26
-      runAsGroup: 26
-    containerSecurityContext:
-      enabled: true
-      runAsUser: 26
-      capabilities:
-        drop:
-          - ALL
-    resources:
-      requests:
-        cpu: "250m"
-        memory: "256Mi"
-      limits:
-        cpu: "250m"
-        memory: "256Mi"
 
 traefik:
   enabled: true
@@ -118,21 +92,6 @@ minioOperator:
     namespace: *opalNS
     tenantNamespace: *minioNS
     imagePullSecrets: *dockerSecret
-    containerSecurityContext:
-      runAsUser: 1001
-      runAsGroup: 1001
-      runAsNonRoot: true
-      capabilities:
-        drop:
-          - ALL
-    resources:
-      requests:
-        cpu: 200m
-        memory: 256Mi
-        ephemeral-storage: 500Mi
-      limits:
-        cpu: 200m
-        memory: 256Mi
 
 minioInstance:
   enabled: false

@@ -52,14 +52,6 @@ appValues:
     appValues:
       namespaceOverride: *opalNS
       namespace: *opalNS
-      auth:
-        enabled: true
-        rootUser: rootuser
-        rootPassword: ""
-        usernames: []
-        passwords: []
-        databases: []
-      replicaCount: 2
   keycloak:
     namespace: *opalNS
     enabled: true
@@ -111,9 +103,6 @@ appValues:
         username: ""
         gitSecret:
           secretName: *gitSyncSecret
-        image:
-          repository: registry.k8s.io/git-sync/git-sync
-          tag: v4.0.0
   daskGateway:
     enabled: true
     appValues:

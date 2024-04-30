@@ -27,6 +27,7 @@
     - [Create a Mongo User and authentication](#create-a-mongo-user-and-authentication)
     - [MongoDB Built-in Roles](#mongodb-built-in-roles)
     - [Signing in as a user with specific roles](#signing-in-as-a-user-with-specific-roles)
+  - [Additional Configuration](#additional-configuration)
   - [TODO](#todo)
 
 
@@ -299,6 +300,109 @@ client = MongoClient('example.com',
                      authMechanism='SCRAM-SHA-256')
 
 By default mongosh excludes all db.auth() operations from the saved history
+
+## Additional Configuration
+
+All snippets below have been removed from the opal-setup and opal chart values files, as they are the defaults for each application's own chart. If they need to be changed in any given deployment, simply add them back to the specified section of your values file
+
+### opal-setup
+
+#### values.yaml
+
+##### mongodb
+
+Under `appValues`:
+```
+      auth:
+        enabled: true
+        rootUser: rootuser
+        rootPassword: ""
+        usernames: []
+        passwords: []
+        databases: []
+      replicaCount: 2
+```
+
+##### jupyterhub
+
+Under `gitSync`:
+```
+      image:
+        repository: registry.k8s.io/git-sync/git-sync
+        tag: v4.0.0
+```
+
+### opal
+
+#### values.yaml
+
+##### mongodb
+
+Under `appValues`:
+```
+      auth:
+        enabled: true
+        rootUser: rootuser
+        rootPassword: ""
+        usernames: []
+        passwords: []
+        databases: []
+      replicaCount: 2
+```
+
+##### keycloak
+
+Under `postgres`:
+```
+    securityContext:
+      enabled: true
+      fsGroup: 26
+      runAsUser: 26
+      runAsGroup: 26
+    containerSecurityContext:
+      enabled: true
+      runAsUser: 26
+      capabilities:
+        drop:
+          - ALL
+    resources:
+      requests:
+        cpu: "250m"
+        memory: "256Mi"
+      limits:
+        cpu: "250m"
+        memory: "256Mi"
+```
+
+##### minioOperator
+
+Under `appValues`:
+```
+    containerSecurityContext:
+      runAsUser: 1001
+      runAsGroup: 1001
+      runAsNonRoot: true
+      capabilities:
+        drop:
+          - ALL
+    resources:
+      requests:
+        cpu: 200m
+        memory: 256Mi
+        ephemeral-storage: 500Mi
+      limits:
+        cpu: 200m
+        memory: 256Mi
+```
+
+##### jupyterhub
+
+Under `gitSync`:
+```
+      image:
+        repository: registry.k8s.io/git-sync/git-sync
+        tag: v4.0.0
+```
 
 ## TODO
 add the regcred-init repo to opal-helm
