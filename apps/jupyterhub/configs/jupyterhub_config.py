@@ -66,7 +66,6 @@ c.KubeSpawner.environment = {
 c.KubeSpawner.init_containers = [{
     "name": "fix-permissions",
     "image": "busybox",
-    "args": "--allow-root",
     "command": ["sh", "-c", "chown -v -R 1000:100 /jovyan"],
     "volume_mounts": [{
         'mountPath': '/jovyan',
@@ -78,6 +77,7 @@ c.KubeSpawner.init_containers = [{
 # the attached volumes
 c.KubeSpawner.fs_gid = 100
 c.KubeSpawner.uid = 1000
+c.KubeSpawner.args = "--allow-root"
 
 # # Mount volume for storage
 pvc_name_template = 'claim-{username}'
