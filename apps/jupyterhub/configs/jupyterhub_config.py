@@ -90,6 +90,13 @@ if use_azure:
     c.KubeSpawner.start_timeout = 60 * 5
 else:
     c.KubeSpawner.storage_class = 'standard'
+use_amazon = os.getenv('USE_AMAZONFILE', False)
+if use_amazon:
+    c.KubeSpawner.storage_class = 'efs-sc'
+    # sometimes azuredisk attach is crazy slow
+    c.KubeSpawner.start_timeout = 60 * 5
+else:
+    c.KubeSpawner.storage_class = 'standard'
 
 c.KubeSpawner.storage_access_modes = ['ReadWriteOnce']
 #singleuser_storage = int(os.env['SINGLE_USER_STORAGE_CAPACITY'])

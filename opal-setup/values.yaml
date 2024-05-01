@@ -85,7 +85,6 @@ appValues:
           service.beta.kubernetes.io/aws-load-balancer-type: "external"
           service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: "ip"
           service.beta.kubernetes.io/aws-load-balancer-subnets: subnet-014ea3b6f578bf649
-          #subnet-03283225228a37928
           service.beta.kubernetes.io/aws-load-balancer-scheme: "internet-facing"
           service.beta.kubernetes.io/aws-load-balancer-eip-allocations: eipalloc-09c8b32b3905fc6a8
           # uncomment for use in Azure

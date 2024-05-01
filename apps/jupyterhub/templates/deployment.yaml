@@ -74,6 +74,10 @@ spec:
             - name: USE_AZUREFILE
               value: "True"
             {{- end }}
+            {{- if .Values.resources.useAmazonFile }}
+            - name: USE_AMAZONFILE
+              value: "True"
+            {{- end }}
             - name: SINGLE_USER_STORAGE_CAPACITY
               value: {{ .Values.resources.singleuser_storage }}
             - name: PROXY_ADDRESS_FORWARDING
