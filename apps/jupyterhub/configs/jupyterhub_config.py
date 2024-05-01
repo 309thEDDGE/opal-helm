@@ -77,7 +77,6 @@ c.KubeSpawner.init_containers = [{
 # the attached volumes
 c.KubeSpawner.fs_gid = 100
 c.KubeSpawner.uid = 1000
-c.KubeSpawner.args = "--allow-root"
 
 # # Mount volume for storage
 pvc_name_template = 'claim-{username}'

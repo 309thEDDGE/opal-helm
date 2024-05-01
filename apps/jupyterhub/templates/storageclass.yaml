@@ -8,6 +8,8 @@ parameters:
   provisioningMode: efs-ap
   fileSystemId: fs-0d220ea8b1d91428d
   directoryPerms: "755"
+  uid: "1000"
+  gid: "100"
   gidRangeStart: "1000" # optional
   gidRangeEnd: "2000" # optional
   # basePath: "/dynamic_provisioning" # optional
