@@ -9,3 +9,23 @@ spec:
   resources:
     requests:
       storage: {{ .Values.resources.storage | default "3Gi" | quote }}
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  namespace: {{ .Values.namespace }}
+    name: {{ .Release.Name }}-nginx-claim
+spec:
+  accessModes:
+    - ReadWriteOnce
+  {{- if .Values.resources.useAzureFile }}
+  storageClassName: azurefile-csi
+  {{- end }}
+  volumeMode: Filesystem
+  storageClassName: efs-sc
+  csi:
+    driver: efs.csi.aws.com
+    volumeHandle: fs-0d220ea8b1d91428d
+  resources:
+    requests:
+      storage: {{ .Values.resources.storage | default "3Gi" | quote }}
