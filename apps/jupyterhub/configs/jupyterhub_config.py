@@ -298,29 +298,9 @@ c.JupyterHub.services = [
     {"name": "dask-gateway", "api_token": jupyterhub_api_token}
 ]
 
-# 1. Sets `DASK_GATEWAY__PROXY_ADDRESS` in the singleuser environment.
-# 2. Adds the URL for the Dask Gateway JupyterHub service.
-
-release_name = os.environ["HELM_RELEASE_NAME"]
-release_namespace = os.environ["POD_NAMESPACE"]
-
-if "PROXY_HTTP_SERVICE_HOST" in os.environ:
-    # https is enabled, we want to use the internal http service.
-    gateway_address = "http://{}:{}/services/dask-gateway/".format(
-        os.environ["PROXY_HTTP_SERVICE_HOST"],
-        os.environ["PROXY_HTTP_SERVICE_PORT"],
-    )
-else:
-    gateway_address = "http://proxy-public/services/dask-gateway"
-
-# Internal address to connect to the Dask Gateway.
-c.KubeSpawner.environment.setdefault("DASK_GATEWAY__ADDRESS", gateway_address)
-# Internal address for the Dask Gateway proxy.
-c.KubeSpawner.environment.setdefault("DASK_GATEWAY__PROXY_ADDRESS",
-                                     "gateway://{}-dask-traefik-{}:80".format(release_name, release_namespace))
-# Relative address for the dashboard link.
-c.KubeSpawner.environment.setdefault("DASK_GATEWAY__PUBLIC_ADDRESS", "/services/dask-gateway/")
-
+dask_traefik_service_ip = os.environ["OPAL_SETUP_DASK_GATEWAY_TRAEFIK_PORT_80_TCP_ADDR"]
+dask_endpoint = f"http://{dask_traefik_service_ip}"
+c.KubeSpawner.environment.setdefault("DASK_GATEWAY_ENDPOINT", dask_endpoint)
 
 # Cdsdashboards stuff
 from cdsdashboards.app import CDS_TEMPLATE_PATHS
