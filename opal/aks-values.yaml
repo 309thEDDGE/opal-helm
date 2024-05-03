@@ -242,3 +242,7 @@ jupyterhub:
       useAzureFile: false
       storage: 20Gi
       singleuser_storage: 20Gi
+daskGateway:
+  enabled: true
+  appValues:
+    namespace: *opalNS
