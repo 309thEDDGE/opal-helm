@@ -7,7 +7,7 @@ data:
   local_channel_env.yaml: |
     name: singleuser
     channels:
-      - http://{{ .Release.Name }}-nginx.{{ .Values.namespace }}.svc.cluster.local/condapkg/
+      - http://{{ .Release.Name }}-nginx.{{ .Values.namespace }}.svc.cluster.local:8080/condapkg/
     dependencies:
       - bokeh==2.4.3
       - cartopy==0.21.1
