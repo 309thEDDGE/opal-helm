@@ -232,7 +232,8 @@ c.KubeSpawner.volume_mounts = [
         'subPath': 'local_channel_env.yaml'
     }
 ]
-
+c.KubeSpawner.mem_guarantee = "2G"
+c.KubeSpawner.cpu_guarantee = 1
 # set the startup bash script
 c.KubeSpawner.cmd = "/tmp/startup_script.bash"
 
