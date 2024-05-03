@@ -245,7 +245,7 @@ jupyterhub:
     resources:
       useAzureFile: false
       storage: 2Gi
-      singleuser_storage: 20Gi
+      singleuser_storage: 1Gi
 daskGateway:
   enabled: true
   appValues:
