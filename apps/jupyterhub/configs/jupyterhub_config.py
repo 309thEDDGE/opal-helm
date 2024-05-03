@@ -84,17 +84,14 @@ c.KubeSpawner.pvc_name_template = pvc_name_template
 
 c.KubeSpawner.storage_pvc_ensure = True
 use_azure = os.getenv('USE_AZUREFILE', False)
+c.KubeSpawner.start_timeout = 60 * 10
 if use_azure:
     c.KubeSpawner.storage_class = 'azuredisk-csi-singleuser'
-    # sometimes azuredisk attach is crazy slow
-    c.KubeSpawner.start_timeout = 60 * 10
 else:
     c.KubeSpawner.storage_class = 'standard'
 use_amazon = os.getenv('USE_AMAZONFILE', False)
 if use_amazon:
     c.KubeSpawner.storage_class = 'efs-sc'
-    # sometimes azuredisk attach is crazy slow
-    c.KubeSpawner.start_timeout = 60 * 5
 else:
     c.KubeSpawner.storage_class = 'standard'
 
@@ -232,8 +229,8 @@ c.KubeSpawner.volume_mounts = [
         'subPath': 'local_channel_env.yaml'
     }
 ]
-c.KubeSpawner.mem_guarantee = "2G"
-c.KubeSpawner.cpu_guarantee = 1
+# c.KubeSpawner.mem_guarantee = "2G"
+# c.KubeSpawner.cpu_guarantee = 1
 # set the startup bash script
 c.KubeSpawner.cmd = "/tmp/startup_script.bash"
 
