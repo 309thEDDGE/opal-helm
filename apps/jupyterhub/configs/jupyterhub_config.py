@@ -66,7 +66,7 @@ c.KubeSpawner.environment = {
 c.KubeSpawner.init_containers = [{
     "name": "fix-permissions",
     "image": "busybox",
-    "command": ["sh", "-c", "chown -v -R 1000:100 /jovyan"],
+    "command": ["sh", "-c", "find /jovyan ! -user 1000 -exec chown -v 1000:100 {} ;"],
     "volume_mounts": [{
         'mountPath': '/jovyan',
         'name': "home-jovyan-mnt"
