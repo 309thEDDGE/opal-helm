@@ -66,7 +66,7 @@ c.KubeSpawner.environment = {
 c.KubeSpawner.init_containers = [{
     "name": "fix-permissions",
     "image": "busybox",
-    "command": ["sh", "-c", "chown -v -R 1000:100 /jovyan"],
+    "command": ["sh", "-c", "find /jovyan \! -user 1000 -exec chown -v 1000:100 {} \;"],
     "volume_mounts": [{
         'mountPath': '/jovyan',
         'name': "home-jovyan-mnt"
@@ -87,7 +87,7 @@ use_azure = os.getenv('USE_AZUREFILE', False)
 if use_azure:
     c.KubeSpawner.storage_class = 'azuredisk-csi-singleuser'
     # sometimes azuredisk attach is crazy slow
-    c.KubeSpawner.start_timeout = 60 * 5
+    c.KubeSpawner.start_timeout = 60 * 10
 else:
     c.KubeSpawner.storage_class = 'standard'
 use_amazon = os.getenv('USE_AMAZONFILE', False)
