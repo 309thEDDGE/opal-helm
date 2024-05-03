@@ -66,7 +66,7 @@ c.KubeSpawner.environment = {
 c.KubeSpawner.init_containers = [{
     "name": "fix-permissions",
     "image": "busybox",
-    "command": ["sh", "-c", "find /jovyan ! -user 1000 -exec chown -v 1000:100 {} ;"],
+    "command": ["sh", "-c", "chown -cR 1000:100 /jovyan/.jupyter"],
     "volume_mounts": [{
         'mountPath': '/jovyan',
         'name': "home-jovyan-mnt"
@@ -229,8 +229,8 @@ c.KubeSpawner.volume_mounts = [
         'subPath': 'local_channel_env.yaml'
     }
 ]
-# c.KubeSpawner.mem_guarantee = "2G"
-# c.KubeSpawner.cpu_guarantee = 1
+c.KubeSpawner.mem_guarantee = "2G"
+c.KubeSpawner.cpu_guarantee = 1
 # set the startup bash script
 c.KubeSpawner.cmd = "/tmp/startup_script.bash"
 
