@@ -7,7 +7,7 @@ data:
   .condarc: |
     anaconda_upload: false
     channels:
-      - http://{{ .Release.Name }}-nginx.{{ .Values.namespace }}.svc.cluster.local/condapkg/
+      - http://{{ .Release.Name }}-nginx.{{ .Values.namespace }}.svc.cluster.local:8080/condapkg/
     default_channels:
     channel_priority: strict
     ssl_verify: false
