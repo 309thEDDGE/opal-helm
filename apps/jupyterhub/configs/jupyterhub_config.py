@@ -298,9 +298,8 @@ c.JupyterHub.services = [
     {"name": "dask-gateway", "api_token": jupyterhub_api_token}
 ]
 
-dask_traefik_service_ip = os.environ["OPAL_SETUP_DASK_GATEWAY_TRAEFIK_PORT_80_TCP_ADDR"]
-dask_endpoint = f"http://{dask_traefik_service_ip}"
-c.KubeSpawner.environment.setdefault("DASK_GATEWAY_ENDPOINT", dask_endpoint)
+c.KubeSpawner.environment.setdefault("DASK_GATEWAY_PROXY_ADDRESS", f"{os.environ['DASK_GATEWAY_ENDPOINT']}:80")
+c.KubeSpawner.environment.setdefault("DASK_GATEWAY_PUBLIC_ADDRESS", f"/services/dask-gateway")
 
 # Cdsdashboards stuff
 from cdsdashboards.app import CDS_TEMPLATE_PATHS
