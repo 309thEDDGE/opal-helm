@@ -1,4 +1,5 @@
-argoProject: default
+argoProject: &argoProj default
+appPrefix: &appPrefix default
 
 namespaces:
   - &minioNS minio-tenant
@@ -9,8 +10,6 @@ imagePullSecrets:
   namespaces:
     - *opalNS
     - *minioNS
-
-useAzureFile: &useAzure false
 
 gitSyncSecret:
   namespace: *opalNS
@@ -23,58 +22,117 @@ tls:
     - *opalNS
 
 oauth:
-  name: opal-oauth-common
+  name: &oauthSecret opal-oauth-common
+  namespaces:
+    - *opalNS
+    - *minioNS
 
 valuesFile: test-values.yaml
 
+token:
+  name: &token-env "token-env"
+  namespaces:
+    - *opalNS
+
+minio:
+  name: &minio-creds "minio-creds-secret"
+  accesskey: &minio-accesskey opal-administrator
+  namespaces:
+    - *minioNS
+
+keycloakenv:
+  name: &keycloak-env "opal-setup-keycloak-env"
+  namespaces:
+    - *opalNS
+    - *minioNS
+
+postgresql:
+  name: &keycloak-postgres "opal-setup-keycloak-postgres"
+  namespaces:
+    - *opalNS
+    - *minioNS
+
+mongodb:
+  name: &mongo-secret "opal-setup-mongodb"
+  architecture: &mongodb-architecture standalone
+  namespaces:
+    - *opalNS
+
 source: &appSource
   url: "https://github.com/309thEDDGE/opal-helm.git"
-  targetRevision: "OPAL-1281-exposing-dask-dashboard"
+  targetRevision: "OPAL-1251-update-jupyterhub-version"
 
 appValues:
+  namespaces:
+    - *opalNS
+    - *minioNS
+  argoProject: *argoProj
+  appPrefix: *appPrefix
   source: *appSource
   mongodb:
     enabled: true
-    auth:
-      enabled: true
-      rootUser: rootuser
-      rootPassword: ""
-      usernames: []
-      passwords: []
-      databases: []
-    replicaCount: 2
+    appValues:
+      architecture: *mongodb-architecture
+      auth:
+        existingSecret: *mongo-secret
+        enabled: true
+        rootUser: rootuser
+        rootPassword: ""
+        usernames: []
+        passwords: []
+        databases: []
+      replicaCount: 2
   keycloak:
     enabled: true
-    namespace: *opalNS
-    # bootstrapper admin credentials. User should be disabled after post-install setup
+    # bootstrapper admin credentials. Should be deleted after post-install setup
     appValues:
+      namespace: *opalNS
       secrets:
         env:
+          existingSecret: *keycloak-env
+          annotations: {}
           stringData:
             KEYCLOAK_ADMIN: "admin"
             KEYCLOAK_ADMIN_PASSWORD: ""
-            JAVA_OPTS_APPEND: -Djgroups.dns.query=""
+            JAVA_OPTS_APPEND: -Djgroups.dns.query=opal-setup-keycloak-headless
+        oauth:
+          existingSecret: *oauthSecret
+    postgresql:
+      existingSecret: *keycloak-postgres
+
   traefik:
     enabled: true
   minioOperator:
     enabled: true
+    appValues:
+      operator:
+        namespace: *opalNS
+        tenantNamespace: *minioNS
   minioInstance:
     enabled: true
-    creds:
-      namespace: *minioNS
-    secrets:
-      accessKey: opal-administrator
+    namespace: *minioNS
     appValues:
-      tenant:
-        namespace: *minioNS
-      oauth:
-        existingSecret: "minio-creds-secret"
+      creds:
+        existingSecret: *minio-creds
+        accessKey: *minio-accesskey   
+
+  nginx:
+    enabled: true
+    appValues:
+      namespace: *opalNS
+    restart: always
+        
   jupyterhub:
     enabled: true
     appValues:
       namespace: *opalNS
-      resources:
-        useAzureFile: *useAzure
+      secrets:
+        tokenenv:
+          existingSecret: *token-env
+        oauth:
+          existingSecret: *oauthSecret
+      instance:
+        namespace: *minioNS
       gitSync:
         enabled: true
         username: ""
@@ -83,7 +141,4 @@ appValues:
         image:
           repository: registry.k8s.io/git-sync/git-sync
           tag: v4.0.0
-  daskGateway:
-    enabled: true
-    appValues:
-      namespace: *opalNS
+

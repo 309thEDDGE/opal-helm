@@ -22,17 +22,11 @@ c.JupyterHub.port = int(os.environ['PROXY_PUBLIC_SERVICE_PORT'])
 # the hub should listen on all interfaces, so the proxy can access it
 c.JupyterHub.hub_ip = '0.0.0.0'
 
-# Leave singleuser running if hub shuts down
-c.Jupyterhub.cleanup_servers = False
-
 # set the user's server image
 #c.KubeSpawner.image_pull_policy = "Never"
-c.KubeSpawner.image_pull_policy = "IfNotPresent"
 c.KubeSpawner.image_pull_secrets = ["regcred"]
 # c.KubeSpawner.image = "registry.il2.dso.mil/skicamp/project-opal/tip:f970c010"
 c.KubeSpawner.image = os.environ["SINGLE_USER_IMAGE"]
-# wait a bit longer for spawn
-c.KubeSpawner.http_timeout = 60 * 5
 
 # inherit some jupyterhub environment variables
 c.KubeSpawner.env_keep = [
@@ -41,36 +35,18 @@ c.KubeSpawner.env_keep = [
     "MINIO_IDENTITY_OPENID_CLIENT_ID",
     "KEYCLOAK_MINIO_CLIENT_SECRET",
     "KEYCLOAK_OPAL_API_URL",
-    "S3_ENDPOINT",
-    "MONGODB_HOST",
-    "MONGODB_USERNAME",
-    "DASK_GATEWAY_ENDPOINT"
+    "CONDA_OVERRIDE_CUDA"
 ]
 
 metaflow_mount_path = "/opt/opal/metaflow-metadata"
-dda_url_name = os.environ["BASE_URL"] + "/user/{unescaped_username}/proxy/8000"
-mongo_password = os.environ["mongodb-root-password"]
 # add some extra environment variables
 c.KubeSpawner.environment = {
+    "S3_ENDPOINT": "http://minio:9000",
     "USERNAME": "jovyan",
-    "METAFLOW_DATASTORE_SYSROOT_LOCAL": metaflow_mount_path,
-    "CONDA_ENVS_PATH": "$HOME/.conda/envs/",
-    "JUPYTER_RUNTIME_DIR": "/tmp",
-    "DDA_ROOT_PATH": dda_url_name,
-    "MONGODB_PASSWORD": mongo_password
+    "METAFLOW_DATASTORE_SYSROOT_LOCAL":metaflow_mount_path,
 }
 
-# init container for fixing permissions in home/jovyan
-c.KubeSpawner.init_containers = [{
-    "name": "fix-permissions",
-    "image": "busybox",
-    "command": ["sh", "-c", "chown -v -R 1000:100 /jovyan"],
-    "volume_mounts": [{
-        'mountPath': '/jovyan',
-        'name': "home-jovyan-mnt"
-        }]
-    }
-]
+
 # assign a security context for write permissions to
 # the attached volumes
 c.KubeSpawner.fs_gid = 100
@@ -81,31 +57,16 @@ pvc_name_template = 'claim-{username}'
 c.KubeSpawner.pvc_name_template = pvc_name_template
 
 c.KubeSpawner.storage_pvc_ensure = True
-use_azure = os.getenv('USE_AZUREFILE', False)
-if use_azure:
-    c.KubeSpawner.storage_class = 'azuredisk-csi-singleuser'
-    # sometimes azuredisk attach is crazy slow
-    c.KubeSpawner.start_timeout = 60 * 5
-else:
-    c.KubeSpawner.storage_class = 'standard'
-
+c.KubeSpawner.storage_class = 'standard'
 c.KubeSpawner.storage_access_modes = ['ReadWriteOnce']
-#singleuser_storage = int(os.env['SINGLE_USER_STORAGE_CAPACITY'])
-#c.KubeSpawner.storage_capacity = '{}Gi'.format(singleuser_storage)
-c.KubeSpawner.storage_capacity = os.environ['SINGLE_USER_STORAGE_CAPACITY']
+c.KubeSpawner.storage_capacity = '1Gi'
 
 # Add volumes to singleuser pods
 c.KubeSpawner.volumes = [
     {
         'name': "config-tar",
-        "configMap": {
+        "configMap":{
             "name": "jupyterhub-config"
-        }
-    },
-    {
-        'name': "home-jovyan-mnt",
-        "persistentVolumeClaim": {
-            "claimName": pvc_name_template
         }
     },
     {
@@ -116,17 +77,15 @@ c.KubeSpawner.volumes = [
         }
     },
     {
-        'name': "jupyter-notebook-config",
+        'name': "condarc",
         "configMap": {
-            "name": "jupyter-notebook-config-py",
-            "defaultMode": 0o755 # octal permission number
+            "name": "jupyterhub-condarc"
         }
     },
     {
-        'name': "jupyter-server-config",
+        'name': "local-channel-mnt",
         "configMap": {
-            "name": "jupyter-server-config-py",
-            "defaultMode": 0o755 # octal permission number
+            "name": "jupyterhub-local-channel"
         }
     },
     {
@@ -139,12 +98,6 @@ c.KubeSpawner.volumes = [
         'name': 'opal-sync-mnt',
         'persistentVolumeClaim': {
             'claimName': 'opal-sync-pvc'
-        }
-    },
-    {
-        'name': 'ddapi-sync-mnt',
-        'persistentVolumeClaim': {
-            'claimName': 'ddapi-sync-pvc'
         }
     },
     {
@@ -162,23 +115,9 @@ c.KubeSpawner.volume_mounts = [
         'name': "config-tar"
     },
     {
-        'mountPath': '/home/jovyan',
-        'name': "home-jovyan-mnt"
-    },
-    {
         'mountPath': '/tmp/startup_script.bash',
         "subPath": "startup_script.bash",
         "name": "startup-script"
-    },
-    {
-        'mountPath': '/home/jovyan/.jupyter/jupyter_notebook_config.py',
-        "subPath": "jupyter_notebook_config.py",
-        "name": "jupyter-notebook-config"
-    },
-    {
-        'mountPath': '/etc/jupyter/jupyter_server_config.py',
-        "subPath": "jupyter_server_config.py",
-        "name": "jupyter-server-config"
     },
     {
         'mountPath': metaflow_mount_path,
@@ -186,20 +125,26 @@ c.KubeSpawner.volume_mounts = [
         "readOnly": False
     },
     {
-        'mountPath': '/opt/data/opal',
+        'mountPath': '/home/jovyan/opal',
         "subPath": "opal",
         'name': 'opal-sync-mnt'
     },
     {
-        'mountPath': '/opt/data/data-discovery-api',
-        "subPath": "data-discovery-api",
-        'name': 'ddapi-sync-mnt'
-    },
-    {
-        'mountPath': '/opt/data/weave',
+        'mountPath': '/home/jovyan/weave',
         "subPath": "weave",
         'name': 'weave-sync-mnt'
+    },
+    {
+        'mountPath': '/home/jovyan/.condarc',
+        'name': 'condarc',
+        'subPath': '.condarc'
+    },
+    {
+        'mountPath': '/home/jovyan/local_channel_env.yaml',
+        'name': 'local-channel-mnt',
+        'subPath': 'local_channel_env.yaml'
     }
+
 ]
 
 # set the startup bash script
@@ -216,7 +161,7 @@ def get_minio_creds(keycloak_access_token):
             "Action": "AssumeRoleWithWebIdentity",
             "WebIdentityToken": keycloak_access_token,
             "Version": "2011-06-15",
-            # "DurationSeconds": 604800, # This should pick up the value specified by keycloak if left blank
+            "DurationSeconds": 604800, # This should pick up the value specified by keycloak if left blank
             }
     r = requests.post(s3_endpoint, data=body)
 
@@ -272,7 +217,7 @@ c.GenericOAuthenticator.login_service = 'keycloak'
 c.GenericOAuthenticator.userdata_params = {"state": "state"}
 c.GenericOAuthenticator.client_id = keycloak_jupyterhub_client_id
 c.GenericOAuthenticator.client_secret = keycloak_jupyterhub_client_secret
-c.GenericOAuthenticator.tls_verify = False
+c.GenericOAuthenticator.validate_server_cert = False
 c.GenericOAuthenticator.oauth_callback_url = keycloak_jupyterhub_oauth_callback_url
 c.GenericOAuthenticator.authorize_url = keycloak_jupyterhub_authorize_url
 c.GenericOAuthenticator.token_url = keycloak_opal_api_url

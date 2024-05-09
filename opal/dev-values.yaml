@@ -1,0 +1,269 @@
+# Default values for opal.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+
+argoProject: default
+
+appPrefix: opal
+
+imagePullSecrets: &dockerSecret regcred
+
+oauth: &oauthSecret opal-oauth-common
+
+
+tls: &tlsSecret "tls-certs"
+#nameOverride: ""
+#fullnameOverride: ""
+
+namespaces:
+  - &opalNS opal
+  - &minioNS minio-tenant
+
+
+source:
+  url: ""
+  targetRevision: ""
+
+mongodb:
+  enabled: false
+  appValues:
+    namespace: *opalNS
+    image:
+      tag: 5.0.9
+      imagePullSecrets: *dockerSecret
+    auth:
+      enabled: true
+      rootUser: user
+      rootPassword: ""
+      usernames: []
+      passwords: []
+      databases: []
+    replicaCount: 2
+
+
+keycloak:
+  enabled: false
+  appValues:
+    namespace: *opalNS
+    secrets:
+      env:
+        stringData:
+          # both fields need to be filled in
+          KEYCLOAK_ADMIN: ""
+          KEYCLOAK_ADMIN_PASSWORD: ""
+    ingress:
+      enabled: false
+      rules:
+        host: ""
+    postgresql:
+      enabled: false
+    keycloakSetup:
+      existingSecret: *oauthSecret
+  postgres:
+    nameOverride: keycloak-postgres
+    namespace: *opalNS
+    # PostgreSQL User to create
+    postgresqlUsername: keycloak
+    # PostgreSQL Password for the new user
+    postgresqlPassword: keycloak
+    # PostgreSQL Database to create
+    postgresqlDatabase: keycloak
+    # PostgreSQL network policy configuration
+    networkPolicy:
+      enabled: false
+    global:
+      imagePullSecrets:
+        - *dockerSecret
+    image:
+      registry: registry1.dso.mil
+      repository: ironbank/opensource/postgres/postgresql12
+      tag: 12.15
+    securityContext:
+      enabled: true
+      fsGroup: 26
+      runAsUser: 26
+      runAsGroup: 26
+    containerSecurityContext:
+      enabled: true
+      runAsUser: 26
+      capabilities:
+        drop:
+          - ALL
+    resources:
+      requests:
+        cpu: "250m"
+        memory: "256Mi"
+      limits:
+        cpu: "250m"
+        memory: "256Mi"
+
+traefik:
+  enabled: false
+  appValues:
+    namespace: *opalNS
+    image:
+      tag: "v2.10.4"
+    service:
+      loadBalancerIP: ""
+    tls:
+      nameOverride: *tlsSecret
+    ingress:
+      enabled: false
+      rules:
+        host: ""
+
+minioOperator:
+  enabled: false
+  appValues:
+    operator:
+      namespace: *opalNS
+      tenantNamespace: *minioNS
+      imagePullSecrets:
+        - name: *dockerSecret
+      containerSecurityContext:
+        runAsUser: 1001
+        runAsGroup: 1001
+        runAsNonRoot: true
+        capabilities:
+          drop:
+            - ALL
+      resources:
+        requests:
+          cpu: 200m
+          memory: 256Mi
+          ephemeral-storage: 500Mi
+        limits:
+          cpu: 200m
+          memory: 256Mi
+
+minioInstance:
+  enabled: false
+  appValues:
+    namespace: ""
+    secrets:
+      # both fields need to be filled in
+      name: "minio-creds-secret"
+      accessKey: "minio-admin"
+    tls:
+      name: tls-certs
+    tenant:
+      namespace: *minioNS
+      imagePullSecrets:
+        - name: *dockerSecret
+      pools:
+        - servers: 4
+          volumesPerServer: 4
+          size: 10Gi
+          resources:
+            requests:
+              memory: 2Gi
+              cpu: 1000m
+            limits:
+              memory: 2Gi
+              cpu: 1000m
+          securityContext:
+            runAsUser: 1001
+            runAsGroup: 1001
+            fsGroup: 1001
+            runAsNonRoot: true
+          containerSecurityContext:
+            runAsUser: 1001
+            runAsGroup: 1001
+            runAsNonRoot: true
+      mountPath: /home/minio
+      subPath: /data
+      externalCaCertSecret:
+        - name: tls-certs
+      buckets:
+        - name: metaflow-data
+        - name: basket-data
+        - name: airflow
+      env:
+        - name: MINIO_IDENTITY_OPENID_CONFIG_URL
+          value: "https://keycloak-dev.{{ .Values.baseDns }}/realms/master/.well-known/openid-configuration"
+        - name: MINIO_BROWSER_REDIRECT_URL
+          value: "https://minio-dev.{{ .Values.baseDns }}"
+        - name: MINIO_IDENTITY_OPENID_CLIENT_ID
+          value: opal-jupyterhub
+        - name: MINIO_IDENTITY_OPENID_CLAIM_NAME
+          value: 'policy'
+        - name: MINIO_IDENTITY_OPENID_REDIRECT_URI
+          value: "https://minio-dev.{{ .Values.baseDns }}/oauth_callback"
+      ## List of secret names to use for generating MinIO users during tenant provisioning
+      users: [ ]
+      ingress:
+        api:
+          enabled: false
+          rules:
+            host: ""
+        console:
+          enabled: false
+          rules:
+            host: ""
+
+jupyterhub:
+  enabled: false
+  appValues:
+    namespace: *opalNS
+    baseDns: "opalacceptance.dso.mil"
+    secrets:
+      oauth:
+        existingSecret: *oauthSecret
+    image:
+      tag: jupyterhub_v8
+    imagePullSecrets:
+      existingSecret: regcred
+    env:
+      singleUserImage: "registry1.dso.mil/ironbank/opensource/metrostar/singleuser/singleuser:singleuser_v21"
+      opalBannerColor: "green"
+      opalBannerText: "Unclassified (local development)"
+      s3Endpointurl: "http://opal-dev-minio-console.minio-dev.svc.cluster.local:9090"
+      keycloakJupyterhubOauthCallbackUrl: "https://opal-dev.{{ .Values.baseDns }}/hub/oauth_callback"
+      keycloakJupyterhubAuthorizeUrl: "https://keycloak-dev.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/auth"
+      keycloakJupyterhubUserdataUrl: "https://keycloak-dev.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/userinfo"
+      keycloakOpalApiUrl: "https://keycloak-dev.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/token"
+    ingress:
+      enabled: false
+      rules:
+        host: "opal-dev.{{ .Values.baseDns }}"
+    # metaflow datastore size
+    resources:
+      storage: 2Gi
+  postgres:
+    nameOverride: jupyterhub-postgres
+    namespace: *opalNS
+    # PostgreSQL User to create
+    postgresqlUsername: jupyterhub
+    # PostgreSQL Password for the new user
+    postgresqlPassword: jupyterhub
+    # PostgreSQL Database to create
+    postgresqlDatabase: jupyterhub
+    # PostgreSQL network policy configuration
+    networkPolicy:
+      enabled: false
+    global:
+      imagePullSecrets:
+        - *dockerSecret
+    image:
+      registry: registry1.dso.mil
+      repository: ironbank/opensource/postgres/postgresql12
+      tag: 12.15
+    securityContext:
+      enabled: true
+      fsGroup: 26
+      runAsUser: 26
+      runAsGroup: 26
+    containerSecurityContext:
+      enabled: true
+      runAsUser: 26
+      capabilities:
+        drop:
+          - ALL
+    resources:
+      requests:
+        cpu: "250m"
+        memory: "256Mi"
+      limits:
+        cpu: "250m"
+        memory: "256Mi"

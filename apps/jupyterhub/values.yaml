@@ -9,10 +9,12 @@ name: jupyterhub
 
 baseDns: ""
 
-namespace: opal
+namespace: &ns opal
 
 secrets:
   nameOverride: "token-env"
+  tokenenv:
+    existingSecret: ""
   oauth:
     # Leave blank to have jupyterhub create its own secret
     existingSecret: ""
@@ -20,23 +22,12 @@ secrets:
 
 image:
   repository: registry1.dso.mil/ironbank/opensource/metrostar/jupyterhub
-  tag: jupyterhub_v8
+  tag: jupyterhub_v10
   pullPolicy: IfNotPresent
   
 imagePullSecrets: 
   name: regcred
   existingSecret: ""
-
-gitSync:
-  enabled: true
-  gitSecret:
-    secretName: "git-creds"
-  username: ""
-  image:
-    repository: registry.k8s.io/git-sync/git-sync
-    tag: v4.0.0
-    pullPolicy: IfNotPresent
-
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -97,9 +88,10 @@ ingress:
               port:
                 number: 80
   tls: []
+
+
 env:
   keycloakJupyterhubOauthCallbackUrl: "https://opal-k8.{{ .Values.baseDns }}/hub/oauth_callback"
-  jupyterhubBaseUrl: "https://opal-k8.{{ .Values.baseDns }}"
   s3Endpointurl: "https://minio-k8.{{ .Values.baseDns }}"
   keycloakJupyterhubAuthorizeUrl: "https://keycloak-k8.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/auth"
   keycloakJupyterhubUserdataUrl: "https://keycloak-k8.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/userinfo"
@@ -107,6 +99,7 @@ env:
   openidClientId: opal-jupyterhub
   singleUserImage: "deploytime_singleuser"
   pythonPath: "/python-packages/:$PYTHONPATH"
+  condaPath: "/conda-packages/:$CONDAPATH"
   opalBannerColor: "Red"
   opalBannerText: "Kubernetes Local Environment"
   keycloakJupyterhubUsernameKey: "preferred_username"
@@ -114,15 +107,9 @@ env:
   helmReleaseName: true
   daskJupyterhubNamespace: true
 
-resources:
+resources: 
   storage: 2Gi
-  singleuser_storage: 1Gi
-
-  # Azure requires a specific storageclass to be used to enable 'readwritemany'
-  useAzureFile: false
-
-  # Storage for gitsync sidecars
-  gitStorage: 1Gi
+  gitStorage: 4Gi
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
   # resources, such as Minikube. If you do want to specify resources, uncomment the following

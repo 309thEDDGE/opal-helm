@@ -1,4 +1,51 @@
 {{- $values := . -}}
+
+{{- $CONFIGPROXY_AUTH_TOKEN := ( randAlphaNum 64) }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: {{ .Values.namespace }}
+  name: {{ include "jupyterhub.fullname" . }}-proxy
+  labels:
+    component: proxy
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      component: proxy
+  template:
+    metadata:
+      labels:
+        component: proxy
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      {{- if not .existingSecret }}
+      imagePullSecrets:
+        - name: {{ .name }}
+      {{- else}}
+      imagePullSecrets:
+        - name: {{ .existingSecret }}
+      {{- end }}
+      {{- end}}
+      containers:
+        - name: chp
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["bash"]
+          args: ["-c", "source /opt/conda/bin/activate && conda activate jupyterhub && configurable-http-proxy --ip=0.0.0.0 --api-ip=0.0.0.0 --api-port=8001 --default-target=http://$(HUB_SERVICE_HOST):$(HUB_SERVICE_PORT) --error-target=http://$(HUB_SERVICE_HOST):$(HUB_SERVICE_PORT)/hub/error --port=8000 --log-level=debug"]
+          securityContext:
+            allowPrivilegeEscalation: {{ .Values.securityContext.allowPrivilegeEscalation }}
+          env:
+            - name: CONFIGPROXY_AUTH_TOKEN
+              value: {{($CONFIGPROXY_AUTH_TOKEN | quote)}}
+          ports:
+            - containerPort: 8000
+              name: proxy-public
+            - containerPort: {{ .Values.serviceApi.port }}
+              name: api
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -46,8 +93,6 @@ spec:
               value: {{ include "render-url" ( dict "value" .keycloakJupyterhubUserdataUrl "context" $values ) }}
             - name: KEYCLOAK_OPAL_API_URL
               value: {{ include "render-url" ( dict "value" .keycloakOpalApiUrl "context" $values ) }}
-            - name: BASE_URL
-              value: {{ include "render-url" ( dict "value" .jupyterhubBaseUrl "context" $values ) }}
             - name: MINIO_IDENTITY_OPENID_CLIENT_ID
               value: {{ .openidClientId }}
             - name: KEYCLOAK_JUPYTERHUB_CLIENT_ID
@@ -56,7 +101,7 @@ spec:
               value: {{ .singleUserImage }}
             - name: PYTHONPATH
               value: {{ .pythonPath }}
-            - name: OPAL_BANNER_COLOR
+            - name: opalBannerColor
               value: {{ .opalBannerColor }}
             - name: OPAL_BANNER_TEXT
               value: {{ .opalBannerText }}
@@ -82,36 +127,35 @@ spec:
             - name: USE_AZUREFILE
               value: "True"
             {{- end }}
-            - name: SINGLE_USER_STORAGE_CAPACITY
-              value: {{ .Values.resources.singleuser_storage }}
+            - name: CONFIGPROXY_AUTH_TOKEN
+              value: {{($CONFIGPROXY_AUTH_TOKEN | quote)}}
             - name: PROXY_ADDRESS_FORWARDING
               value: "true"
-            - name: MONGODB_USERNAME
-              value: "rootuser"
-            - name: MONGODB_HOST
-              value: {{ .Release.Name }}-mongodb:27017
+            - name: CONDA_OVERRIDE_CUDA
+              value: "12.0"
           envFrom:
             - secretRef:
-                name: {{( include "get.tokenName" . )}}
+                name: {{( include "get.tokenName" .)}}
             {{- if .Values.secrets.oauth.existingSecret }}
             - secretRef:
                 name: {{ .Values.secrets.oauth.existingSecret }}
             {{- else }}
             - secretRef:
-                name: {{( include "get.oauthName" . )}}
+                name: {{( include "get.oauthName" )}}
             {{- end }}
-            - secretRef:
-                name: {{ .Release.Name }}-mongodb
           resources:
             requests: 
               cpu: 500m
-          securityContext:
-            runAsUser: 1000
-            runAsGroup: 100
           volumeMounts:
             - name: jupyterhub-config-py-mnt
               mountPath: /home/jovyan/jupyterhub_config.py
               subPath: jupyterhub_config.py
+            - name: jupyterhub-condarc-mnt
+              mountPath: /home/jovyan/.condarc
+              subPath: .condarc
+            - name: jupyterhub-local-channel-mnt
+              mountPath: /home/jovyan/local_channel_env.yaml
+              subPath: local_channel_env.yaml
 {{- if .Values.gitSync.enabled }}
         - image: "{{ .Values.gitSync.image.repository }}:{{ .Values.gitSync.image.tag }}"
           name: opal-repo-sync
@@ -133,8 +177,7 @@ spec:
               mountPath: /repos
               readOnly: false
           securityContext:
-            #runAsUser: 65533 # git-sync-user
-            runAsUser: 1000 #jovyan
+            runAsUser: 65533 # git-sync-user
             runAsGroup: 100
         - image: "{{ .Values.gitSync.image.repository }}:{{ .Values.gitSync.image.tag }}"
           name: weave-repo-sync
@@ -156,31 +199,7 @@ spec:
               mountPath: /repos
               readOnly: false
           securityContext:
-            #runAsUser: 65533 # git-sync-user
-            runAsUser: 1000 #jovyan
-            runAsGroup: 100
-        - image: "{{ .Values.gitSync.image.repository }}:{{ .Values.gitSync.image.tag }}"
-          name: ddapi-repo-sync
-          args:
-            - "--repo=https://github.com/309theddge/data-discovery-api.git"
-            - "--depth=1"
-            - "--max-failures=-1"
-            - "--group-write"
-            - "--username={{ .Values.gitSync.username }}"
-            - "--password-file=/etc/git-secret/token"
-            - "--root=/repos"
-            - "--link=/repos/data-discovery-api"
-            - "--period=120s"
-          volumeMounts:
-            - name: git-creds-mnt
-              mountPath: /etc/git-secret
-              readOnly: true
-            - name: ddapi-sync-mnt
-              mountPath: /repos
-              readOnly: false
-          securityContext:
-            #runAsUser: 65533 # git-sync-user
-            runAsUser: 1000 #jovyan
+            runAsUser: 65533 # git-sync-user
             runAsGroup: 100
       securityContext:
         runAsNonRoot: true
@@ -190,21 +209,19 @@ spec:
       - name: jupyterhub-config-py-mnt
         configMap:
           name: jupyterhub-config-py
-      - name: metaflow-datastore-mnt
-        persistentVolumeClaim:
-          claimName: metaflow-datastore
-{{- if .Values.gitSync.enabled }}
       - name: opal-sync-mnt
         persistentVolumeClaim:
           claimName: opal-sync-pvc
       - name: weave-sync-mnt
         persistentVolumeClaim:
           claimName: weave-sync-pvc
-      - name: ddapi-sync-mnt
-        persistentVolumeClaim:
-          claimName: ddapi-sync-pvc
-{{- end }}
       - name: git-creds-mnt
         secret:
           secretName: {{ .Values.gitSync.gitSecret.secretName }}
           defaultMode: 0400
+      - name: jupyterhub-condarc-mnt
+        configMap:
+          name: jupyterhub-condarc
+      - name: jupyterhub-local-channel-mnt
+        configMap:
+          name: jupyterhub-local-channel

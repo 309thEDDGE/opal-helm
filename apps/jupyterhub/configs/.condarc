@@ -1,0 +1,7 @@
+anaconda_upload: false
+channels:
+  - http://nginx-k8s.10.96.30.9.nip.io/condapkg/
+default_channels:
+channel_priority: strict
+ssl_verify: false
+

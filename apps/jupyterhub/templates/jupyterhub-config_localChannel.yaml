@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: {{ .Values.namespace }}
+  name: jupyterhub-local-channel
+data:
+  local_channel_env.yaml: |-
+    {{- .Files.Get "configs/local_channel_env.yaml" | nindent 6 }}

@@ -55,6 +55,7 @@ serviceAccount:
 rbac:
   create: false
   rules: []
+  testing: "for testing"
   # RBAC rules for KUBE_PING
   #  - apiGroups:
   #      - ""
