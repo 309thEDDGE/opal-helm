@@ -301,6 +301,7 @@ c.JupyterHub.services = [
 c.KubeSpawner.environment.setdefault("DASK_GATEWAY__PROXY_ADDRESS", "gateway://opal-setup-dask-gateway-traefik.opal:80")
 c.KubeSpawner.environment.setdefault("DASK_GATEWAY__ADDRESS", "http://proxy-public/services/dask-gateway")
 c.KubeSpawner.environment.setdefault("DASK_GATEWAY__PUBLIC_ADDRESS", f"/services/dask-gateway")
+c.KubeSpawner.environment.setdefault("DASK_GATEWAY__AUTH__TYPE", "jupyterhub")
 
 # Cdsdashboards stuff
 from cdsdashboards.app import CDS_TEMPLATE_PATHS
