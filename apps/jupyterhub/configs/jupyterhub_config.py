@@ -292,13 +292,17 @@ c.OAuthenticator.scope = ['openid', 'profile', 'roles']
 ########## extra services ##########
 
 # Dask Gateway Setup
+release_name = os.environ["RELEASE_NAME"]
+namespace = os.environ["POD_NAMESPACE"]
+
 jupyterhub_api_token = os.environ['JUPYTERHUB_API_TOKEN']
+service_url = "http://traefik-{}-dask-gateway.{}".format(release_name, namespace)
 
 c.JupyterHub.services = [
-    {"name": "dask-gateway", "api_token": jupyterhub_api_token}
+    {"name": "dask-gateway", "api_token": jupyterhub_api_token, "url": service_url}
 ]
 
-c.KubeSpawner.environment.setdefault("DASK_GATEWAY__PROXY_ADDRESS", "gateway://opal-setup-dask-gateway-traefik.opal:80")
+c.KubeSpawner.environment.setdefault("DASK_GATEWAY__PROXY_ADDRESS", f"gateway://{release_name}-dask-gateway-traefik.{namespace}:80")
 c.KubeSpawner.environment.setdefault("DASK_GATEWAY__ADDRESS", "http://proxy-public/services/dask-gateway")
 c.KubeSpawner.environment.setdefault("DASK_GATEWAY__PUBLIC_ADDRESS", f"/services/dask-gateway")
 c.KubeSpawner.environment.setdefault("DASK_GATEWAY__AUTH__TYPE", "jupyterhub")
