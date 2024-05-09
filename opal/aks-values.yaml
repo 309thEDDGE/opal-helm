@@ -3,7 +3,8 @@
 # Declare variables to be passed into your templates.
 
 
-argoProject: default
+argoProject: ""
+appPrefix: ""
 
 imagePullSecrets: &dockerSecret regcred
 
@@ -245,3 +246,7 @@ jupyterhub:
       useAzureFile: false
       storage: 20Gi
       singleuser_storage: 20Gi
+daskGateway:
+  enabled: true
+  appValues:
+    namespace: *opalNS
