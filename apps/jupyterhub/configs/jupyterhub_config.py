@@ -296,7 +296,7 @@ release_name = os.environ["HELM_RELEASE_NAME"]
 namespace = os.environ["POD_NAMESPACE"]
 
 jupyterhub_api_token = os.environ['JUPYTERHUB_API_TOKEN']
-service_url = "http://traefik-{}-dask-gateway.{}".format(release_name, namespace)
+service_url = "http://{}-dask-gateway-traefik.{}".format(release_name, namespace)
 
 c.JupyterHub.services = [
     {"name": "dask-gateway", "api_token": jupyterhub_api_token, "url": service_url}
