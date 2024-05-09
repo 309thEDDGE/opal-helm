@@ -25,7 +25,7 @@ spec:
       imagePullSecrets:
         - name: {{ .existingSecret }}
       {{- end }}
-      {{- end}}
+      {{- end }}
       containers:
         - name: jupyter-hub
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -82,6 +82,10 @@ spec:
               value: "rootuser"
             - name: MONGODB_HOST
               value: {{ .Release.Name }}-mongodb:27017
+            - name: NGINX_HOST
+              value: http://{{ .Release.Name }}-nginx.{{ .Values.namespace }}.svc.cluster.local/condapkg/
+            - name: CONDA_OVERRIDE_CUDA
+              value: "12.0"
           envFrom:
             - secretRef:
                 name: {{( include "get.tokenName" . )}}
