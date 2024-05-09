@@ -292,7 +292,7 @@ c.OAuthenticator.scope = ['openid', 'profile', 'roles']
 ########## extra services ##########
 
 # Dask Gateway Setup
-release_name = os.environ["RELEASE_NAME"]
+release_name = os.environ["HELM_RELEASE_NAME"]
 namespace = os.environ["POD_NAMESPACE"]
 
 jupyterhub_api_token = os.environ['JUPYTERHUB_API_TOKEN']
