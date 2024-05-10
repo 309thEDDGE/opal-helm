@@ -60,7 +60,7 @@ mongodb:
 
 source: &appSource
   url: "https://github.com/309thEDDGE/opal-helm.git"
-  targetRevision: "OPAL-1251-update-jupyterhub-version"
+  targetRevision: "OPAL-1281-exposing-dask-dashboard"
 
 appValues:
   namespaces:
