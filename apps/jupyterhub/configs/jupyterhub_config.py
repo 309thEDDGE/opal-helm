@@ -215,7 +215,7 @@ c.KubeSpawner.volume_mounts = [
         'name': 'weave-sync-mnt'
     },
     {
-        'mountPath': '/opt/conda/.condarc',
+        'mountPath': '/opt/conf/condarc',
         'name': 'condarc',
         'subPath': '.condarc'
     },
