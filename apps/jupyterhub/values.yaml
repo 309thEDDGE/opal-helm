@@ -22,7 +22,7 @@ secrets:
 
 image:
   repository: registry1.dso.mil/ironbank/opensource/metrostar/jupyterhub
-  tag: jupyterhub_v10
+  tag: jupyterhub_v8
   pullPolicy: IfNotPresent
   
 imagePullSecrets: 

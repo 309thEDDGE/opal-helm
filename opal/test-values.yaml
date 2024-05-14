@@ -211,7 +211,7 @@ jupyterhub:
       oauth:
         existingSecret: *oauthSecret
     image:
-      tag: jupyterhub_v10
+      tag: jupyterhub_v8
     imagePullSecrets:
       existingSecret: regcred
     env:
