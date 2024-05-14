@@ -37,7 +37,7 @@ valuesFile: test-values.yaml
 
 source: &appSource
   url: "https://github.com/309thEDDGE/opal-helm.git"
-  targetRevision: "OPAL-1229-dask-argo"
+  targetRevision: "daskworker-node-management"
 
 # Most of this is just propagating settings from above, but change as needed for your use case
 appValues:
@@ -108,6 +108,7 @@ appValues:
         useAzureFile: *useAzure
       gitSync:
         enabled: true
+        ## username and gitSecret are now only relevant for the data-discovery-api package
         username: ""
         gitSecret:
           secretName: *gitSyncSecret
@@ -118,3 +119,17 @@ appValues:
     enabled: true
     appValues:
       namespace: *opalNS
+      ## Uncomment and populate the following to allow scheduling of worker pods
+      ## to specific worker nodes. Example options provided by default
+#      gateway:
+#        backend:
+#          worker:
+#            extraPodConfig:
+#              affinity:
+#                nodeSelector:
+#                  workload: "dask-worker"
+#              tolerations:
+#                - key: "worker"
+#                  operator: "Equal"
+#                  value: "false"
+#                  effect: NoSchedule

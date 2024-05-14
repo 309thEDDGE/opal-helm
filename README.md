@@ -142,8 +142,8 @@ In order for the product to work properly you will also need to run a minikube t
 After the status of all opal pods are running and the keycloak-setup pod is complete, open a browser to access the services.
 
 ### Patching argoCD
-if there is a reason to update any of the helm values while argoCD is running, there will have to be a patch applied to make sure the changes take place
->$kubectl patch Application/keycloak \ --type json \ --patch='[ { "op": "remove", "path": "/metadata/finalizers" } ]' -n argocd
+Applications will occasionally fail to sync following an update, there will have to be a patch applied to make sure the changes take place
+> $kubectl patch Application/<failing application> \ --type json \ --patch='[ { "op": "remove", "path": "/metadata/finalizers" } ]' -n argocd
 
 ### Important URLs
 **Opal**
@@ -189,6 +189,46 @@ After Jupyterhub is running, you will also need to create the conda environment 
 
 ```conda env create -f local_channel_env.yaml```
 
+
+## Dask Gateway
+
+Dask gateway provides a means for users to farm out large compute tasks to scalable worker pools. By default, the kubernetes controller will schedule these workers onto any available node, potentially leading to degraded performance in user-facing services. This can be solved using kubernetes features called 'node affinity' and 'taints/tolerations', allowing us to have a separate nodepool that can only be utilized by dask's worker nodes. Some cluster-side configuration is required to make use of this functionality. The target nodes will need some sort of label to distinguish them from the rest of the cluster, as well as a taint to prevent other pods from being scheduled to these nodes. For the sake of this example, we'll use the following: 
+
+``` yaml
+labels:
+    workload:dask-worker
+```
+
+``` yaml
+taints:
+    worker=false:NoSchedule
+```
+
+These can either be added through nodepool options through your cloud provider's CLI/Web UI, or manually per-node using `kubectl`. As cloud providers can vary, the following examples will use `kubectl`
+
+To label nodes:
+`kubectl label nodes <node-name> workload=dask-worker`
+
+To taint nodes:
+`kubectl taint nodes <node-name> worker=false:NoSchedule`
+
+To add the required node affinity and tolerations to the worker pods, add the following to the `appValues` section of `daskGateway` in your values file:
+
+``` yaml
+gateway:
+  backend:
+    worker:
+      extraPodConfig:
+        affinity:
+          nodeSelector:
+            workload: "dask-worker"
+        tolerations:
+          - key: "worker"
+            operator: "Equal"
+            value: "false"
+            effect: NoSchedule
+
+```
 
 ## Mongodb
 Mongodb is a document database designed for ease of application development and scaling.  In the instance of OPAL, it is used in conjuction with pyMongo in a jupyterhub notebook to provide data analyst access to important collections within the database.
@@ -299,9 +339,5 @@ client = MongoClient('example.com',
                      authMechanism='SCRAM-SHA-256')
 
 By default mongosh excludes all db.auth() operations from the saved history
-
-## TODO
-add the regcred-init repo to opal-helm
-add the argoCD repo to opal-helm
 
 
