@@ -32,7 +32,7 @@ spec:
       containers:
         - name: traefik
           image: {{ .Values.traefik.image.name }}:{{ .Values.traefik.image.tag }}
-          imagePullPolicy: {{ .Values.gateway.image.pullPolicy }}
+          imagePullPolicy: {{ .Values.traefik.image.pullPolicy }}
           securityContext:
             runAsUser: 1000
             runAsGroup: 1000
