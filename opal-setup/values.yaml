@@ -1,6 +1,6 @@
 # leave these empty to disable them in the rendered app yamls
-argoProject: &argoProj ""
-appPrefix: &appPrefix ""
+argoProject: &argoProj "test"
+appPrefix: &appPrefix "test"
 
 namespaces:
   - &minioNS minio-tenant
@@ -37,7 +37,7 @@ valuesFile: test-values.yaml
 
 source: &appSource
   url: "https://github.com/309thEDDGE/opal-helm.git"
-  targetRevision: "OPAL-1229-dask-argo"
+  targetRevision: "aks-comp-rebase-test"
 
 # Most of this is just propagating settings from above, but change as needed for your use case
 appValues:
@@ -118,3 +118,55 @@ appValues:
     enabled: true
     appValues:
       namespace: *opalNS
+      gateway:
+        image:
+          name: docker.io/library/dask-gateway-api
+          tag: "test"
+          pullPolicy: Never
+        backend:
+          image:
+            name: docker.io/library/dask-gateway-controller
+            tag: "test"
+            pullPolicy: Never
+      controller:
+        image:
+          name: docker.io/library/dask-gateway-controller
+          tag: "test"
+          pullPolicy: Never
+      traefik:
+        replicas: 1
+        annotations: {}
+        resources: {}
+        image:
+          name: traefik
+          tag: "2.10.6"
+          pullPolicy: IfNotPresent
+        imagePullSecrets: []
+
+        additionalArguments: []
+
+        loglevel: WARN
+
+        dashboard: false
+
+  # Additional configuration for the traefik service
+        service:
+          type: LoadBalancer
+          annotations: {}
+          spec: {}
+          ports:
+            web:
+        # The port HTTP(s) requests will be served on
+              port: 80
+              nodePort:
+            tcp:
+        # The port TCP requests will be served on. Set to `web` to share the
+        # web service port
+              port: web
+              nodePort:
+
+  # Settings for nodeSelector, affinity, and tolerations for the traefik pods
+        nodeSelector: {}
+        affinity: {}
+        tolerations: []
+
