@@ -3,7 +3,8 @@
 # Declare variables to be passed into your templates.
 
 
-argoProject: default
+argoProject: ""
+appPrefix: ""
 
 imagePullSecrets: &dockerSecret regcred
 
@@ -203,6 +204,10 @@ minioInstance:
           enabled: true
           rules:
             host: *minioBase
+nginx:
+  enabled: true
+  appValues:
+    namespace: *opalNS
 jupyterhub:
   enabled: true
   appValues:
@@ -224,8 +229,8 @@ jupyterhub:
     imagePullSecrets:
       existingSecret: regcred
     env:
-      singleUserImage: "jupyterhub/singleuser"
-      #singleUserImage: "registry1.dso.mil/ironbank/opensource/metrostar/singleuser/singleuser:singleuser_v22"
+      #singleUserImage: "jupyterhub/singleuser"
+      singleUserImage: "registry1.dso.mil/ironbank/opensource/metrostar/singleuser:core_singleuser_v2"
       opalBannerColor: "green"
       opalBannerText: "Unclassified"
       jupyterhubBaseUrl: &jhubBase ""
@@ -244,3 +249,7 @@ jupyterhub:
     resources:
       useAzureFile: false
       storage: 2Gi
+daskGateway:
+  enabled: true
+  appValues:
+    namespace: *opalNS

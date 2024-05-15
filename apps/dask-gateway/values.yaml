@@ -115,7 +115,11 @@ gateway:
   # (code-blocks are run in alphabetical order by key, the key value itself is
   # meaningless). The map version is useful as it supports merging multiple
   # `values.yaml` files, but is unnecessary in other cases.
-  extraConfig: {}
+  extraConfig:
+    resourceLimits: |
+      c.KubeClusterConfig.cluster_max_cores = 6
+      c.KubeClusterConfig.cluster_max_memory = "10 G"
+      c.KubeClusterConfig.cluster_max_workers = 6
 
   # backend nested configuration relates to the scheduler and worker resources
   # created for DaskCluster k8s resources by the controller.
@@ -147,13 +151,13 @@ gateway:
 
       # Cores request/limit for the scheduler.
       cores:
-        request:
-        limit:
+        request: 1
+        limit: 1
 
       # Memory request/limit for the scheduler.
       memory:
-        request:
-        limit:
+        request: "2 G"
+        limit: "2 G"
 
     worker:
       # Any extra configuration for the worker pod. Sets
@@ -166,13 +170,13 @@ gateway:
 
       # Cores request/limit for each worker.
       cores:
-        request:
-        limit:
+        request: 1
+        limit: 1
 
       # Memory request/limit for each worker.
       memory:
-        request:
-        limit:
+        request: "2 G"
+        limit: "2 G"
 
       # Number of threads available for a worker. Sets
       # `c.KubeClusterConfig.worker_threads`

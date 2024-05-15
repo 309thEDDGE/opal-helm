@@ -5,6 +5,6 @@ home: https://gateway.dask.org/
 icon: https://avatars3.githubusercontent.com/u/17131925?v=3&s=200
 kubeVersion: '>=1.25.0-0'
 name: dask-gateway
-sources:
-- https://github.com/dask/dask-gateway/
+#sources:
+#- https://github.com/dask/dask-gateway/
 version: 2024.1.0

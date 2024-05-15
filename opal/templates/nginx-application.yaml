@@ -1,13 +1,13 @@
-{{- if .Values.mongodb.enabled }}
+{{- if .Values.nginx.enabled }}
 {{ $global := .Values }}
-{{ $values := .Values.mongodb }}
+{{ $values := .Values.nginx }}
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   {{- if $global.appPrefix }}
-  name: {{ $global.appPrefix }}-mongodb-application
+  name: {{ $global.appPrefix }}-nginx-application
   {{- else }}
-  name: mongodb-application
+  name: nginx-application
   {{- end }}
   # You'll usually want to add your resources to the argocd namespace.
   namespace: argocd
@@ -16,7 +16,7 @@ metadata:
     # The default behaviour is foreground cascading deletion
     - resources-finalizer.argocd.argoproj.io
   labels:
-    name: mongodb
+    name: nginx
 spec:
   # The project the application belongs to.
   project: {{ $global.argoProject | default "default" }}
@@ -25,7 +25,7 @@ spec:
   source:
     repoURL: {{ $global.source.url }}  # Can point to either a Helm chart repo or a git repo.
     targetRevision: {{ $global.source.targetRevision }}  # For Helm, this refers to the chart version.
-    path: "apps/mongodb"  # This has no meaning for Helm charts pulled directly from a Helm repo instead of git.
+    path: "apps/nginx"  # This has no meaning for Helm charts pulled directly from a Helm repo instead of git.
 
     # helm specific config
     helm:
@@ -85,10 +85,5 @@ spec:
   # circumstances. Setting to zero will store no history. This will reduce storage used. Increasing will increase the
   # space used to store the history, so we do not recommend increasing it.
   revisionHistoryLimit: 10
-
-  ignoreDifferences:
-  - kind: Secret
-    jsonPointers:
-    - /data
 
 {{- end }}

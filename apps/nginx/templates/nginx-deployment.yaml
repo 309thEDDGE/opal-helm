@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: {{ .Values.namespace }}
+  name: {{ .Release.Name }}-nginx
+  labels:
+    component: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: nginx
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        component: nginx
+    spec:
+      imagePullSecrets:
+        - name: regcred
+      containers:
+        - name: nginx
+          image: "{{ .Values.image.registry}}/{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: 8080
+              hostPort: 8080
+              protocol: TCP
+          volumeMounts:
+          - name: nginxconfig-mnt
+            mountPath: /etc/nginx/nginx.conf
+            subPath: nginx.conf
+          - name: nginx-claim
+            mountPath: /usr/share/nginx/html
+            readOnly: false
+      volumes:
+      - name: nginxconfig-mnt
+        configMap:
+          name: {{ .Release.Name }}-nginxconfig
+      - name: nginx-claim
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-nginx-claim
