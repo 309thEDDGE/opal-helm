@@ -93,7 +93,7 @@ appValues:
     secrets:
       accessKey: opal-administrator
     appValues:
-    domainExtension: *domainExtension
+      domainExtension: *domainExtension
       tenant:
         namespace: *minioNS
       oauth:
