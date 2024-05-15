@@ -111,6 +111,7 @@ env:
   opalBannerText: "Kubernetes Local Environment"
   keycloakJupyterhubUsernameKey: "preferred_username"
   daskGatewayServiceName: ""
+  helmReleaseName: true
 
 resources:
   storage: 2Gi
