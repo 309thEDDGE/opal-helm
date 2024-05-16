@@ -191,6 +191,8 @@ After Jupyterhub is running, you will also need to create the conda environment 
 
 
 ## Dask Gateway
+  
+### Node Assignment
 
 Dask gateway provides a means for users to farm out large compute tasks to scalable worker pools. By default, the kubernetes controller will schedule these workers onto any available node, potentially leading to degraded performance in user-facing services. This can be solved using kubernetes features called 'node affinity' and 'taints/tolerations', allowing us to have a separate nodepool that can only be utilized by dask's worker nodes. Some cluster-side configuration is required to make use of this functionality. The target nodes will need some sort of label to distinguish them from the rest of the cluster, as well as a taint to prevent other pods from being scheduled to these nodes. For the sake of this example, we'll use the following: 
 
@@ -229,6 +231,23 @@ gateway:
             effect: NoSchedule
 
 ```
+
+### Modifying Resource Limits
+
+Inorder to modify resource limits for dask gateway you will need to configure the values in the dask gateway helm chart values. Currently, by default they should be configured to allow the scheduler and workers 2 G of memory and one core a piece with the cluster total limits being 10 G of memory with 6 cores and 6 workers as a maximum. These values can be located at:
+- gateway
+  - extraConfig (This is where the cluster limits are defined)
+  - backend
+  
+    - scheduler
+    
+      - cores
+      - memory
+    
+    - worker
+    
+      - cores
+      - memory
 
 ## Mongodb
 Mongodb is a document database designed for ease of application development and scaling.  In the instance of OPAL, it is used in conjuction with pyMongo in a jupyterhub notebook to provide data analyst access to important collections within the database.
@@ -339,5 +358,4 @@ client = MongoClient('example.com',
                      authMechanism='SCRAM-SHA-256')
 
 By default mongosh excludes all db.auth() operations from the saved history
-
 
