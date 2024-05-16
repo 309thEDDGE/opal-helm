@@ -201,7 +201,7 @@ minioInstance:
         host: ""
       console:
         enabled: true
-        host: "minio.{{ .Values.baseDns }}"
+        host: "minio-k8s.{{ .Values.baseDns }}"
 nginx:
   enabled: true
   appValues:
