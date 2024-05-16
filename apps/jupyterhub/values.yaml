@@ -110,6 +110,7 @@ env:
   opalBannerColor: "Red"
   opalBannerText: "Kubernetes Local Environment"
   keycloakJupyterhubUsernameKey: "preferred_username"
+  daskGatewayServiceName: ""
   helmReleaseName: true
 
 resources:
