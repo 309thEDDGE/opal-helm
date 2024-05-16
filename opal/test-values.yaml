@@ -18,6 +18,7 @@ namespaces:
   - &opalNS opal
   - &minioNS minio-tenant
 
+baseDns: &baseDns ".10.96.30.9.nip.io"
 domainExtension: &domainExtension ""
 
 source:
@@ -44,6 +45,8 @@ keycloak:
   enabled: true
   appValues:
     namespace: *opalNS
+    baseDns: *baseDns
+    domainExtension: *domainExtension
     secrets:
       env:
         stringData:
@@ -53,7 +56,7 @@ keycloak:
     ingress:
       enabled: true
       rules:
-        host: "keycloak-k8s.10.96.30.9.nip.io"
+        host: ""
     postgresql:
       enabled: false
       useExternal: true
@@ -112,7 +115,7 @@ traefik:
     ingress:
       enabled: true
       rules:
-        host: "traefik-k8s.10.96.30.9.nip.io"
+        host: ""
 
 minioOperator:
   enabled: true
@@ -142,7 +145,8 @@ minioInstance:
     namespace: ""
     oauth:
       existingSecret: *oauthSecret
-    baseDns: "10.96.30.9.nip.io"
+    baseDns: *baseDns
+    domainExtension: *domainExtension
     secrets:
       # both fields need to be filled in
       name: "minio-creds-secret"
@@ -211,7 +215,7 @@ jupyterhub:
   appValues:
     namespace: *opalNS
     minioNS: *minioNS
-    baseDns: "10.96.30.9.nip.io"
+    baseDns: *baseDns
     domainExtension: *domainExtension
     gitSync:
       enabled: true

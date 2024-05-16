@@ -1,4 +1,5 @@
 {{- $ingress := .Values.ingress -}}
+{{- $values := . -}}
 {{- if $ingress.enabled -}}
 {{- $apiV1 := false -}}
 {{- $apiVersion := "extensions/v1beta1" -}}
@@ -44,8 +45,8 @@ spec:
 {{- end }}
   rules:
     -
-      {{- if $ingress.rules.host }}
-      host: {{ tpl $ingress.rules.host $ | quote }}
+      {{- with .Values.ingress.rules }}
+      host: {{ .host | default (include "domains.keycloak" $values) }}
       {{- end }}
       http:
         paths:

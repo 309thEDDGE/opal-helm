@@ -80,3 +80,18 @@ Create the service DNS name.
 {{- $secretName = printf "%s-oauth" (include "keycloak.fullname" .) }}
 {{- $secretName }}
 {{- end}}
+
+{{- define "domains.base" -}}
+{{- $base := .Values.baseDns -}}
+{{- if not (hasPrefix .Values.baseDns ".") -}}
+{{- $base = print "." $base -}}
+{{- end -}}
+{{- if .Values.domainExtension -}}
+{{- $base = print "-" .Values.domainExtension -}}
+{{- end -}}
+{{- print $base -}}
+{{- end -}}
+
+{{- define "domains.keycloak" -}}
+{{- printf "%s%s" "https://keycloak" (include "domains.base" .) -}}
+{{- end -}}

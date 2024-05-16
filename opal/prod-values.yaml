@@ -18,7 +18,8 @@ namespaces:
   - &opalNS opal
   - &minioNS minio-tenant
 
-domainExtension: &domainExtension ""
+baseDns: &baseDns "opalacceptance.dso.mil"
+domainExtension: &domainExtension "prod"
 
 source:
   url: ""
@@ -44,6 +45,8 @@ keycloak:
   enabled: true
   appValues:
     namespace: *opalNS
+    baseDns: *baseDns
+    domainExtension: *domainExtension
     secrets:
       env:
         stringData:
@@ -53,7 +56,7 @@ keycloak:
     ingress:
       enabled: true
       rules:
-        host: "keycloak-prod.opalacceptance.dso.mil"
+        host: ""
     postgresql:
       enabled: false
       useExternal: true
@@ -142,14 +145,14 @@ minioInstance:
     namespace: ""
     oauth:
       existingSecret: *oauthSecret
-    baseDns: "opalacceptance.dso.mil"
+    baseDns: *baseDns
     domainExtension: *domainExtension
     secrets:
       # both fields need to be filled in
       name: "minio-creds-secret"
       accessKey: "minio-admin"
     tls:
-      name: tls-certs
+      name: *tlsSecret
     tenant:
       namespace: *minioNS
       imagePullSecrets:
@@ -213,7 +216,7 @@ jupyterhub:
   appValues:
     namespace: *opalNS
     minioNS: *minioNS
-    baseDns: "opalacceptance.dso.mil"
+    baseDns: *baseDns
     domainExtension: *domainExtension
     gitSync:
       enabled: true

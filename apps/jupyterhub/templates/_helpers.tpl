@@ -118,5 +118,5 @@ Create the name of the service account to use
 {{- end -}}
 
 {{- define "domains.jhub" -}}
-{{- printf "%s%s" "https://jhub" (include "domains.base" .) -}}
+{{- printf "%s%s" "https://opal" (include "domains.base" .) -}}
 {{- end -}}

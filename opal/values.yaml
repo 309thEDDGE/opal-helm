@@ -18,6 +18,7 @@ namespaces:
   - &opalNS opal
   - &minioNS minio-tenant
 
+baseDns: &baseDns ""
 domainExtension: &domainExtension ""
 
 source:
@@ -44,6 +45,8 @@ keycloak:
   enabled: true
   appValues:
     namespace: *opalNS
+    baseDns: *baseDns
+    domainExtension: *domainExtension
     secrets:
       env:
         stringData:
@@ -142,7 +145,7 @@ minioInstance:
     namespace: ""
     oauth:
       existingSecret: *oauthSecret
-    baseDns: ""
+    baseDns: *baseDns
     domainExtension: *domainExtension
     secrets:
       # both fields need to be filled in
@@ -213,7 +216,7 @@ jupyterhub:
   appValues:
     namespace: *opalNS
     minioNS: *minioNS
-    baseDns: ""
+    baseDns: *baseDns
     domainExtension: *domainExtension
     gitSync:
       enabled: true

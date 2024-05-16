@@ -26,7 +26,9 @@ spec:
     {{- end }}
   {{- end }}
   rules:
-    - host: {{ .minioBrowserRedirectURL | default (include "domains.minio" .) }}
+    {{- with .Values.ingress.rules }}
+    - host: {{ .host | default (include "domains.minio" $values) }}
+    {{- end }}
       http:
         paths:
           - path: {{ .Values.ingress.console.path }}

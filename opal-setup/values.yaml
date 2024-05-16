@@ -16,6 +16,7 @@ imagePullSecrets:
     - *minioNS
 
 domainExtension: &domainExtension ""
+baseDomain: &baseDomain ""
 
 useAzureFile: &useAzure false
 
@@ -39,7 +40,7 @@ valuesFile: test-values.yaml
 
 source: &appSource
   url: "https://github.com/309thEDDGE/opal-helm.git"
-  targetRevision: "OPAL-1233-dask-resource-paramterization"
+  targetRevision: "1254-simplify-urls"
 
 # Most of this is just propagating settings from above, but change as needed for your use case
 appValues:
@@ -68,6 +69,8 @@ appValues:
     # bootstrapper admin credentials. User should be disabled after post-install setup
     appValues:
       namespace: *opalNS
+      baseDns: *baseDomain
+      domainExtension: *domainExtension
       secrets:
         env:
           stringData:
@@ -93,6 +96,7 @@ appValues:
     secrets:
       accessKey: opal-administrator
     appValues:
+      baseDns: *baseDomain
       domainExtension: *domainExtension
       tenant:
         namespace: *minioNS
@@ -107,6 +111,7 @@ appValues:
     enabled: true
     appValues:
       namespace: *opalNS
+      baseDns: *baseDomain
       domainExtension: *domainExtension
       resources:
         useAzureFile: *useAzure

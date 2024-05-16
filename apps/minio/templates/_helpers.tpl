@@ -146,5 +146,5 @@ helpers for other opal service urls
 {{- end -}}
 
 {{- define "domains.jhub" -}}
-{{- printf "%s%s" "https://jhub" (include "domains.base" .) -}}
+{{- printf "%s%s" "https://opal" (include "domains.base" .) -}}
 {{- end -}}
