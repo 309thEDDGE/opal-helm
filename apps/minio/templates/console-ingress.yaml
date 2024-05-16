@@ -27,7 +27,7 @@ spec:
   {{- end }}
   rules:
     {{- with .Values.ingress.rules }}
-    - host: {{ .host | default (include "domains.minio" $values) }}
+    - host: {{ .host | default (include "domains.minio" $values) | quote }}
     {{- end }}
       http:
         paths:

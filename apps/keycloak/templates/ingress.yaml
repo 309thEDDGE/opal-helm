@@ -45,9 +45,7 @@ spec:
 {{- end }}
   rules:
     -
-      {{- with .Values.ingress.rules }}
-      host: {{ .host | default (include "domains.keycloak" $values) }}
-      {{- end }}
+      host: {{ $ingress.rules.host | default (include "domains.keycloak" .) | quote }}
       http:
         paths:
           {{- range $ingress.rules.paths }}

@@ -83,11 +83,11 @@ Create the service DNS name.
 
 {{- define "domains.base" -}}
 {{- $base := .Values.baseDns -}}
-{{- if not (hasPrefix .Values.baseDns ".") -}}
+{{- if not (hasPrefix "." $base) -}}
 {{- $base = print "." $base -}}
 {{- end -}}
 {{- if .Values.domainExtension -}}
-{{- $base = print "-" .Values.domainExtension -}}
+{{- $base = print "-" .Values.domainExtension $base -}}
 {{- end -}}
 {{- print $base -}}
 {{- end -}}
