@@ -6,6 +6,9 @@ nameOverride: ""
 
 namespace: &ns opal
 
+baseDns: ""
+domainExtension: ""
+
 # The number of replicas to create (has no effect if autoscaling enabled)
 replicas: 1
 

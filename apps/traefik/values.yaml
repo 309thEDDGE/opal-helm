@@ -7,6 +7,10 @@ nameOverride: ""
 # Namespace to install traefik
 namespace: "opal"
 
+# domain info for ingress
+baseDns: ""
+domainExtension: ""
+
 # The number of replicas to create (has no effect if autoscaling enabled)
 replicas: 1
 
@@ -116,7 +120,7 @@ service:
 
 ingress:
   # If `true`, an Ingress is created
-  enabled: true
+  enabled: false
   # The Service port targeted by the Ingress
   servicePort: http
   # Ingress annotations
