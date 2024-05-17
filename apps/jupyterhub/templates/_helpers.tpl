@@ -110,13 +110,17 @@ Create the name of the service account to use
 {{- end -}}
 
 {{- define "domains.minio" -}}
-{{- printf "%s%s" "minio" (include "domains.base" .) -}}
+{{- printf "%s%s" "https://minio" (include "domains.base" .) -}}
 {{- end -}}
 
 {{- define "domains.keycloak" -}}
-{{- printf "%s%s" "keycloak" (include "domains.base" .) -}}
+{{- printf "%s%s" "https://keycloak" (include "domains.base" .) -}}
 {{- end -}}
 
 {{- define "domains.jhub" -}}
+{{- printf "%s%s" "https://opal" (include "domains.base" .) -}}
+{{- end -}}
+
+{{- define "ingresses.jhub" -}}
 {{- printf "%s%s" "opal" (include "domains.base" .) -}}
 {{- end -}}

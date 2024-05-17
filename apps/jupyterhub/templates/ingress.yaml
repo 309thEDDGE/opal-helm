@@ -15,7 +15,7 @@ metadata:
 spec:
   rules:
   {{- with .Values.ingress.rules }}
-    - host: {{ .host | default (include "domains.jhub" $values) | quote }}
+    - host: {{ .host | default (include "ingresses.jhub" $values) | quote }}
       http: 
         paths: 
         {{- range .http.paths }}

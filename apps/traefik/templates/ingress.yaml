@@ -29,7 +29,7 @@ spec:
     {{- with $ingress.rules }}
     -
       {{- if .host }}
-      host: {{ .host | default (include "domains.traefik" $values) | quote }}
+      host: {{ .host | default (include "ingresses.traefik" $values) | quote }}
       {{- end }}
       http:
         paths:
