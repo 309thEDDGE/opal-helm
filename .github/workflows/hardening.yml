@@ -1,0 +1,96 @@
+name: compliance-checks
+
+on:
+  push:
+  pull_request:
+    branches:
+      - main
+      - aks-comp-rebase-test
+
+jobs:
+  trufflehog:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: TruffleHog OSS
+        uses: trufflesecurity/trufflehog@v3.71.2
+        with:
+          extra_args: --debug --only-verified
+
+  helm-lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install helm
+        uses: azure/setup-helm@v3
+        with:
+          version: 3.12.2
+      - name: run helm lint - setup
+        run: |
+          cd ${GITHUB_WORKSPACE}/opal-setup
+          helm dependency build . > /dev/null
+          helm lint
+      - name: run helm lint - opal
+        run: |
+          cd ${GITHUB_WORKSPACE}/opal
+          helm dependency build . > /dev/null
+          helm lint
+      - name: run helm lint - apps
+        run: |
+          cd ${GITHUB_WORKSPACE}/apps/
+          for dir in `find . -depth -maxdepth 1 -mindepth 1 -type d`
+          do
+            pushd $dir > /dev/null
+            helm dependency build . > /dev/null
+            helm lint .
+            popd > /dev/null
+          done
+
+  check-for-hardcoded-vars:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install helm
+        uses: azure/setup-helm@v3
+        with:
+          version: 3.12.2
+      - name: check for string 'opal-setup' in rendered opal-setup manifests
+        run: |
+          cd ${GITHUB_WORKSPACE}/opal-setup
+          helm dependency build . > /dev/null
+          helm template $RANDOM . > setup.yaml
+          grep -n "opal-setup" setup.yaml
+      - name: check for string 'opal-setup' in rendered opal manifests
+        run: |
+          cd ${GITHUB_WORKSPACE}/opal
+          helm dependency build . > /dev/null
+          helm template $RANDOM . > opal.yaml
+          grep -n "opal-setup" opal.yaml
+      - name: check for string 'opal-setup' in rendered app manifests
+        run: |
+          cd ${GITHUB_WORKSPACE}/apps
+          for dir in `find . -depth -maxdepth 1 -mindepth 1 -type d`
+          do
+            pushd $dir > /dev/null
+            printf "$dir\n"
+            helm dependency build . > /dev/null
+            helm template $RANDOM . > app.yaml
+            if (grep -n "opal-setup" app.yaml)
+            then
+              # need to make grep work backwards
+              exit 1
+            fi
+            popd > /dev/null
+          done

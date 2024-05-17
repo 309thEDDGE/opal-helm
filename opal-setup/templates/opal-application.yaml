@@ -3,7 +3,11 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
+  {{- if $global.appPrefix }}
+  name: {{ $global.appPrefix }}-opal-application
+  {{- else }}
   name: opal-application
+  {{- end }}
   # You'll usually want to add your resources to the argocd namespace.
   namespace: argocd
   finalizers:
@@ -15,7 +19,7 @@ metadata:
     name: opal
 spec:
   # The project the application belongs to.
-  project: {{ $global.argoProject }}
+  project: {{ $global.argoProject | default "default" }}
 
   # Source of the application manifests
   source:
@@ -48,6 +52,7 @@ spec:
   # Destination cluster and namespace to deploy the application
   destination:
     name: in-cluster
+    namespace: {{ $global.appNamespace }}
     # The namespace will only be set for namespace-scoped resources that have not set a value for .metadata.namespace
 
   # Extra information to show in the Argo CD Application details tab

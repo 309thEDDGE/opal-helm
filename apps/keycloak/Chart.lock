@@ -1,6 +1,0 @@
-dependencies:
-- name: postgresql
-  repository: file://./deps/postgresql
-  version: 10.3.13
-digest: sha256:a08b223db3b51da0666e112e295def78e51a57f88a91eca65607107e41c4501c
-generated: "2023-10-04T11:34:12.060786357-06:00"

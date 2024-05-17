@@ -3,7 +3,8 @@
 # Declare variables to be passed into your templates.
 
 
-argoProject: default
+argoProject: ""
+appPrefix: ""
 
 imagePullSecrets: &dockerSecret regcred
 
@@ -22,7 +23,7 @@ source:
   targetRevision: ""
 
 mongodb:
-  enabled: false
+  enabled: true
   appValues:
     namespace: *opalNS
     image:
@@ -37,9 +38,8 @@ mongodb:
       databases: []
     replicaCount: 2
 
-
 keycloak:
-  enabled: false
+  enabled: true
   appValues:
     namespace: *opalNS
     secrets:
@@ -113,7 +113,7 @@ traefik:
         host: ""
 
 minioOperator:
-  enabled: false
+  enabled: true
   appValues:
     namespace: *opalNS
     tenantNamespace: *minioNS
@@ -203,6 +203,10 @@ minioInstance:
           enabled: true
           rules:
             host: "minio-prod.{{ .Values.baseDns }}"
+nginx:
+  enabled: true
+  appValues:
+    namespace: *opalNS
 jupyterhub:
   enabled: true
   appValues:
@@ -215,6 +219,7 @@ jupyterhub:
       username: ""
       gitSecret:
         secretName: "git-creds"
+    secrets:
       oauth:
         existingSecret: *oauthSecret
     image:
@@ -222,8 +227,8 @@ jupyterhub:
     imagePullSecrets:
       existingSecret: regcred
     env:
-      singleUserImage: "jupyterhub/singleuser"
-      #singleUserImage: "registry1.dso.mil/ironbank/opensource/metrostar/singleuser/singleuser:singleuser_v22"
+      #singleUserImage: "jupyterhub/singleuser"
+      singleUserImage: "registry1.dso.mil/ironbank/opensource/metrostar/singleuser:core_singleuser_v2"
       opalBannerColor: "green"
       opalBannerText: "Unclassified"
       s3Endpointurl: "http://opal-minio-console.minio-tenant.svc.cluster.local:9090"
@@ -240,3 +245,7 @@ jupyterhub:
     resources:
       useAzureFile: false
       storage: 2Gi
+daskGateway:
+  enabled: true
+  appValues:
+    namespace: *opalNS
