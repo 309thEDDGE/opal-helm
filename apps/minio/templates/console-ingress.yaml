@@ -26,7 +26,7 @@ spec:
     {{- end }}
   {{- end }}
   rules:
-    {{- with .Values.ingress.rules }}
+    {{- with .Values.ingress.console }}
     - host: {{ .host | default (include "ingresses.minio" $values) | quote }}
     {{- end }}
       http:
