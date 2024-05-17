@@ -73,5 +73,5 @@ Create the name of the service account to use
 {{- end -}}
 
 {{- define "domains.traefik" -}}
-{{- printf "%s%s" "https://traefik" (include "domains.base" .) -}}
+{{- printf "%s%s" "traefik" (include "domains.base" .) -}}
 {{- end -}}

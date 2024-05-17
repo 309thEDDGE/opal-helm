@@ -93,5 +93,5 @@ Create the service DNS name.
 {{- end -}}
 
 {{- define "domains.keycloak" -}}
-{{- printf "%s%s" "https://keycloak" (include "domains.base" .) -}}
+{{- printf "%s%s" "keycloak" (include "domains.base" .) -}}
 {{- end -}}
