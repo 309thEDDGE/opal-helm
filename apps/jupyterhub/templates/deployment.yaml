@@ -66,7 +66,7 @@ spec:
               value: {{ .Values.env.s3Endpointurl }}
               {{- else }}
               {{- $minioNS := .Values.minioNS | default "minio-tenant" }}
-              value: "http://{{ .Release.Name }}-minio-console.{{ $minioNS }}.svc.cluster.local:9090"
+              value: "http://{{ .Release.Name }}-minio-hl.{{ $minioNS }}.svc.cluster.local:9090"
               {{- end }}
             {{- if .Values.env.daskGatewayServiceName }}
             - name: DASK_GATEWAY_ENDPOINT
