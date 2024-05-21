@@ -12,9 +12,6 @@ spec:
   {{- if .Values.resources.useAmazonFile }}
   storageClassName: efs-csi
   volumeMode: Filesystem
-  csi:
-    driver: efs.csi.aws.com
-    volumeHandle: {{ .Values.resources.amazonEFSVolumeHandle }}
   {{- end }}
   resources:
     requests:

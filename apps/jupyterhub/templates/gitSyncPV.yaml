@@ -11,7 +11,7 @@ spec:
   storageClassName: azurefile-csi-singleuser
 {{- end }}
 {{- if .Values.resources.useAmazonFile}}
-  storageClassName: efs-sc
+  storageClassName: efs-csi
 {{- end }}
   resources:
     requests:
@@ -29,7 +29,7 @@ spec:
   storageClassName: azurefile-csi-singleuser
 {{- end }}
 {{- if .Values.resources.useAmazonFile}}
-  storageClassName: efs-sc
+  storageClassName: efs-csi
 {{- end }}
   resources:
     requests:
@@ -47,7 +47,7 @@ spec:
   storageClassName: azurefile-csi-singleuser
 {{- end }}
 {{- if .Values.resources.useAmazonFile}}
-  storageClassName: efs-sc
+  storageClassName: efs-csi
 {{- end }}
   resources:
     requests:
