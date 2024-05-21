@@ -119,6 +119,8 @@ resources:
 
   # Azure requires a specific storageclass to be used to enable 'readwritemany'
   useAzureFile: false
+  useAmazonFile: false
+  amazonEFSVolumeHandle: ""
 
   # Storage for gitsync sidecars
   gitStorage: 1Gi

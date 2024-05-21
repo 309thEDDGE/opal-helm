@@ -84,14 +84,12 @@ c.KubeSpawner.pvc_name_template = pvc_name_template
 
 c.KubeSpawner.storage_pvc_ensure = True
 use_azure = os.getenv('USE_AZUREFILE', False)
+use_amazon = os.getenv('USE_AMAZONFILE', False)
 c.KubeSpawner.start_timeout = 60 * 10
 if use_azure:
     c.KubeSpawner.storage_class = 'azuredisk-csi-singleuser'
-else:
-    c.KubeSpawner.storage_class = 'standard'
-use_amazon = os.getenv('USE_AMAZONFILE', False)
-if use_amazon:
-    c.KubeSpawner.storage_class = 'efs-sc'
+elif use_amazon:
+    c.KubeSpawner.storage_class = 'efs-csi'
 else:
     c.KubeSpawner.storage_class = 'standard'
 

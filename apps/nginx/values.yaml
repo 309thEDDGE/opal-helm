@@ -41,3 +41,6 @@ ingress:
 
 resources:
   storage: 3Gi
+  useAzureFile: false
+  useAmazonFile: false
+  amazonEFSVolumeHandle: ""

@@ -18,6 +18,10 @@ namespaces:
   - &opalNS opal-prod
   - &minioNS minio-tenant
 
+useAzureFile: &useAzure false
+useAmazonFile: &useAmazon false
+amazonEFSVolumeHandle: &EFSHandle ""
+
 tokenEnv: &tokenEnv "token-env"
 
 source:
@@ -137,7 +141,7 @@ minioOperator:
         memory: 256Mi
 
 minioInstance:
-  enabled: false
+  enabled: true
   appValues:
     namespace: ""
     oauth:
@@ -195,18 +199,22 @@ minioInstance:
           value: "https://minio-k8s.{{ .Values.baseDns }}/oauth_callback"
       ## List of secret names to use for generating MinIO users during tenant provisioning
       users: [ ]
-    ingress:
-      api:
-        enabled: false
-        host: ""
-      console:
-        enabled: true
-        host: "minio-k8s.{{ .Values.baseDns }}"
+      ingress:
+        api:
+          enabled: false
+          host: ""
+        console:
+          enabled: true
+          host: "minio-k8s.{{ .Values.baseDns }}"
 nginx:
   enabled: true
   appValues:
     namespace: *opalNS
     baseDns: "52.222.114.186.nip.io"
+    resources:
+      useAzureFile: *useAzure
+      useAmazonFile: *useAmazon
+      amazonEFSVolumeHandle: *EFSHandle
 jupyterhub:
   enabled: true
   appValues:
@@ -243,7 +251,9 @@ jupyterhub:
         host: "opal-k8s.{{ .Values.baseDns }}"
     # metaflow datastore size
     resources:
-      useAzureFile: false
+      useAzureFile: *useAzure
+      useAmazonFile: *useAmazon
+      amazonEFSVolumeHandle: *EFSHandle
       storage: 2Gi
       singleuser_storage: 1Gi
 daskGateway:

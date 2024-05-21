@@ -8,7 +8,7 @@ appPrefix: ""
 
 imagePullSecrets: &dockerSecret regcred
 
-oauth: &oauthSecret opal-oauth-common
+oauth: &oauthSecret "opal-oauth-common"
 
 tls: &tlsSecret "tls-certs"
 #nameOverride: ""
@@ -17,6 +17,12 @@ tls: &tlsSecret "tls-certs"
 namespaces:
   - &opalNS opal-prod
   - &minioNS minio-tenant
+
+useAzureFile: &useAzure false
+useAmazonFile: &useAmazon false
+amazonEFSVolumeHandle: &EFSHandle ""
+
+tokenEnv: &tokenEnv "token-env"
 
 source:
   url: ""
@@ -197,17 +203,19 @@ minioInstance:
       ingress:
         api:
           enabled: false
-          rules:
-            host: ""
+          host: ""
         console:
           enabled: true
-          rules:
-            host: "minio.{{ .Values.baseDns }}"
+          host: "minio.{{ .Values.baseDns }}"
 nginx:
   enabled: true
   appValues:
     namespace: *opalNS
     baseDns: ""
+    resources:
+      useAzureFile: *useAzure
+      useAmazonFile: *useAmazon
+      amazonEFSVolumeHandle: *EFSHandle
 jupyterhub:
   enabled: true
   appValues:
@@ -244,7 +252,9 @@ jupyterhub:
         host: "opal.{{ .Values.baseDns }}"
     # metaflow datastore size
     resources:
-      useAzureFile: false
+      useAzureFile: *useAzure
+      useAmazonFile: *useAmazon
+      amazonEFSVolumeHandle: *EFSHandle
       storage: 2Gi
       singleuser_storage: 20Gi
 daskGateway:
