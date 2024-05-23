@@ -1,15 +1,15 @@
 #!/usr/bin/env sh
 
-share = "/nginx-share"
-nginx_channel = "$share/nginx/html/condapkg"
-local_channel = "/home/jovyan/local-channel"
+share="/nginx-share"
+nginx_channel="$share/nginx/html/condapkg"
+local_channel="/home/jovyan/local-channel"
 
 
 checksum_diff(){
     if [[ -f "$nginx_channel/$1" ]]; then
 
-        local_md5 = ($(md5sum "$local_channel/$1"))
-        remote_md5 = ($(md5sum "$nginx_channel/$1"))
+        local_md5=($(md5sum "$local_channel/$1"))
+        remote_md5=($(md5sum "$nginx_channel/$1"))
 
         if [[ $local_md5 -ne $remote_md5 ]]; then
             printf "found diff at $1\n"

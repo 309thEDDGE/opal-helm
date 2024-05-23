@@ -4,5 +4,5 @@ metadata:
   namespace: {{ .Values.namespace }}
   name: {{ .Release.Name }}-copy-conda-channel
 data:
-  copy-conda-channel.sh: |-
+  copy_conda_channel.sh: |-
 {{- .Files.Get "config/copy_conda_channel.sh" | nindent 6 }}
