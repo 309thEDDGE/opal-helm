@@ -29,7 +29,8 @@ spec:
               mountPath: /nginx-share/
               readOnly: false
             - name: copy-conda-channel
-              mountPath: /home/jovyan
+              mountPath: /home/jovyan/
+              subPath: copy_conda_channel.sh
               readOnly: true
       containers:
         - name: nginx
