@@ -23,7 +23,8 @@ spec:
         - name: conda-channel-setup
           image: "{{ .Values.condaChannelImage.registry}}/{{ .Values.condaChannelImage.repository }}:{{ .Values.condaChannelImage.tag }}"
           imagePullPolicy: {{ .Values.condaChannelImage.pullPolicy }}
-          command: ["sleep 8000"]
+          command: ["bash"]
+          args: ["-c", "ls /home/jovyan"]
           volumeMounts:
             - name: nginx-claim
               mountPath: /nginx-share/
