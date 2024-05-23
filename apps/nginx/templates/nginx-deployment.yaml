@@ -24,13 +24,13 @@ spec:
           image: "{{ .Values.condaChannelImage.registry}}/{{ .Values.condaChannelImage.repository }}:{{ .Values.condaChannelImage.tag }}"
           imagePullPolicy: {{ .Values.condaChannelImage.pullPolicy }}
           command: ["bash"]
-          args: ["/home/jovyan/copy_conda_channel.sh"]
+          args: ["/copy_conda_channel.sh"]
           volumeMounts:
             - name: nginx-claim
               mountPath: /nginx-share/
               readOnly: false
             - name: copy-conda-channel
-              mountPath: /home/jovyan/copy_conda_channel.sh
+              mountPath: /copy_conda_channel.sh
               subPath: copy_conda_channel.sh
               readOnly: true
       containers:
