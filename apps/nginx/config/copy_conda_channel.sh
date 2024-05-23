@@ -13,12 +13,12 @@ checksum_diff(){
 
         if [[ $local_md5 -ne $remote_md5 ]]; then
             printf "found diff at $1\n"
-            return 0
+            echo 0
         else
-            return 1
+            echo 1
         fi
     else
-        return 0
+        echo 0
     fi
 }
 
