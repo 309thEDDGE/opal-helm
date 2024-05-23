@@ -37,7 +37,7 @@ main() {
     mkdir -p "$nginx_channel"
     mkdir -p "$nginx_channel/linux-64"
     mkdir -p "$nginx_channel/noarch"
-    pushd /home/joyvan/local-channel
+    pushd "/home/joyvan/local-channel"
 
 
     printf "checking for diff in linux-64 repodata\n"

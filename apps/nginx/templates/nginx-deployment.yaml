@@ -24,8 +24,7 @@ spec:
           image: "{{ .Values.condaChannelImage.registry}}/{{ .Values.condaChannelImage.repository }}:{{ .Values.condaChannelImage.tag }}"
           imagePullPolicy: {{ .Values.condaChannelImage.pullPolicy }}
           command: ["bash"]
-          #args: ["/copy_conda_channel.sh"]
-          args: ["-c", "sleep 8000"]
+          args: ["/copy_conda_channel.sh"]
           volumeMounts:
             - name: nginx-claim
               mountPath: /nginx-share/
