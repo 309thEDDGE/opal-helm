@@ -24,15 +24,16 @@ spec:
           image: "{{ .Values.condaChannelImage.registry}}/{{ .Values.condaChannelImage.repository }}:{{ .Values.condaChannelImage.tag }}"
           imagePullPolicy: {{ .Values.condaChannelImage.pullPolicy }}
           command: ["bash"]
-          args: ["/copy_conda_channel.sh"]
+          #args: ["/copy_conda_channel.sh"]
+          args: ["-c", "sleep 8000"]
           volumeMounts:
             - name: nginx-claim
               mountPath: /nginx-share/
               readOnly: false
-            - name: copy-conda-channel
-              mountPath: /copy_conda_channel.sh
-              subPath: copy_conda_channel.sh
-              readOnly: true
+           # - name: copy-conda-channel
+           #   mountPath: /copy_conda_channel.sh
+           #   subPath: copy_conda_channel.sh
+           #   readOnly: true
       containers:
         - name: nginx
           image: "{{ .Values.image.registry}}/{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
