@@ -44,11 +44,13 @@ main() {
     if [[ checksum_diff "linux-64/repodata.json" ]]; then
         printf "copying new packages"
         find linux-64 ! -name "repodata.json" -exec diff_and_copy {} \;
+        copy_file "linux-64/repodata.json"
     fi
     printf "copying noarch packages to nginx fileserver"
     if [[ checksum_diff "noarch/repodata.json" ]]; then
         printf "copying new packages"
         find noarch ! -name "repodata.json" -exec diff_and_copy {} \;
+        copy_file "noarch/repodata.json"
     fi
 
 
