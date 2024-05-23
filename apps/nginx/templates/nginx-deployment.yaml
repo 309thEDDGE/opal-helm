@@ -23,8 +23,7 @@ spec:
         - name: conda-channel-setup
           image: "{{ .Values.condaChannelImage.registry}}/{{ .Values.condaChannelImage.repository }}:{{ .Values.condaChannelImage.tag }}"
           imagePullPolicy: {{ .Values.condaChannelImage.pullPolicy }}
-          command: ["bash"]
-          args: ["/home/jovyan/copy_conda_channel.sh"]
+          command: ["bash /home/jovyan/copy_conda_channel.sh"]
           volumeMounts:
             - name: nginx-claim
               mountPath: /nginx-share/
