@@ -19,6 +19,18 @@ spec:
     spec:
       imagePullSecrets:
         - name: regcred
+      initContainers:
+        - name: conda-channel-setup
+          image: "{{ .Values.condaChannelImage.registry}}/{{ .Values.condaChannelImage.repository }}:{{ .Values.condaChannelImage.tag }}"
+          imagePullPolicy: {{ .Values.condaChannelImage.pullPolicy }}
+          command: ["bash /home/jovyan/copy_conda_channel.sh"]
+          volumeMounts:
+            - name: nginx-claim
+              mountPath: /nginx-share/
+              readOnly: false
+            - name: copy-conda-channel
+              mountPath: /home/jovyan
+              readOnly: true
       containers:
         - name: nginx
           image: "{{ .Values.image.registry}}/{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -41,3 +53,6 @@ spec:
       - name: nginx-claim
         persistentVolumeClaim:
           claimName: {{ .Release.Name }}-nginx-claim
+      - name: copy-conda-channel
+        configMap:
+          name: {{ .Release.Name }}-copy-conda-channel
