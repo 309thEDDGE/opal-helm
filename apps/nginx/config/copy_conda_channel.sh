@@ -11,7 +11,7 @@ checksum_diff(){
         local_md5=($(md5sum "$local_channel/$1"))
         remote_md5=($(md5sum "$nginx_channel/$1"))
 
-        if [[ $((16#local_md5)) -ne $((16#remote_md5)) ]]; then
+        if [[ $((16#$local_md5)) -ne $((16#$remote_md5)) ]]; then
             printf "found diff at $1\n"
             echo 0
         else
