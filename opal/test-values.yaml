@@ -106,7 +106,7 @@ traefik:
     image:
       tag: "v2.10.4"
     service:
-      loadBalancerIP: "127.0.0.1"
+      loadBalancerIP: "10.96.30.9"
     tls:
       nameOverride: *tlsSecret
     ingress:
