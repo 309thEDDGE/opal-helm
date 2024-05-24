@@ -11,7 +11,6 @@ checksum_diff(){
         remote_md5=($(md5sum "$nginx_channel/$1"))
 
         if [[ $((16#$local_md5)) -ne $((16#$remote_md5)) ]]; then
-            echo "found diff at $1\n"
             return 0
         else
             return 1
@@ -27,17 +26,15 @@ copy_file(){
 
 #combines the above two for one-line use in find command
 diff_and_copy(){
-    echo $1
     if checksum_diff $1; then
+        echo $1
         copy_file $1
     fi
 }
 
 main() {
-    mkdir -p "$nginx_channel"
     mkdir -p "$nginx_channel/linux-64"
     mkdir -p "$nginx_channel/noarch"
-    chmod -R 755 $nginx_channel
     cd $local_channel
 
 
@@ -63,9 +60,6 @@ main() {
         #find noarch ! -name "repodata.json" -exec bash -c 'diff_and_copy' bash {} \;
         copy_file "noarch/repodata.json"
     fi
-
-    # index the channel so singleuser can access it
-    conda index $nginx_channel
 }
 
 export -f diff_and_copy
