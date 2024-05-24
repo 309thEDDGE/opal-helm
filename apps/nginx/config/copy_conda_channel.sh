@@ -46,7 +46,7 @@ main() {
         printf "copying new packages"
         for file in linux-64/*; do
             if [[ ! $file = "repodata.json" ]]; then
-                diff_and_copy "/linux-64/$file"
+                diff_and_copy "$file"
             fi
         done
         #find linux-64 ! -name "repodata.json" -exec bash -c 'diff_and_copy' bash {} \;
@@ -55,9 +55,9 @@ main() {
     printf "copying noarch packages to nginx fileserver"
     if checksum_diff "noarch/repodata.json"; then
         printf "copying new packages"
-        for file in linux-64/*; do
+        for file in noarch/*; do
             if [[ ! $file = "repodata.json" ]]; then
-                diff_and_copy "/linux-64/$file"
+                diff_and_copy "$file"
             fi
         done
         #find noarch ! -name "repodata.json" -exec bash -c 'diff_and_copy' bash {} \;
