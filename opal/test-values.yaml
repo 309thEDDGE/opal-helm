@@ -53,7 +53,7 @@ keycloak:
     ingress:
       enabled: true
       rules:
-        host: "keycloak-k8s.10.96.30.9.nip.io"
+        host: "keycloak-k8s.127.0.0.1.nip.io"
     postgresql:
       enabled: false
       useExternal: true
@@ -106,13 +106,13 @@ traefik:
     image:
       tag: "v2.10.4"
     service:
-      loadBalancerIP: "10.96.30.9"
+      loadBalancerIP: "127.0.0.1"
     tls:
       nameOverride: *tlsSecret
     ingress:
       enabled: true
       rules:
-        host: "traefik-k8s.10.96.30.9.nip.io"
+        host: "traefik-k8s.127.0.0.1.nip.io"
 
 minioOperator:
   enabled: true
@@ -142,7 +142,7 @@ minioInstance:
     namespace: ""
     oauth:
       existingSecret: *oauthSecret
-    baseDns: "10.96.30.9.nip.io"
+    baseDns: "127.0.0.1.nip.io"
     secrets:
       # both fields need to be filled in
       name: "minio-creds-secret"
@@ -210,7 +210,7 @@ jupyterhub:
   enabled: true
   appValues:
     namespace: *opalNS
-    baseDns: "10.96.30.9.nip.io"
+    baseDns: "127.0.0.1.nip.io"
     gitSync:
       enabled: true
       # Leave this empty, only fill it in the opal-setup chart values
