@@ -23,6 +23,7 @@ checksum_diff(){
 copy_file(){
     echo $1
     cp -f "$local_channel/$1" "$nginx_channel/$1"
+    chmod 755 "$nginx_channel/$1"
 }
 
 #combines the above two for one-line use in find command
