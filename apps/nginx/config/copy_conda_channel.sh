@@ -12,13 +12,13 @@ checksum_diff(){
         remote_md5=($(md5sum "$nginx_channel/$1"))
 
         if [[ $((16#$local_md5)) -ne $((16#$remote_md5)) ]]; then
-            printf "found diff at $1\n"
-            echo 0
+            echo "found diff at $1\n"
+            return 0
         else
-            echo 1
+            return 1
         fi
     else
-        echo 0
+        return 0
     fi
 }
 
@@ -28,6 +28,7 @@ copy_file(){
 
 #combines the above two for one-line use in find command
 diff_and_copy(){
+    echo $1
     if checksum_diff $1; then
         copy_file $1
     fi
@@ -41,22 +42,22 @@ main() {
     cd $local_channel
 
 
-    printf "checking for diff in linux-64 repodata\n"
+    echo "checking for diff in linux-64 repodata"
     if checksum_diff "linux-64/repodata.json"; then
-        printf "copying new packages"
+        echo "copying new packages to linux-64"
         for file in linux-64/*; do
-            if [[ ! $file = "repodata.json" ]]; then
+            if [[ ! ${file##*/} = "repodata.json" ]]; then
                 diff_and_copy "$file"
             fi
         done
         #find linux-64 ! -name "repodata.json" -exec bash -c 'diff_and_copy' bash {} \;
         copy_file "linux-64/repodata.json"
     fi
-    printf "copying noarch packages to nginx fileserver"
+    echo "checking for diff in noarch repodata"
     if checksum_diff "noarch/repodata.json"; then
-        printf "copying new packages"
+        echo "copying new packages to noarch"
         for file in noarch/*; do
-            if [[ ! $file = "repodata.json" ]]; then
+            if [[ ! ${file##*/} = "repodata.json" ]]; then
                 diff_and_copy "$file"
             fi
         done
