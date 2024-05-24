@@ -1,7 +1,6 @@
 #!/usr/bin/env sh
 
-share="/nginx-share"
-nginx_channel="$share/nginx/html/condapkg"
+nginx_channel="/nginx-share/condapkg"
 local_channel="/home/jovyan/local-channel"
 
 
@@ -35,7 +34,6 @@ diff_and_copy(){
 }
 
 main() {
-    ls -lash "/home/jovyan"
     mkdir -p "$nginx_channel"
     mkdir -p "$nginx_channel/linux-64"
     mkdir -p "$nginx_channel/noarch"
@@ -44,7 +42,7 @@ main() {
 
     echo "checking for diff in linux-64 repodata"
     if checksum_diff "linux-64/repodata.json"; then
-        echo "copying new packages to linux-64"
+        echo "diff found, copying new packages to linux-64"
         for file in linux-64/*; do
             if [[ ! ${file##*/} = "repodata.json" ]]; then
                 diff_and_copy "$file"
@@ -55,7 +53,7 @@ main() {
     fi
     echo "checking for diff in noarch repodata"
     if checksum_diff "noarch/repodata.json"; then
-        echo "copying new packages to noarch"
+        echo "diff found, copying new packages to noarch"
         for file in noarch/*; do
             if [[ ! ${file##*/} = "repodata.json" ]]; then
                 diff_and_copy "$file"
