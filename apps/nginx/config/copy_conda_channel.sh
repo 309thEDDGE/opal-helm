@@ -63,7 +63,8 @@ main() {
         copy_file "noarch/repodata.json"
     fi
 
-
+    # index the channel so singleuser can access it
+    python -m conda_index $nginx_channel
 }
 
 export -f diff_and_copy
