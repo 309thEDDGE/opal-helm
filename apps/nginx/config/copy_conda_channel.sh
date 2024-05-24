@@ -37,6 +37,7 @@ main() {
     mkdir -p "$nginx_channel"
     mkdir -p "$nginx_channel/linux-64"
     mkdir -p "$nginx_channel/noarch"
+    chmod -R 755 $nginx_channel
     cd $local_channel
 
 
