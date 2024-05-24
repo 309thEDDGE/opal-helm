@@ -21,13 +21,13 @@ checksum_diff(){
 }
 
 copy_file(){
+    echo $1
     cp -af "$local_channel/$1" "$nginx_channel/$1"
 }
 
 #combines the above two for one-line use in find command
 diff_and_copy(){
     if checksum_diff $1; then
-        echo $1
         copy_file $1
     fi
 }
