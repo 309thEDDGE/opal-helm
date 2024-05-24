@@ -11,7 +11,7 @@ checksum_diff(){
         local_md5=($(md5sum "$local_channel/$1"))
         remote_md5=($(md5sum "$nginx_channel/$1"))
 
-        if [[ ${local_md5#0} -ne ${remote_md5#} ]]; then
+        if [[ $((16#local_md5)) -ne $((16#remote_md5)) ]]; then
             printf "found diff at $1\n"
             echo 0
         else
@@ -34,10 +34,11 @@ diff_and_copy(){
 }
 
 main() {
+    ls -lash "/home/jovyan"
     mkdir -p "$nginx_channel"
     mkdir -p "$nginx_channel/linux-64"
     mkdir -p "$nginx_channel/noarch"
-    pushd "/home/joyvan/local-channel"
+    cd $local_channel
 
 
     printf "checking for diff in linux-64 repodata\n"
