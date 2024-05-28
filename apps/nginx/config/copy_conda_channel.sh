@@ -36,7 +36,7 @@ diff_and_copy(){
 
 remove_old_packages(){
     match_string="Only in $nginx_channel/$1"
-    rm -f (diff -q "$local_channel/$1" "$nginx_channel/$1" | awk -v dir="$match_string" '$0 ~ dir {print substr ($3, 1, length($3)-1) "/" $4}')
+    rm -f $(diff -q "$local_channel/$1" "$nginx_channel/$1" | awk -v dir="$match_string" '$0 ~ dir {print substr ($3, 1, length($3)-1) "/" $4}')
 }
 
 main() {
