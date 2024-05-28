@@ -20,7 +20,7 @@ image:
 condaChannelImage:
   registry: registry1.dso.mil
   repository: ironbank/opensource/metrostar/pytorch
-  tag: cuda_v3
+  tag: cuda_v4
   pullPolicy: IfNotPresent
   
 imagePullSecrets: 
