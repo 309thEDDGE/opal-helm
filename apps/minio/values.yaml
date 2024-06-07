@@ -63,7 +63,7 @@ istio:
     port: ""
 
 monitoring:
-  enabled: false
+  enabled: true
   namespace: monitoring
 
 networkPolicies:
