@@ -337,17 +337,17 @@ tenant:
   ## Prometheus setup for MinIO Tenant.
   prometheus:
     # When set to true disables the creation of prometheus deployment
-    disabled: false
+    disabled: true
     image: "" # defaults to quay.io/prometheus/prometheus:latest
     env: [ ]
     sidecarimage: "" # defaults to alpine
     initimage: "" # defaults to busybox:1.33.1
     # Right now you need to disable Prometheus and logging by setting their disk capacity to false
     # Feature request has been added to disable this
-    diskCapacityGB: 1
+    diskCapacityGB: false
     #Use Standard storage class for stable deployment
-    storageClassName: standard
-    #storageClassName: ""
+    #storageClassName: standard
+    storageClassName: ""
     annotations: { }
     labels: { }
     nodeSelector: { }
@@ -366,7 +366,7 @@ tenant:
   ## LogSearch API setup for MinIO Tenant.
   log:
     # When set to true disables the creation of logsearch api deployment
-    disabled: false
+    disabled: true
     image: "" # defaults to minio/operator:v4.4.17
     env: [ ]
     resources: { }
