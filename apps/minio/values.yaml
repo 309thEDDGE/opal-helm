@@ -169,7 +169,7 @@ tenant:
   subPath: /data
   # pool metrics to be read by Prometheus
   metrics:
-    enabled: false
+    enabled: true
     port: 9000
     protocol: http
   certificate:
@@ -221,7 +221,7 @@ tenant:
   # https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/
   serviceAccountName: ""
   # Tenant scrape configuration will be added to prometheus managed by the prometheus-operator.
-  prometheusOperator: false
+  prometheusOperator: true
   # Enable JSON, Anonymous logging for MinIO tenants.
   # Refer https://github.com/minio/operator/blob/master/pkg/apis/minio.min.io/v2/types.go#L303
   # How logs will look:
@@ -337,17 +337,17 @@ tenant:
   ## Prometheus setup for MinIO Tenant.
   prometheus:
     # When set to true disables the creation of prometheus deployment
-    disabled: true
+    disabled: false
     image: "" # defaults to quay.io/prometheus/prometheus:latest
     env: [ ]
     sidecarimage: "" # defaults to alpine
     initimage: "" # defaults to busybox:1.33.1
     # Right now you need to disable Prometheus and logging by setting their disk capacity to false
     # Feature request has been added to disable this
-    diskCapacityGB: false
+    diskCapacityGB: 1
     #Use Standard storage class for stable deployment
-    #storageClassName: standard
-    storageClassName: ""
+    storageClassName: standard
+    #storageClassName: ""
     annotations: { }
     labels: { }
     nodeSelector: { }
