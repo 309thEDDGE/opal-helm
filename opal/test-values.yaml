@@ -78,8 +78,8 @@ keycloak:
         - *dockerSecret
     image:
       registry: registry1.dso.mil
-      repository: ironbank/bitnami/postgres
-      tag: 16.3.0
+      repository: ironbank/opensource/postgres/postgresql12
+      tag: 12.19
     securityContext:
       enabled: true
       fsGroup: 26
