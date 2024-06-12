@@ -44,7 +44,9 @@ gateway:
   env: []
 
   # Image pull secrets for gateway-server pod
-  imagePullSecrets: []
+  imagePullSecrets: 
+    name: regcred
+    existingSecret: ""
 
   # Configuration for the gateway-server service
   service:
