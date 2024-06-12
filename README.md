@@ -302,6 +302,44 @@ By default mongosh excludes all db.auth() operations from the saved history
 
 ## Dask Gateway
 
+### Using Dask and its Dashboard
+
+The first step in using dask is creating a Gateway and creating a cluster through it.
+This Can be done like this:
+
+```python
+from dask_gateway import Gateway
+gateway = Gateway(address=os.environ["DASK_GATEWAY_ADDRESS"], auth="jupyterhub")
+cluster = gateway.new_cluster()
+```
+
+Following that a client will need to be made like this:
+
+```python
+from dask.distributed import Client
+client = Client(cluster)
+client
+```
+
+This will output a URL that will give you access to the dask dashboard. However, you will need to modify the URL
+inorder for it to work.
+
+```text
+Original
+https://proxy-public/services/dask-gateway/clusters/opal.c9637057fccb41abb9adc9313fd2b6db/status
+Modified
+https://opal-k8s.10.96.30.9.nip.io/services/dask-gateway/clusters/opal.c9637057fccb41abb9adc9313fd2b6db/status
+```
+
+You can see that the
+```text
+proxy-public
+```
+has been replaced with
+```text
+opal-k8s.10.96.30.9.nip.io
+```
+
 ### Modifying Resource Limits
 
 Inorder to modify resource limits for dask gateway you will need to configure the values in the dask gateway helm chart values. Currently, by default they should be configured to allow the scheduler and workers 2 G of memory and one core a piece with the cluster total limits being 10 G of memory with 6 cores and 6 workers as a maximum. These values can be located at:
