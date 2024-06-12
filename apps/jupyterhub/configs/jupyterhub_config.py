@@ -156,6 +156,12 @@ c.KubeSpawner.volumes = [
         }
     },
     {
+        'name': "toplevel-condarc",
+        "configMap": {
+            "name": "jupyterhub-toplevel-condarc"
+        }
+    },
+    {
         'name': "condarc",
         "configMap": {
             "name": "jupyterhub-condarc"
@@ -216,6 +222,11 @@ c.KubeSpawner.volume_mounts = [
     },
     {
         'mountPath': '/opt/conda/.condarc',
+        'name': 'toplevel-condarc',
+        'subPath': '.condarc'
+    },
+    {
+        'mountPath': '/opt/conf/.condarc',
         'name': 'condarc',
         'subPath': '.condarc'
     },
