@@ -34,7 +34,7 @@ gateway:
   image:
     name: registry1.dso.mil/ironbank/opensource/309th/dask-gateway-api
     tag: dask_gateway_api_v1
-    pullPolicy:
+    pullPolicy: IfNotPresent
 
   # Add additional environment variables to the gateway pod
   # e.g.
@@ -42,7 +42,7 @@ gateway:
   # - name: MYENV
   #   value: "my value"
   env: []
-
+  
   # Image pull secrets for gateway-server pod
   imagePullSecrets: 
     name: regcred
