@@ -89,7 +89,7 @@ properties:
               docs](https://kubernetes.io/docs/concepts/containers/images/#updating-images)
               for more info.
       imagePullSecrets: &imagePullSecrets-spec
-        type: object
+        type: array
         description: |
           A list of references to existing k8s Secrets with credentials to pull
           the image.

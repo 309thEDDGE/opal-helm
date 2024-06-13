@@ -42,10 +42,10 @@ gateway:
   # - name: MYENV
   #   value: "my value"
   env: []
-  
+
   # Image pull secrets for gateway-server pod
   imagePullSecrets: 
-    name: regcred
+    name: [regcred]
 
   # Configuration for the gateway-server service
   service:
