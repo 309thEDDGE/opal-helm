@@ -126,14 +126,17 @@ gateway:
   # created for DaskCluster k8s resources by the controller.
   backend:
     # The image to use for both schedulers and workers.
+  #  image:
+  #    name: registry1.dso.mil/ironbank/opensource/309theddge/dask-gateway-controller
+  #    tag: "dask_gateway_controller_v1"
+  #    pullPolicy: IfNotPresent
     image:
-      name: registry1.dso.mil/ironbank/opensource/309theddge/dask-gateway-controller
-      tag: "dask_gateway_controller_v1"
-      pullPolicy: IfNotPresent
-
+      name: ghcr.io/dask/dask-gateway-server
+      tag: "2024.1.0"
+      pullPolicy:
     # Image pull secrets for a dask cluster's scheduler and worker pods
-    imagePullSecrets: 
-      - name: regcred
+  #  imagePullSecrets: 
+  #    - name: regcred
 
     # The namespace to launch dask clusters in. If not specified, defaults to
     # the same namespace the gateway is running in.
@@ -227,11 +230,15 @@ controller:
 
   # The image to use for the controller pod.
   image:
-    name: registry1.dso.mil/ironbank/opensource/309theddge/dask-gateway-controller
-    tag: "dask_gateway_controller_v1"
-    pullPolicy: IfNotPresent
-  imagePullSecrets: 
-    - name: regcred
+    name: ghcr.io/dask/dask-gateway-server
+    tag: "2024.1.0"
+    pullPolicy:
+  #image:
+  #  name: registry1.dso.mil/ironbank/opensource/309theddge/dask-gateway-controller
+  #  tag: "dask_gateway_controller_v1"
+  #  pullPolicy: IfNotPresent
+  #imagePullSecrets: 
+  #  - name: regcred
   # Settings for nodeSelector, affinity, and tolerations for the controller pods
   nodeSelector: {}
   affinity: {}
