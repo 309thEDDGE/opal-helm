@@ -230,7 +230,8 @@ controller:
     name: registry1.dso.mil/ironbank/opensource/309theddge/dask_gateway_controller_v1 
     tag: "dask_gateway_controller_v1"
     pullPolicy: IfNotPresent
-
+  imagePullSecrets: 
+    - name: regcred
   # Settings for nodeSelector, affinity, and tolerations for the controller pods
   nodeSelector: {}
   affinity: {}
