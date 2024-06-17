@@ -227,9 +227,9 @@ controller:
 
   # The image to use for the controller pod.
   image:
-    name: ghcr.io/dask/dask-gateway-server
-    tag: "2024.1.0"
-    pullPolicy:
+    name: registry1.dso.mil/ironbank/opensource/309theddge/dask_gateway_controller_v1 
+    tag: "dask_gateway_controller_v1"
+    pullPolicy: IfNotPresent
 
   # Settings for nodeSelector, affinity, and tolerations for the controller pods
   nodeSelector: {}
