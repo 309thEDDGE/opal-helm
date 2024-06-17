@@ -127,7 +127,7 @@ gateway:
   backend:
     # The image to use for both schedulers and workers.
     image:
-      name: opensource/309theddge/dask-gateway-controller 
+      name: registry1.dso.mil/ironbank/opensource/309theddge/dask-gateway-controller 
       tag: "dask_gateway_controller_v1"
       pullPolicy: IfNotPresent
 
