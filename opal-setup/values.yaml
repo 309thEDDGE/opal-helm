@@ -126,9 +126,8 @@ appValues:
 #        backend:
 #          worker:
 #            extraPodConfig:
-#              affinity:
-#                nodeSelector:
-#                  workload: "dask-worker"
+#              nodeSelector:
+#                workload: "dask-worker"
 #              tolerations:
 #                - key: "worker"
 #                  operator: "Equal"

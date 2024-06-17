@@ -16,6 +16,8 @@
     - [Helm install OPAL](#helm-install-opal)
     - [Patching argoCD](#patching-argocd)
     - [Important URLs](#important-urls)
+  - [Dask Gateway](#dask-gateway)
+    - [Node Assignment](#node-assignment)
   - [Mongodb](#mongodb)
     - [Mongodb documentation](#mongodb-documentation)
     - [Mongodb configuration and user creation](#mongodb-configuration-and-user-creation)
@@ -221,9 +223,8 @@ gateway:
   backend:
     worker:
       extraPodConfig:
-        affinity:
-          nodeSelector:
-            workload: "dask-worker"
+        nodeSelector:
+          workload: "dask-worker"
         tolerations:
           - key: "worker"
             operator: "Equal"
