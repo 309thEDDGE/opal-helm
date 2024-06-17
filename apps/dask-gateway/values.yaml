@@ -137,7 +137,7 @@ gateway:
     # Image pull secrets for a dask cluster's scheduler and worker pods
   #  imagePullSecrets: 
   #    - name: regcred
-
+    imagePullSecrets: []
     # The namespace to launch dask clusters in. If not specified, defaults to
     # the same namespace the gateway is running in.
     namespace:
