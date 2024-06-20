@@ -9,6 +9,5 @@ data:
     channels:
       - http://{{ .Release.Name }}-nginx.{{ .Values.namespace }}.svc.cluster.local:8080/condapkg/
       - nodefaults
-
     channel_priority: strict
     ssl_verify: false
