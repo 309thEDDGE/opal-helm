@@ -7,7 +7,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   {{- if .Values.resources.useAzureFile }}
-  storageClassName: azuredisk-csi-singleuser
+  storageClassName: azurefile-csi-gitsync
   {{- end }}
   resources:
     requests:
