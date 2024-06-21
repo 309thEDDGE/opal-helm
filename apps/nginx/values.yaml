@@ -47,3 +47,4 @@ ingress:
 
 resources:
   storage: 3Gi
+  useAzureFile: false

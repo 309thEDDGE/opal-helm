@@ -6,6 +6,9 @@ metadata:
 spec:
   accessModes:
     - ReadWriteOnce
+  {{- if .Values.resources.useAzureFile }}
+  storageClassName: azuredisk-csi-singleuser
+  {{- end }}
   resources:
     requests:
       storage: {{ .Values.resources.storage | default "3Gi" | quote }}
