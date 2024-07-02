@@ -32,7 +32,7 @@ gateway:
 
   # The image to use for the dask-gateway-server pod (api pod)
   image:
-    name: registry1.dso.mil/ironbank/opensource/309th/dask-gateway-controller
+    name: registry1.dso.mil/ironbank/opensource/309theddge/dask-gateway-controller
     tag: dask_gateway_controller_v1
     pullPolicy: IfNotPresent
 
