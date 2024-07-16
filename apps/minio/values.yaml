@@ -169,7 +169,7 @@ tenant:
   subPath: /data
   # pool metrics to be read by Prometheus
   metrics:
-    enabled: true
+    enabled: false
     port: 9000
     protocol: http
   certificate:
