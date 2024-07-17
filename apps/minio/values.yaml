@@ -338,16 +338,16 @@ tenant:
   prometheus:
     # When set to true disables the creation of prometheus deployment
     disabled: false
-    image: "" # defaults to quay.io/prometheus/prometheus:latest
+    image: "quay.io/prometheus/prometheus:latest" # defaults to quay.io/prometheus/prometheus:latest
     env: [ ]
     sidecarimage: "" # defaults to alpine
-    initimage: "" # defaults to busybox:1.33.1
+    initimage: "busybox:1.33.1" # defaults to busybox:1.33.1
     # Right now you need to disable Prometheus and logging by setting their disk capacity to false
     # Feature request has been added to disable this
     diskCapacityGB: 10
     #Use Standard storage class for stable deployment
     #storageClassName: standard
-    storageClassName: ""
+    storageClassName: "standard"
     annotations: { }
     labels: { }
     nodeSelector: { }
@@ -367,7 +367,7 @@ tenant:
   log:
     # When set to true disables the creation of logsearch api deployment
     disabled: false
-    image: "" # defaults to minio/operator:v4.4.17
+    image: "registry1.dso.mil/ironbank/opensource/minio/operator:v5.0.6" # defaults to minio/operator:v4.4.17
     env: [ ]
     resources: { }
     nodeSelector: { }
@@ -384,9 +384,9 @@ tenant:
       diskCapacityGB: 10
     ## Postgres setup for LogSearch API
     db:
-      image: "" # defaults to library/postgres
+      image: "registry1.dso.mil/ironbank/opensource/postgres/postgresql12:12.15" # defaults to library/postgres
       env: [ ]
-      initimage: "" # defaults to busybox:1.33.1
+      initimage: "busybox:1.33.1" # defaults to busybox:1.33.1
       volumeClaimTemplate:
         metadata: { }
         spec:
