@@ -63,7 +63,7 @@ istio:
     port: ""
 
 monitoring:
-  enabled: true
+  enabled: false
   namespace: monitoring
 
 networkPolicies:
@@ -169,7 +169,7 @@ tenant:
   subPath: /data
   # pool metrics to be read by Prometheus
   metrics:
-    enabled: false
+    enabled: true
     port: 9000
     protocol: http
   certificate:
