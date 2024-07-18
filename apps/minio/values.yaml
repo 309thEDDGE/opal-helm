@@ -247,10 +247,6 @@ tenant:
       value: policy
     - name: MINIO_IDENTITY_OPENID_REDIRECT_URI
       value: "https://minio-k8.{{ .Values.baseDns }}/oauth_callback"
-    - name: MINIO_PROMETHEUS_AUTH_TYPE
-      value: public
-    - value: MINIO_PROMETHEUS_URL
-      value: "http://prometheus-kube-prometheus-prometheus.monitoring.svc.cluster.local:9090"
   ## PriorityClassName indicates the Pod priority and hence importance of a Pod relative to other Pods.
   ## This is applied to MinIO pods only.
   ## Refer Kubernetes documentation for details https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/#priorityclass/
