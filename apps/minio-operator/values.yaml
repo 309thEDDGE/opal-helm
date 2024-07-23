@@ -5,11 +5,13 @@ operator:
   ## Setup environment variables for the Operator
   env:
     - name: MINIO_OPERATOR_TLS_ENABLE
-      value: "on"
+      value: "off"
     - name: OPERATOR_STS_ENABLED
       value: "on"
     - name: CLUSTER_DOMAIN
       value: "cluster.local"
+    - name: PROMETHEUS_NAMESPACE
+      value: monitoring
     - name: WATCHED_NAMESPACE
       value: "{{ .Values.operator.tenantNamespace }}"
   image:
@@ -52,7 +54,7 @@ operator:
       memory: 256Mi
 
 console:
-  enabled: false
+  enabled: true
   image:
     repository: registry1.dso.mil/ironbank/opensource/minio/console
     tag: v0.30.0
@@ -73,12 +75,15 @@ console:
       drop:
         - ALL
   ingress:
-    enabled: false
+    enabled: true
     ingressClassName: ""
     labels: { }
-    annotations: { }
+    annotations: {
+      traefik.ingress.kubernetes.io/router.entrypoints: websecure,
+      traefik.ingress.kubernetes.io/router.tls: "true"
+      }
     tls: [ ]
-    host: console.local
+    host: operator-console.10.96.30.9.nip.io
     path: /
     pathType: Prefix
   volumes: [ ]
