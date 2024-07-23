@@ -5,7 +5,7 @@ operator:
   ## Setup environment variables for the Operator
   env:
     - name: MINIO_OPERATOR_TLS_ENABLE
-      value: "off"
+      value: "on"
     - name: OPERATOR_STS_ENABLED
       value: "on"
     - name: CLUSTER_DOMAIN
@@ -54,7 +54,7 @@ operator:
       memory: 256Mi
 
 console:
-  enabled: true
+  enabled: false
   image:
     repository: registry1.dso.mil/ironbank/opensource/minio/console
     tag: v0.30.0
@@ -75,15 +75,12 @@ console:
       drop:
         - ALL
   ingress:
-    enabled: true
+    enabled: false
     ingressClassName: ""
     labels: { }
-    annotations: {
-      traefik.ingress.kubernetes.io/router.entrypoints: websecure,
-      traefik.ingress.kubernetes.io/router.tls: "true"
-      }
+    annotations: { }
     tls: [ ]
-    host: operator-console.10.96.30.9.nip.io
+    host: console.local
     path: /
     pathType: Prefix
   volumes: [ ]
