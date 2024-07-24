@@ -167,7 +167,7 @@ spec:
   {{- end }}
   {{- if $tenant.metrics.enabled }}
     - name: MINIO_PROMETHEUS_URL
-      value: http://{{ $tenant.metrics.prometheusSvc | default "prometheus-operated"}}.svc.{{ $tenant.metrics.prometheusNamespace | default "monitoring" }}.cluster.local:{{ $tenant.metrics.prometheusPort | default "9090" }}
+      value: http://{{ $tenant.metrics.prometheusSvc | default "prometheus-operated"}}.{{ $tenant.metrics.prometheusNamespace | default "monitoring" }}.svc.cluster.local:{{ $tenant.metrics.prometheusPort | default "9090" }}
   {{- end }}
   {{- end }}
   {{- if dig "priorityClassName" "" . }}

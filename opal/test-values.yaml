@@ -193,8 +193,6 @@ minioInstance:
           value: 'policy'
         - name: MINIO_IDENTITY_OPENID_REDIRECT_URI
           value: "https://minio-k8s.{{ .Values.baseDns }}/oauth_callback"
-        - name: PROMETHEUS_NAMESPACE
-          value: monitoring
       ## List of secret names to use for generating MinIO users during tenant provisioning
       users: [ ]
     ingress:
