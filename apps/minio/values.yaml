@@ -174,9 +174,11 @@ tenant:
     protocol: http
 
     # Defaults to 'prometheus-operated'
-    prometheusUrl: ""
+    prometheusSvc: ""
     # Defaults to 'monitoring'
     prometheusNamespace: ""
+    # Defaults to 9090
+    prometheusPort: ""
 
   certificate:
     ## Use this field to provide one or more external CA certificates. This is used by MinIO
