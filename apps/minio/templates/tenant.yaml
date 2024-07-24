@@ -1,4 +1,5 @@
 {{- $values := . -}}
+{{- $tenant := .Values.tenant -}}
 {{- $files := .Files -}}
 {{- $oauth := .Values.oauth -}}
 
@@ -163,6 +164,10 @@ spec:
   {{- range . }}
     - name: {{ .name }}
       value: {{ include "render-url" ( dict "value" .value "context" $values ) }}
+  {{- end }}
+  {{- if $tenant.metrics.enabled }}
+    - name: MINIO_PROMETHEUS_URL
+      value: {{ $tenant.metrics.prometheusSvc | default "prometheus-operated"}}.svc.{{ $tenant.metrics.prometheusNamespace | default "monitoring" }}.cluster.local:{{ $tenant.metrics.prometheusPort | default "9090" }}
   {{- end }}
   {{- end }}
   {{- if dig "priorityClassName" "" . }}
