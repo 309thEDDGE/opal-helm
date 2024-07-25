@@ -6,6 +6,9 @@ metadata:
 spec:
   accessModes:
     - ReadWriteOnce
+  {{- if .Values.resources.useAzureFile }}
+  storageClassName: azurefile-csi-gitsync
+  {{- end }}
   resources:
     requests:
       storage: {{ .Values.resources.storage | default "3Gi" | quote }}
