@@ -137,7 +137,7 @@ minioOperator:
         memory: 256Mi
 
 minioInstance:
-  enabled: false
+  enabled: true
   appValues:
     namespace: ""
     oauth:
@@ -153,6 +153,14 @@ minioInstance:
       namespace: *minioNS
       imagePullSecrets:
         - *dockerSecret
+      metrics:
+        enabled: true
+        # Defaults to 'prometheus-operated'
+        prometheusSvc: ""
+        # Defaults to 'monitoring'
+        prometheusNamespace: ""
+        # Defaults to 9090
+        prometheusPort: ""
       pools:
       # don't change these for local dev, or risk system overload
         - servers: 4

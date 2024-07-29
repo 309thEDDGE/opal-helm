@@ -10,6 +10,8 @@ operator:
       value: "on"
     - name: CLUSTER_DOMAIN
       value: "cluster.local"
+    - name: PROMETHEUS_NAMESPACE
+      value: monitoring
     - name: WATCHED_NAMESPACE
       value: "{{ .Values.operator.tenantNamespace }}"
   image:

@@ -8,7 +8,7 @@ appPrefix: ""
 
 imagePullSecrets: &dockerSecret regcred
 
-oauth: &oauthSecret opal-oauth-common
+oauth: &oauthSecret "opal-oauth-common"
 
 tls: &tlsSecret "tls-certs"
 #nameOverride: ""
@@ -151,6 +151,14 @@ minioInstance:
       namespace: *minioNS
       imagePullSecrets:
         - *dockerSecret
+      metrics:
+        enabled: true
+        # Defaults to 'prometheus-operated'
+        prometheusSvc: ""
+        # Defaults to 'monitoring'
+        prometheusNamespace: ""
+        # Defaults to 9090
+        prometheusPort: ""
       pools:
         - servers: 4
           volumesPerServer: 4

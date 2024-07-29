@@ -172,6 +172,14 @@ tenant:
     enabled: true
     port: 9000
     protocol: http
+
+    # Defaults to 'prometheus-operated'
+    prometheusSvc: ""
+    # Defaults to 'monitoring'
+    prometheusNamespace: ""
+    # Defaults to 9090
+    prometheusPort: ""
+
   certificate:
     ## Use this field to provide one or more external CA certificates. This is used by MinIO
     ## to verify TLS connections with other applications:
