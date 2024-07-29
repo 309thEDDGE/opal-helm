@@ -103,7 +103,7 @@ istio:
 openshift: false
 
 monitoring:
-  enabled: false
+  enabled: true
   namespace: monitoring
 
 serviceAccount:

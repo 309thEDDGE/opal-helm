@@ -79,7 +79,7 @@ keycloak:
     image:
       registry: registry1.dso.mil
       repository: ironbank/opensource/postgres/postgresql12
-      tag: 12.15
+      tag: 12.19
     securityContext:
       enabled: true
       fsGroup: 26
@@ -193,6 +193,10 @@ minioInstance:
           value: 'policy'
         - name: MINIO_IDENTITY_OPENID_REDIRECT_URI
           value: "https://minio-k8s.{{ .Values.baseDns }}/oauth_callback"
+        - name: MINIO_PROMETHEUS_AUTH_TYPE
+          value: public
+        - name: MINIO_PROMETHEUS_URL
+          value: "http://prometheus-kube-prometheus-prometheus.monitoring.svc.cluster.local:9090"
       ## List of secret names to use for generating MinIO users during tenant provisioning
       users: [ ]
     ingress:
