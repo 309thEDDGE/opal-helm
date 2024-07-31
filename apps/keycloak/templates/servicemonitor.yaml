@@ -1,4 +1,5 @@
 {{- range $key, $serviceMonitor := dict "metrics" .Values.serviceMonitor "extra" .Values.extraServiceMonitor }}
+{{- $release := .Release }}
 {{- with $serviceMonitor }}
 {{- if .enabled }}
 ---
@@ -6,10 +7,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: {{ include "keycloak.fullname" $ }}-{{ $key }}
-  namespace: {{ .Values.namespace }}
-  {{- with .namespace }}
-  namespace: {{ . }}
-  {{- end }}
+  namespace: {{ $release.namespace }}
   {{- with .annotations }}
   annotations:
     {{- range $key, $value := . }}
