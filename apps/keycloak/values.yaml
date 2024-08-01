@@ -125,6 +125,8 @@ extraEnv: |
     value: kubernetes
   - name: KC_CACHE
     value: ispn
+  - name: KC_METRICS_ENABLED
+    value: true
 #  - name: KC_HTTP_RELATIVE_PATH
 #    value: /auth
 #   - name: KC_HTTPS_CERTIFICATE_FILE
