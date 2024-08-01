@@ -1,5 +1,5 @@
+{{- $values := . }}
 {{- range $key, $serviceMonitor := dict "metrics" .Values.serviceMonitor "extra" .Values.extraServiceMonitor }}
-{{- $release := .Release }}
 {{- with $serviceMonitor }}
 {{- if .enabled }}
 ---
@@ -25,7 +25,7 @@ spec:
   {{- toYaml .namespaceSelector | nindent 4 }}
   {{- else }}
   namespaceSelector:
-    {{ $release.namespace }}
+    {{ $values.namespace }}
   {{- end }}
   selector:
     matchLabels:
