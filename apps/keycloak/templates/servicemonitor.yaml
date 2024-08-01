@@ -20,13 +20,9 @@ metadata:
   {{- printf "%s: %s" $key (tpl $value $ | quote) | nindent 4 }}
   {{- end }}
 spec:
-  {{- if .namespaceSelector }}
+  {{- with .namespaceSelector }}
   namespaceSelector:
   {{- toYaml .namespaceSelector | nindent 4 }}
-  {{- else }}
-  namespaceSelector:
-    matchNames:
-      - {{ $values.namespace }}
   {{- end }}
   selector:
     matchLabels:

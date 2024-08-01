@@ -512,7 +512,9 @@ serviceMonitor:
   # Optionally sets a target namespace in which to deploy the ServiceMonitor resource
   namespace: monitoring
   # Optionally sets a namespace for the ServiceMonitor
-  namespaceSelector: {}
+  namespaceSelector:
+    matchNames:
+      - *ns
   # Annotations for the ServiceMonitor
   annotations: {}
   # Additional labels for the ServiceMonitor
