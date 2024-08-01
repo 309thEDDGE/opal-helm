@@ -25,7 +25,7 @@ spec:
   {{- toYaml .namespaceSelector | nindent 4 }}
   {{- else }}
   namespaceSelector:
-    - {{ $release.namespace }}
+    {{ $release.namespace }}
   {{- end }}
   selector:
     matchLabels:
