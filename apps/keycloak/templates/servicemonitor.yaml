@@ -7,7 +7,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: {{ include "keycloak.fullname" $ }}-{{ $key }}
-  namespace: {{ $release.namespace }}
+  namespace: {{ .namespace }}
   {{- with .annotations }}
   annotations:
     {{- range $key, $value := . }}
@@ -20,9 +20,12 @@ metadata:
   {{- printf "%s: %s" $key (tpl $value $ | quote) | nindent 4 }}
   {{- end }}
 spec:
-  {{- with .namespaceSelector }}
+  {{- if .namespaceSelector }}
   namespaceSelector:
-  {{- toYaml . | nindent 4 }}
+  {{- toYaml .namespaceSelector | nindent 4 }}
+  {{- else }}
+  namespaceSelector:
+    - {{ $release.namespace }}
   {{- end }}
   selector:
     matchLabels:
