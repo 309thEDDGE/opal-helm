@@ -22,12 +22,12 @@ metadata:
 spec:
   {{- with .namespaceSelector }}
   namespaceSelector:
-  {{- toYaml .namespaceSelector | nindent 4 }}
+  {{- tpl . $ | nindent 4 }}
   {{- end }}
   selector:
     matchLabels:
       {{- include "keycloak.selectorLabels" $ | nindent 6 }}
-      app.kubernetes.io/component: http
+      app.kubernetes.io/component: metrics
   endpoints:
     - port: {{ .port }}
       path: {{ .path }}

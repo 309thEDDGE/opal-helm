@@ -314,11 +314,7 @@ service:
   # The HTTPS Service node port if type is NodePort
   httpsNodePort: null
   # Additional Service ports, e.g. for custom admin console
-  extraPorts:
-    - name: http-internal
-      port: 9000
-      targetPort: http-internal
-      protocol: TCP
+  extraPorts: []
   # When using Service type LoadBalancer, you can restrict source ranges allowed
   # to connect to the LoadBalancer, e.g. will result in Security Groups
   # (or equivalent) with inbound source ranges allowed to connect
@@ -523,7 +519,10 @@ serviceMonitor:
   # Optionally sets a target namespace in which to deploy the ServiceMonitor resource
   namespace: monitoring
   # Optionally sets a namespace for the ServiceMonitor
-  namespaceSelector: {}
+  namespaceSelector: |
+    matchNames:
+      - {{ tpl .Values.namespace $ }}
+
   # Annotations for the ServiceMonitor
   annotations: {}
   # Additional labels for the ServiceMonitor
