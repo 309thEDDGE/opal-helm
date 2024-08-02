@@ -129,10 +129,9 @@ extraEnv: |
   - name: KC_LOG_LEVEL
     value: "org.keycloak.events:DEBUG"
   - name: KC_METRICS_ENABLED
-    value: true
+    value: "true"
   - name: KC_HEALTH_ENABLED
-    value: true
-
+    value: "true"
 #  - name: KC_HTTP_RELATIVE_PATH
 #    value: /auth
 #   - name: KC_HTTPS_CERTIFICATE_FILE
