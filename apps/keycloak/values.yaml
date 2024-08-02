@@ -211,7 +211,7 @@ podAnnotations: {}
 livenessProbe: |
   httpGet:
     path: /health
-    port: http
+    port: http-internal
     scheme: HTTP
   failureThreshold: 15
   timeoutSeconds: 2
@@ -223,7 +223,7 @@ livenessProbe: |
 readinessProbe: |
   httpGet:
     path: /health
-    port: http
+    port: http-internal
     scheme: HTTP
   failureThreshold: 15
   timeoutSeconds: 2
@@ -234,7 +234,7 @@ readinessProbe: |
 startupProbe: |
   httpGet:
     path: /health
-    port: http
+    port: http-internal
   initialDelaySeconds: 90
   timeoutSeconds: 2
   failureThreshold: 60
