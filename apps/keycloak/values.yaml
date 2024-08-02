@@ -317,7 +317,7 @@ service:
   extraPorts:
     - name: http-internal
       port: 9000
-      targetPort: {{ tpl .Values.http.internalPort }}
+      targetPort: http-internal
       protocol: TCP
   # When using Service type LoadBalancer, you can restrict source ranges allowed
   # to connect to the LoadBalancer, e.g. will result in Security Groups
