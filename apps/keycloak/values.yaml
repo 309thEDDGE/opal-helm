@@ -13,7 +13,7 @@ image:
   # The Keycloak image repository
   repository: registry1.dso.mil/ironbank/opensource/keycloak/keycloak
   # Overrides the Keycloak image tag whose default is the chart appVersion
-  tag: "21.1.2"
+  tag: "25.0.2"
   # The Keycloak image pull policy
   pullPolicy: IfNotPresent
 
@@ -67,10 +67,14 @@ rbac:
 # SecurityContext for the entire Pod. Every container running in the Pod will inherit this SecurityContext. This might be relevant when other components of the environment inject additional containers into running Pods (service meshes are the most prominent example for this)
 podSecurityContext:
   fsGroup: 1000
+  runAsUser: 1000
+  runAsGroup: 1000
+  runAsNonRoot: true
 
 # SecurityContext for the Keycloak container
 securityContext:
   runAsUser: 1000
+  runAsGroup: 1000
   runAsNonRoot: true
   capabilities:
     drop:
@@ -105,17 +109,14 @@ terminationGracePeriodSeconds: 60
 clusterDomain: cluster.local
 
 ## Overrides the default entrypoint of the Keycloak container
-command:
-  - "/opt/keycloak/bin/kc.sh"
+command: []
 
 ## Overrides the default args for the Keycloak container
 args:
   - "start"
-  #- "--proxy edge"
 
 # Additional environment variables for Keycloak
 # https://www.keycloak.org/server/all-config
-#extraEnv: ""
 extraEnv: |
   - name: KC_PROXY
     value: "edge"
@@ -125,8 +126,13 @@ extraEnv: |
     value: kubernetes
   - name: KC_CACHE
     value: ispn
+  - name: KC_LOG_LEVEL
+    value: "org.keycloak.events:DEBUG"
   - name: KC_METRICS_ENABLED
     value: true
+  - name: KC_HEALTH_ENABLED
+    value: true
+
 #  - name: KC_HTTP_RELATIVE_PATH
 #    value: /auth
 #   - name: KC_HTTPS_CERTIFICATE_FILE
@@ -205,7 +211,7 @@ podAnnotations: {}
 #### Updated for Big Bang ####
 livenessProbe: |
   httpGet:
-    path: /
+    path: /health
     port: http
     scheme: HTTP
   failureThreshold: 15
@@ -217,7 +223,7 @@ livenessProbe: |
 #### Updated for Big Bang ####
 readinessProbe: |
   httpGet:
-    path: /realms/master
+    path: /health
     port: http
     scheme: HTTP
   failureThreshold: 15
@@ -228,7 +234,7 @@ readinessProbe: |
 #### Updated for Big Bang ####
 startupProbe: |
   httpGet:
-    path: /realms/master
+    path: /health
     port: http
   initialDelaySeconds: 90
   timeoutSeconds: 2
@@ -528,7 +534,7 @@ serviceMonitor:
   # The path at which metrics are served
   path: /metrics
   # The Service port at which metrics are served
-  port: http
+  port: http-internal
   # added by Big Bang to support Istio mTLS
   scheme: ""
   tlsConfig: {}
