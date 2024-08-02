@@ -520,7 +520,7 @@ serviceMonitor:
   namespace: monitoring
   # Optionally sets a namespace for the ServiceMonitor
   namespaceSelector:
-    matchNames:
+    matchName:
       - *ns
   # Annotations for the ServiceMonitor
   annotations: {}
