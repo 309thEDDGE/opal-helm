@@ -210,7 +210,7 @@ podAnnotations: {}
 #### Updated for Big Bang ####
 livenessProbe: |
   httpGet:
-    path: /health
+    path: /health/live
     port: http-internal
     scheme: HTTP
   failureThreshold: 15
@@ -222,7 +222,7 @@ livenessProbe: |
 #### Updated for Big Bang ####
 readinessProbe: |
   httpGet:
-    path: /health
+    path: /health/ready
     port: http-internal
     scheme: HTTP
   failureThreshold: 15
@@ -314,7 +314,11 @@ service:
   # The HTTPS Service node port if type is NodePort
   httpsNodePort: null
   # Additional Service ports, e.g. for custom admin console
-  extraPorts: []
+  extraPorts:
+    - name: http-internal
+      port: 9000
+      targetPort: {{ tpl .Values.http.internalPort }}
+      protocol: TCP
   # When using Service type LoadBalancer, you can restrict source ranges allowed
   # to connect to the LoadBalancer, e.g. will result in Security Groups
   # (or equivalent) with inbound source ranges allowed to connect
