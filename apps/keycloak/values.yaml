@@ -532,7 +532,7 @@ serviceMonitor:
   # Timeout for scraping
   scrapeTimeout: 10s
   # The path at which metrics are served
-  path: /realms/master/metrics
+  path: /metrics
   # The Service port at which metrics are served
   port: http-internal
   # added by Big Bang to support Istio mTLS
