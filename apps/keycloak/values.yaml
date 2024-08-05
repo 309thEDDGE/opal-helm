@@ -128,10 +128,6 @@ extraEnv: |
     value: ispn
   - name: KC_LOG_LEVEL
     value: "org.keycloak.events:DEBUG"
-  - name: KC_METRICS_ENABLED
-    value: "true"
-  - name: KC_HEALTH_ENABLED
-    value: "true"
 #  - name: KC_HTTP_RELATIVE_PATH
 #    value: /auth
 #   - name: KC_HTTPS_CERTIFICATE_FILE
@@ -207,7 +203,6 @@ podLabels: {}
 podAnnotations: {}
 
 # Liveness probe configuration
-#### Updated for Big Bang ####
 livenessProbe: |
   httpGet:
     path: /health/live
@@ -219,7 +214,6 @@ livenessProbe: |
   initialDelaySeconds: 300
 
 # Readiness probe configuration
-#### Updated for Big Bang ####
 readinessProbe: |
   httpGet:
     path: /health/ready
@@ -230,7 +224,6 @@ readinessProbe: |
   initialDelaySeconds: 30
 
 # Startup probe configuration
-#### Updated for Big Bang ####
 startupProbe: |
   httpGet:
     path: /health
@@ -248,6 +241,7 @@ resources:
   limits:
     cpu: "1"
     memory: "1Gi"
+
 
 #### starupScripts removed. Not relevant for Quarkus distribution ####
 
@@ -512,6 +506,10 @@ postgresql:
     limits:
       cpu: "250m"
       memory: "256Mi"
+
+metrics:
+  enabled: false
+  port: "9000"
 
 serviceMonitor:
   # If `true`, a ServiceMonitor resource for the prometheus-operator is created

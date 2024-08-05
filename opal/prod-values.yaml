@@ -59,6 +59,8 @@ keycloak:
     keycloakSetup:
       enabled: true
       existingSecret: *oauthSecret
+    metrics:
+      enabled: true
   postgres:
     nameOverride: *keycloakPostgresName
     namespace: *opalNS

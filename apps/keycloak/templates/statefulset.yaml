@@ -105,6 +105,18 @@ spec:
                   name: {{ include "keycloak.postgresql.fullname" . }}
                   key: postgresql-password
             {{- end }}
+            - name: KC_HEALTH_ENABLED
+              value: "true"
+            {{- with .Values.metrics }}
+            {{- if .enabled }}
+            - name: KC_METRICS_ENABLED
+              value: "true"
+            {{- with .port }}
+            - name: KC_HTTP_MANAGEMENT_PORT
+              value: {{ . | default "9000" }}
+            {{- end }}
+            {{- end }}
+            {{- end }}
             {{- with .Values.extraEnv }}
             {{- tpl . $ | nindent 12 }}
             {{- end }}
@@ -119,9 +131,13 @@ spec:
             - name: https
               containerPort: 8443
               protocol: TCP
+            {{- with .Values.metrics }}
+            {{- if .enabled }}
             - name: http-internal
-              containerPort: 9000
+              containerPort: {{ .port | default "9000" }}
               protocol: TCP
+            {{- end }}
+            {{- end }}
             {{- with .Values.extraPorts }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
