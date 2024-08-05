@@ -231,13 +231,18 @@ controller:
 
   # The image to use for the controller pod.
   #image:
-  #  name: registry1.dso.mil/ironbank/opensource/309theddge/dask-gateway-controller
-  #  tag: "dask_gateway_controller_v1"
-  #  pullPolicy: IfNotPresent
+   # name: registry1.dso.mil/ironbank/opensource/309theddge/dask-gateway-controller
+   # tag: "dask_gateway_controller_v1"
+   # pullPolicy: IfNotPresent
   image:
     name: registry1.dso.mil/ironbank/opensource/309th/dask-gateway-api
     tag: dask_gateway_api_v1
     pullPolicy: IfNotPresent
+
+  #image:
+  #  name: registry1.dso.mil/ironbank/opensource/309theddge/dask-gateway-controller
+  #  tag: "dask_gateway_controller_v1"
+  #  pullPolicy: IfNotPresent
   imagePullSecrets: 
     - name: regcred
   # Settings for nodeSelector, affinity, and tolerations for the controller pods
