@@ -107,6 +107,8 @@ traefik:
       tag: "v2.10.4"
     service:
       loadBalancerIP: "10.96.30.9"
+    serviceMonitor:
+      enabled: true
     tls:
       nameOverride: *tlsSecret
     ingress:

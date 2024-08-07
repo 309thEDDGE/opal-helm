@@ -31,6 +31,8 @@ spec:
               containerPort: 8000
             - name: websecure
               containerPort: 8443
+            - name: metrics
+              containerPort: 8082
           volumeMounts:
             - name: traefik-cfg
               mountPath: /etc/traefik/traefik.toml
