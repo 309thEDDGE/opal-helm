@@ -26,9 +26,20 @@ data:
     [entryPoints.websecure]
     address = ":8443"
 
+    [entryPoints.metrics]
+    address: ":8082"
+
     [api]
     insecure = true
     dashboard = false
+
+    [metrics.prometheus]
+    entryPoint = "metrics"
+    addServicesLabels = true
+    addRoutersLabels = true
+    addEntryPointsLabels = true
+    buckets = [0.1,0.3,1.2,5.0]
+
 
 
     [log]
