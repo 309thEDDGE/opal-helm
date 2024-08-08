@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   namespace: {{ .Values.namespace}}
-  name: {{ include "traefik.fullname" . }}-service
+  name: {{ include "traefik.fullname" . }}-metrics
   annotations:
     {{- .Values.service.annotations | toYaml | nindent 4 }}
   labels:
@@ -10,20 +10,13 @@ metadata:
     {{- range $key, $value := .Values.service.labels }}
     {{- printf "%s: %s" $key (tpl $value $ | quote) | nindent 4 }}
     {{- end }}
-    app.kubernetes.io/component: http
+    app.kubernetes.io/component:
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   selector:
     app: {{ include "traefik.fullname" . }}
   ports:
     - protocol: TCP
-      port: 80
-      name: web
-      targetPort: web
-    - protocol: TCP
-      port: 443
-      name: websecure
-      targetPort: websecure
-  {{- if .Values.service.loadBalancerIP }}
-  clusterIP: {{ .Values.service.loadBalancerIP }}
-  {{- end }}
+      port: 8082
+      name: metrics
+      targetPort: metrics
