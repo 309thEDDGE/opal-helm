@@ -113,7 +113,7 @@ spec:
               value: "true"
             {{- with .port }}
             - name: KC_HTTP_MANAGEMENT_PORT
-              value: {{ . | default "9000" }}
+              value: {{ . | default "9000" | quote }}
             {{- end }}
             {{- end }}
             {{- end }}
