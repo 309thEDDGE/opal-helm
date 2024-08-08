@@ -11,10 +11,11 @@ namespace: "opal"
 replicas: 1
 
 image:
+  registry: registry1.dso.mil/ironbank/opensource/traefik
   # The Traefik image repository
-  repository: registry1.dso.mil/ironbank/opensource/traefik/traefik
+  repository: traefik
   # Overrides the Traefik image tag whose default is the chart appVersion
-  tag: "v2.10.4"
+  tag: "v3.0.4"
   # The Traefik image pull policy
   pullPolicy: IfNotPresent
 
@@ -154,7 +155,6 @@ networkPolicy:
   # Define all other external allowed source
   # See https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.18/#networkpolicypeer-v1-networking-k8s-io
   extraFrom: []
-
 
 serviceMonitor:
   # If `true`, a ServiceMonitor resource for the prometheus-operator is created

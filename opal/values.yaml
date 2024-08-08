@@ -18,6 +18,8 @@ namespaces:
   - &opalNS opal
   - &minioNS minio-tenant
 
+tokenEnv: &tokenEnv "token-env"
+
 source:
   url: ""
   targetRevision: ""
@@ -102,7 +104,7 @@ traefik:
   appValues:
     namespace: *opalNS
     image:
-      tag: "v2.10.4"
+      tag: "v3.0.4"
     service:
       loadBalancerIP: ""
     tls:

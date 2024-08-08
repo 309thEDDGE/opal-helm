@@ -1,3 +1,5 @@
+{{- if .Values.serviceMonitor.enabled }}
+---
 apiVersion: v1
 kind: Service
 metadata:
@@ -17,6 +19,7 @@ spec:
     app: {{ include "traefik.fullname" . }}
   ports:
     - protocol: TCP
-      port: 8082
+      port: {{ .Values.serviceMonitor.port }}
       name: metrics
       targetPort: metrics
+{{- end }}
