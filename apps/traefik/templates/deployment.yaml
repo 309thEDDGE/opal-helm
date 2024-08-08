@@ -32,11 +32,9 @@ spec:
               containerPort: 8000
             - name: websecure
               containerPort: 8443
-            {{- with .Values.serviceMonitor }}
-            {{- if .enabled }}
+            {{- if .Values.metrics.enabled }}
             - name: metrics
-              containerPort: {{ .port }}
-            {{- end }}
+              containerPort: {{ .Values.metrics.port }}
             {{- end }}
           volumeMounts:
             - name: traefik-cfg

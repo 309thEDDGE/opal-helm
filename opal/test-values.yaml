@@ -109,6 +109,8 @@ traefik:
       loadBalancerIP: "10.96.30.9"
     serviceMonitor:
       enabled: true
+    metrics:
+      enabled: true
     tls:
       nameOverride: *tlsSecret
     ingress:

@@ -115,6 +115,10 @@ service:
   # Session affinity config
   sessionAffinityConfig: {}
 
+metrics:
+  enabled: false
+  port: 8082
+
 ingress:
   # If `true`, an Ingress is created
   enabled: false
@@ -158,7 +162,7 @@ networkPolicy:
 
 serviceMonitor:
   # If `true`, a ServiceMonitor resource for the prometheus-operator is created
-  enabled: false
+  enabled: true
   # Optionally sets a target namespace in which to deploy the ServiceMonitor resource
   namespace: "monitoring"
   # Optionally sets a namespace for the ServiceMonitor

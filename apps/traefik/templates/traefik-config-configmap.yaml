@@ -27,10 +27,9 @@ data:
     [entryPoints.websecure]
     address = ":8443"
 
-    {{- with .Values.serviceMonitor }}
-    {{- if .enabled }}
+    {{- if .Values.metrics.enabled }}
     [entryPoints.metrics]
-    address = ":{{ .port }}"
+    address = ":{{ .Values.metrics.port }}"
 
     [metrics.prometheus]
     entryPoint = "metrics"
@@ -38,7 +37,6 @@ data:
     addRoutersLabels = true
     addEntryPointsLabels = true
     buckets = [0.1,0.3,1.2,5.0]
-    {{- end }}
     {{- end }}
 
     [api]
