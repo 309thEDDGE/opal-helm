@@ -132,7 +132,7 @@ gateway:
   #    pullPolicy: IfNotPresent
     image:
       name: registry1.dso.mil/ironbank/opensource/309theddge/dask-gateway-worker
-      tag: "dask_gateway_worker_v1"
+      tag: "dask-gateway-worker_v1"
       pullPolicy:
     # Image pull secrets for a dask cluster's scheduler and worker pods
   #  imagePullSecrets: 
