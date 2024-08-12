@@ -73,17 +73,17 @@ spec:
               value: "12.0"
           {{- with .Values.env }}
             - name: KEYCLOAK_JUPYTERHUB_OAUTH_CALLBACK_URL
-              value: {{ include "render-url" ( dict "value" .keycloakJupyterhubOauthCallbackUrl "context" $values ) }}
-            - name: S3_ENDPOINT
-              value: {{ include "render-url" ( dict "value" .s3Endpointurl "context" $values ) }}
+              value: {{ tpl .keycloakJupyterhubOauthCallbackUrl $ | default (print (include "domains.jhub" $values) "/hub/oauth_callback") }}
             - name: KEYCLOAK_JUPYTERHUB_AUTHORIZE_URL
-              value: {{ include "render-url" ( dict "value" .keycloakJupyterhubAuthorizeUrl "context" $values ) }}
+              value: {{ tpl .keycloakJupyterhubAuthorizeUrl $ | default (print (include "domains.keycloak" $values) "/realms/master/protocol/openid-connect/auth") }}
             - name: KEYCLOAK_JUPYTERHUB_USERDATA_URL
-              value: {{ include "render-url" ( dict "value" .keycloakJupyterhubUserdataUrl "context" $values ) }}
+              value: {{ tpl .keycloakJupyterhubUserdataUrl $ | default (print (include "domains.keycloak" $values) "/realms/master/protocol/openid-connect/userinfo") }}
             - name: KEYCLOAK_OPAL_API_URL
-              value: {{ include "render-url" ( dict "value" .keycloakOpalApiUrl "context" $values ) }}
+              value: {{ tpl .keycloakOpalApiUrl $ | default (print (include "domains.keycloak" $values) "/realms/master/protocol/openid-connect/token") }}
             - name: BASE_URL
-              value: {{ include "render-url" ( dict "value" .jupyterhubBaseUrl "context" $values ) }}
+              value: {{ tpl .jupyterhubBaseUrl $ | default (include "domains.jhub" $values) }}
+            - name: S3_ENDPOINT
+              value: {{ tpl .s3EndpointUrl $ | default (print "http://" $.Release.Name "-minio-hl." ( $.Values.minioNS | default "minio-tenant" ) ".svc.cluster.local:9000") }}
             - name: MINIO_IDENTITY_OPENID_CLIENT_ID
               value: {{ .openidClientId }}
             - name: KEYCLOAK_JUPYTERHUB_CLIENT_ID

@@ -11,6 +11,10 @@ baseDns: ""
 
 namespace: opal
 
+minioNS: minio-tenant
+
+domainExtension: ""
+
 secrets:
   nameOverride: "token-env"
   oauth:
@@ -92,7 +96,7 @@ ingress:
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
     traefik.ingress.kubernetes.io/router.tls: "true"
   rules:
-    host: "opal-k8.{{ .Values.baseDns }}"
+    host: ""
     http:
       paths:
         - path: /
@@ -105,12 +109,12 @@ ingress:
   tls: []
 
 env:
-  keycloakJupyterhubOauthCallbackUrl: "https://opal-k8.{{ .Values.baseDns }}/hub/oauth_callback"
-  jupyterhubBaseUrl: "https://opal-k8.{{ .Values.baseDns }}"
-  s3Endpointurl: "https://minio-k8.{{ .Values.baseDns }}"
-  keycloakJupyterhubAuthorizeUrl: "https://keycloak-k8.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/auth"
-  keycloakJupyterhubUserdataUrl: "https://keycloak-k8.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/userinfo"
-  keycloakOpalApiUrl: "https://keycloak-k8.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/token"
+  keycloakJupyterhubOauthCallbackUrl: ""
+  jupyterhubBaseUrl: ""
+  s3EndpointUrl: ""
+  keycloakJupyterhubAuthorizeUrl: ""
+  keycloakJupyterhubUserdataUrl: ""
+  keycloakOpalApiUrl: ""
   openidClientId: opal-jupyterhub
   singleUserImage: "deploytime_singleuser"
   pythonPath: "/python-packages/:$PYTHONPATH"
