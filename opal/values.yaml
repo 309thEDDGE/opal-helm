@@ -18,6 +18,9 @@ namespaces:
   - &opalNS opal
   - &minioNS minio-tenant
 
+baseDns: &baseDns ""
+domainExtension: &domainExtension ""
+
 source:
   url: ""
   targetRevision: ""
@@ -42,6 +45,8 @@ keycloak:
   enabled: true
   appValues:
     namespace: *opalNS
+    baseDns: *baseDns
+    domainExtension: *domainExtension
     secrets:
       env:
         stringData:
@@ -135,12 +140,13 @@ minioOperator:
         memory: 256Mi
 
 minioInstance:
-  enabled: false
+  enabled: true
   appValues:
     namespace: ""
     oauth:
       existingSecret: *oauthSecret
-    baseDns: ""
+    baseDns: *baseDns
+    domainExtension: *domainExtension
     secrets:
       # both fields need to be filled in
       name: "minio-creds-secret"
@@ -190,27 +196,19 @@ minioInstance:
         - name: airflow
       #change these to reflect desired domain names
       env:
-        - name: MINIO_IDENTITY_OPENID_CONFIG_URL
-          value: "https://keycloak.{{ .Values.baseDns }}/realms/master/.well-known/openid-configuration"
-        - name: MINIO_BROWSER_REDIRECT_URL
-          value: "https://minio.{{ .Values.baseDns }}"
-        - name: MINIO_IDENTITY_OPENID_CLIENT_ID
-          value: opal-jupyterhub
-        - name: MINIO_IDENTITY_OPENID_CLAIM_NAME
-          value: 'policy'
-        - name: MINIO_IDENTITY_OPENID_REDIRECT_URI
-          value: "https://minio.{{ .Values.baseDns }}/oauth_callback"
-      ## List of secret names to use for generating MinIO users during tenant provisioning
+        minioIdentityOpenIDConfigURL: ""
+        minioBrowserRedirectURL: ""
+        minioIdentityOpenIDRedirectURI: ""
+        minioIdentityOpenIDClientID: opal-jupyterhub
+        minioIdentityOpenIDClaimName: policy
       users: [ ]
-      ingress:
-        api:
-          enabled: false
-          rules:
-            host: ""
-        console:
-          enabled: true
-          rules:
-            host: "minio.{{ .Values.baseDns }}"
+    ingress:
+      api:
+        enabled: false
+        host: ""
+      console:
+        enabled: true
+        host: ""
 nginx:
   enabled: true
   appValues:
@@ -219,7 +217,8 @@ jupyterhub:
   enabled: true
   appValues:
     namespace: *opalNS
-    baseDns: ""
+    baseDns: *baseDns
+    domainExtension: *domainExtension
     gitSync:
       enabled: true
       # Leave this empty, only fill it in the opal-setup chart values
@@ -238,17 +237,16 @@ jupyterhub:
       singleUserImage: "registry1.dso.mil/ironbank/opensource/metrostar/singleuser:core_singleuser_v2"
       opalBannerColor: "green"
       opalBannerText: "Unclassified"
-      #change this based on minio's target namespace, and the name of the helm release
-      s3Endpointurl: "http://opal-setup-minio-console.minio-tenant.svc.cluster.local:9090"
-      keycloakJupyterhubOauthCallbackUrl: "https://opal.{{ .Values.baseDns }}/hub/oauth_callback"
-      jupyterhubBaseUrl: "https://opal.{{ .Values.baseDns }}"
-      keycloakJupyterhubAuthorizeUrl: "https://keycloak.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/auth"
-      keycloakJupyterhubUserdataUrl: "https://keycloak.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/userinfo"
-      keycloakOpalApiUrl: "https://keycloak.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/token"
+      s3Endpointurl: ""
+      keycloakJupyterhubOauthCallbackUrl: ""
+      jupyterhubBaseUrl: ""
+      keycloakJupyterhubAuthorizeUrl: ""
+      keycloakJupyterhubUserdataUrl: ""
+      keycloakOpalApiUrl: ""
     ingress:
       enabled: true
       rules:
-        host: "opal.{{ .Values.baseDns }}"
+        host: ""
     # metaflow datastore size
     resources:
       useAzureFile: false

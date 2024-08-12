@@ -1,6 +1,6 @@
 # leave these empty to disable them in the rendered app yamls
-argoProject: &argoProj "test"
-appPrefix: &appPrefix "test"
+argoProject: &argoProj ""
+appPrefix: &appPrefix ""
 
 namespaces:
   - &minioNS minio-tenant
@@ -14,6 +14,9 @@ imagePullSecrets:
   namespaces:
     - *opalNS
     - *minioNS
+
+domainExtension: &domainExtension ""
+baseDns: &baseDns ""
 
 useAzureFile: &useAzure false
 
@@ -66,6 +69,8 @@ appValues:
     # bootstrapper admin credentials. User should be disabled after post-install setup
     appValues:
       namespace: *opalNS
+      baseDns: *baseDns
+      domainExtension: *domainExtension
       secrets:
         env:
           stringData:
@@ -91,6 +96,8 @@ appValues:
     secrets:
       accessKey: opal-administrator
     appValues:
+      baseDns: *baseDns
+      domainExtension: *domainExtension
       tenant:
         namespace: *minioNS
       oauth:
@@ -104,6 +111,8 @@ appValues:
     enabled: true
     appValues:
       namespace: *opalNS
+      baseDns: *baseDns
+      domainExtension: *domainExtension
       resources:
         useAzureFile: *useAzure
       gitSync:
