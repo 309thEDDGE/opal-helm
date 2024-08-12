@@ -60,3 +60,22 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{- define "domains.base" -}}
+{{- $base := .Values.baseDns -}}
+{{- if not (hasPrefix "." $base) -}}
+{{- $base = print "." $base -}}
+{{- end -}}
+{{- if .Values.domainExtension -}}
+{{- $base = print "-" .Values.domainExtension $base -}}
+{{- end -}}
+{{- print $base -}}
+{{- end -}}
+
+{{- define "domains.traefik" -}}
+{{- printf "%s%s" "https://traefik" (include "domains.base" .) -}}
+{{- end -}}
+
+{{- define "ingresses.traefik" -}}
+{{- printf "%s%s" "traefik" (include "domains.base" .) -}}
+{{- end -}}
