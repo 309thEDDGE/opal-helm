@@ -1,0 +1,63 @@
+{{- $values := . -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: {{ .Values.namespace }}
+  name: {{ include "jupyterhub.fullname" . }}-proxy
+  labels:
+    component: proxy
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      component: proxy
+  template:
+    metadata:
+      labels:
+        component: proxy
+        hub.jupyer.org/network-access-hub: "true"
+        hub.jupyer.org/network-access-singleuser: "true"
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        - name: {{ .existingSecret | default .name }}
+      {{- end }}
+      containers:
+        - name: chp
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["bash", "-c"]
+          args:
+            - >-
+              source /opt/conda/bin/activate &&
+              conda activate jupyterhub &&
+              configurable-http-proxy
+              --ip=
+              --port=8000
+              --api-ip=
+              --api-port=8001
+              --default-target=http://$(HUB_SERVICE_HOST):$(HUB_SERVICE_PORT)
+              --error-target=http://$(HUB_SERVICE_HOST):$(HUB_SERVICE_PORT)/hub/error
+              {{- if .Values.debug.enabled }}
+              --log-level=debug
+              {{- end }}
+              {{- if .Values.metrics.enabled }}
+              --metrics-port={{ .Values.metrics.port }}
+              {{- end }}
+          securityContext:
+            allowPrivilegeEscalation: {{ .Values.securityContext.allowPrivilegeEscalation }}
+          envFrom:
+            - secretRef:
+                name: {{( include "get.tokenName" . )}}
+          ports:
+            - containerPort: 8000
+              name: http
+            - containerPort: 8001
+              name: api
+            {{- if .Values.metrics.enabled }}
+            - containerPort: {{ .Values.metrics.port }}
+              name: metrics
+            {{- end }}
+---

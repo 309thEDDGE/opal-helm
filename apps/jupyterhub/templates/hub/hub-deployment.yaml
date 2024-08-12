@@ -15,7 +15,18 @@ spec:
     metadata:
       labels:
         component: jupyter
+        hub.jupyter.org/network-access-proxy-api: "true"
+        hub.jupyter.org/network-access-proxy-http: "true"
+        hub.jupyter.org/network-access-singleuser: "true"
     spec:
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- . | toYaml | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- . | toYaml | nindent 8 }}
+      {{- end }}
       serviceAccountName: hub
       {{- with .Values.imagePullSecrets }}
       {{- if not .existingSecret }}
@@ -30,12 +41,37 @@ spec:
         - name: jupyter-hub
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command: ["bash"]
-          args: ["-c", "source /opt/conda/bin/activate && conda activate jupyterhub && jupyterhub -f /home/jovyan/jupyterhub_config.py"]
+          command: ["bash", "-c"]
+          args:
+            - >-
+              source /opt/conda/bin/activate &&
+              conda activate jupyterhub &&
+              jupyterhub -f /home/jovyan/jupyterhub_config.py
+              {{- if .Values.debug.enabled }}
+              --debug
+              {{- end }}
           ports:
             - containerPort: 8081
-          {{- with .Values.env }}
           env:
+            - name: PYTHONUNBUFFERED
+              value: "1"
+            - name: HELM_RELEASE_NAME
+              value: {{ .Release.Name | quote }}
+            - name: POD_NAMESPACE
+              value: {{ .Values.namespace }}
+            - name: SINGLE_USER_STORAGE_CAPACITY
+              value: {{ .Values.resources.singleuser_storage | default "1Gi" }}
+#            - name: PROXY_ADDRESS_FORWARDING
+#              value: "true"
+            - name: MONGODB_USERNAME
+              value: "rootuser"
+            - name: MONGODB_HOST
+              value: {{ .Release.Name }}-mongodb:27017
+            - name: NGINX_HOST
+              value: http://{{ .Release.Name }}-nginx.{{ .Values.namespace }}.svc.cluster.local/condapkg/
+            - name: CONDA_OVERRIDE_CUDA
+              value: "12.0"
+          {{- with .Values.env }}
             - name: KEYCLOAK_JUPYTERHUB_OAUTH_CALLBACK_URL
               value: {{ include "render-url" ( dict "value" .keycloakJupyterhubOauthCallbackUrl "context" $values ) }}
             - name: S3_ENDPOINT
@@ -70,30 +106,10 @@ spec:
             - name: DASK_GATEWAY_ENDPOINT
               value: http://{{ .Release.Name }}-dask-gateway-traefik.{{ .Values.namespace }}.svc.cluster.local
             {{- end }}
-            {{- if .Values.env.helmReleaseName }}
-            - name: HELM_RELEASE_NAME
-              value: {{ .Release.Name }}
-            {{- end }}
-            {{- if .Values.env.helmReleaseName }}
-            - name: POD_NAMESPACE
-              value: {{ .Values.namespace }}
-            {{- end }}
             {{- if .Values.resources.useAzureFile }}
             - name: USE_AZUREFILE
               value: "True"
             {{- end }}
-            - name: SINGLE_USER_STORAGE_CAPACITY
-              value: {{ .Values.resources.singleuser_storage }}
-            - name: PROXY_ADDRESS_FORWARDING
-              value: "true"
-            - name: MONGODB_USERNAME
-              value: "rootuser"
-            - name: MONGODB_HOST
-              value: {{ .Release.Name }}-mongodb:27017
-            - name: NGINX_HOST
-              value: http://{{ .Release.Name }}-nginx.{{ .Values.namespace }}.svc.cluster.local/condapkg/
-            - name: CONDA_OVERRIDE_CUDA
-              value: "12.0"
           envFrom:
             - secretRef:
                 name: {{( include "get.tokenName" . )}}
@@ -116,7 +132,7 @@ spec:
             - name: jupyterhub-config-py-mnt
               mountPath: /home/jovyan/jupyterhub_config.py
               subPath: jupyterhub_config.py
-{{- if .Values.gitSync.enabled }}
+        {{- if .Values.gitSync.enabled }}
         - image: "{{ .Values.gitSync.image.repository }}:{{ .Values.gitSync.image.tag }}"
           name: opal-repo-sync
           args:

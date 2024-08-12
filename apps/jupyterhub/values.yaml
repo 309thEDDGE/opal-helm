@@ -18,6 +18,9 @@ secrets:
     existingSecret: ""
     clientSecret: ""
 
+debug:
+  enabled: false
+
 image:
   repository: registry1.dso.mil/ironbank/opensource/metrostar/jupyterhub
   tag: jupyterhub_v8
@@ -76,9 +79,12 @@ servicePublic:
       targetPort: 8000
     - name: https
       port: 443
-      targetPort: 443
-    - name: api
-      port: 8001
+      targetPort: 8443
+
+metrics:
+  enabled: false
+  port: 8081
+
 ingress:
   enabled: true
   className: ""
