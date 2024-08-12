@@ -26,7 +26,9 @@ spec:
     {{- end }}
   {{- end }}
   rules:
-    - host: {{include "render-url" ( dict "value" .Values.ingress.console.host "context" $values ) }}
+    {{- with .Values.ingress.console }}
+    - host: {{ tpl .host $ | default (include "ingresses.minio" $values) | quote }}
+    {{- end }}
       http:
         paths:
           - path: {{ .Values.ingress.console.path }}
