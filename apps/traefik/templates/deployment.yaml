@@ -1,3 +1,4 @@
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -25,12 +26,16 @@ spec:
       serviceAccountName: {{ include "traefik.fullname" .}}-account
       containers:
         - name: {{ include "traefik.fullname" . }}
-          image: registry1.dso.mil/ironbank/opensource/traefik/traefik:v2.9.1
+          image: {{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}
           ports:
             - name: web
               containerPort: 8000
             - name: websecure
               containerPort: 8443
+            {{- if .Values.metrics.enabled }}
+            - name: metrics
+              containerPort: {{ .Values.metrics.port }}
+            {{- end }}
           volumeMounts:
             - name: traefik-cfg
               mountPath: /etc/traefik/traefik.toml

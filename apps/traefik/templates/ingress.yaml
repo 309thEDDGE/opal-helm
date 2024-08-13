@@ -1,5 +1,6 @@
 {{- $ingress := .Values.ingress -}}
 {{ if .Values.ingress.enabled }}
+---
 {{- $apiV1 := false -}}
 {{- $apiVersion := "extensions/v1beta1" -}}
 {{- if and (.Capabilities.APIVersions.Has "networking.k8s.io/v1") (semverCompare ">= v1.19.0-0" .Capabilities.KubeVersion.Version) -}}

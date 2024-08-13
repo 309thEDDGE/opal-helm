@@ -1,0 +1,22 @@
+{{- if .Values.metrics.enabled }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: {{ .Values.namespace }}
+  name: {{ include "traefik.fullname" . }}-metrics
+  annotations:
+    {{- .Values.service.annotations | toYaml | nindent 4 }}
+  labels:
+    {{- include "traefik.labels" . | nindent 4 }}
+    app.kubernetes.io/component: metrics
+spec:
+  type: ClusterIP
+  selector:
+    app: {{ include "traefik.fullname" . }}
+  ports:
+    - protocol: TCP
+      port: {{ .Values.metrics.port }}
+      name: metrics
+      targetPort: metrics
+{{- end }}
