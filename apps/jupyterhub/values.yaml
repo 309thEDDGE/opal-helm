@@ -86,7 +86,7 @@ servicePublic:
       targetPort: 8443
 
 metrics:
-  enabled: false
+  enabled: true
   port: 8081
 
 ingress:
@@ -123,6 +123,30 @@ env:
   keycloakJupyterhubUsernameKey: "preferred_username"
   daskGatewayServiceName: ""
   helmReleaseName: true
+
+serviceMonitor:
+  # If `true`, a ServiceMonitor resource for the prometheus-operator is created
+  enabled: true
+  # Optionally sets a target namespace in which to deploy the ServiceMonitor resource
+  namespace: monitoring
+  # Optionally sets a namespace for the ServiceMonitor
+  namespaceSelector: {}
+  # Annotations for the ServiceMonitor
+  annotations: {}
+  # Additional labels for the ServiceMonitor
+  labels: {}
+  # Interval at which Prometheus scrapes metrics
+  interval: 10s
+  # Timeout for scraping
+  scrapeTimeout: 10s
+  # The path at which metrics are served
+  path: /metrics
+  # The Service port at which metrics are served
+  port: metrics
+  # added by Big Bang to support Istio mTLS
+  scheme: ""
+  tlsConfig: {}
+
 
 resources:
   storage: 2Gi
