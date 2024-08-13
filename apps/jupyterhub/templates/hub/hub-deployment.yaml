@@ -30,7 +30,7 @@ spec:
       tolerations:
         {{- . | toYaml | nindent 8 }}
       {{- end }}
-      serviceAccountName: hub
+      serviceAccountName: {{ include "jupyterhub.fullname" . }}
       {{- with .Values.imagePullSecrets }}
       {{- if not .existingSecret }}
       imagePullSecrets:
