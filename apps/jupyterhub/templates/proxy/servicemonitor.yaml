@@ -5,7 +5,7 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: {{ include "jupyterhub.fullname" $ }}-serviceMonitor
+  name: {{ include "jupyterhub.fullname" $ }}-servicemonitor
   namespace: {{ $.Values.namespace }}
   {{- with .namespace }}
   namespace: {{ . }}
