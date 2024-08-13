@@ -13,7 +13,7 @@ image:
   # The Keycloak image repository
   repository: registry1.dso.mil/ironbank/opensource/keycloak/keycloak
   # Overrides the Keycloak image tag whose default is the chart appVersion
-  tag: "21.1.2"
+  tag: "25.0.2"
   # The Keycloak image pull policy
   pullPolicy: IfNotPresent
 
@@ -66,11 +66,15 @@ rbac:
 
 # SecurityContext for the entire Pod. Every container running in the Pod will inherit this SecurityContext. This might be relevant when other components of the environment inject additional containers into running Pods (service meshes are the most prominent example for this)
 podSecurityContext:
-  fsGroup: 1000
+  fsGroup: 2000
+  runAsUser: 2000
+  runAsGroup: 2000
+  runAsNonRoot: true
 
 # SecurityContext for the Keycloak container
 securityContext:
-  runAsUser: 1000
+  runAsUser: 2000
+  runAsGroup: 2000
   runAsNonRoot: true
   capabilities:
     drop:
@@ -105,17 +109,14 @@ terminationGracePeriodSeconds: 60
 clusterDomain: cluster.local
 
 ## Overrides the default entrypoint of the Keycloak container
-command:
-  - "/opt/keycloak/bin/kc.sh"
+command: []
 
 ## Overrides the default args for the Keycloak container
 args:
   - "start"
-  #- "--proxy edge"
 
 # Additional environment variables for Keycloak
 # https://www.keycloak.org/server/all-config
-#extraEnv: ""
 extraEnv: |
   - name: KC_PROXY
     value: "edge"
@@ -125,6 +126,8 @@ extraEnv: |
     value: kubernetes
   - name: KC_CACHE
     value: ispn
+  - name: KC_LOG_LEVEL
+    value: "org.keycloak.events:DEBUG"
 #  - name: KC_HTTP_RELATIVE_PATH
 #    value: /auth
 #   - name: KC_HTTPS_CERTIFICATE_FILE
@@ -200,11 +203,10 @@ podLabels: {}
 podAnnotations: {}
 
 # Liveness probe configuration
-#### Updated for Big Bang ####
 livenessProbe: |
   httpGet:
-    path: /
-    port: http
+    path: /health/live
+    port: http-internal
     scheme: HTTP
   failureThreshold: 15
   timeoutSeconds: 2
@@ -212,22 +214,20 @@ livenessProbe: |
   initialDelaySeconds: 300
 
 # Readiness probe configuration
-#### Updated for Big Bang ####
 readinessProbe: |
   httpGet:
-    path: /realms/master
-    port: http
+    path: /health/ready
+    port: http-internal
     scheme: HTTP
   failureThreshold: 15
   timeoutSeconds: 2
   initialDelaySeconds: 30
 
 # Startup probe configuration
-#### Updated for Big Bang ####
 startupProbe: |
   httpGet:
-    path: /realms/master
-    port: http
+    path: /health
+    port: http-internal
   initialDelaySeconds: 90
   timeoutSeconds: 2
   failureThreshold: 60
@@ -241,6 +241,7 @@ resources:
   limits:
     cpu: "1"
     memory: "1Gi"
+
 
 #### starupScripts removed. Not relevant for Quarkus distribution ####
 
@@ -434,8 +435,8 @@ pgchecker:
   # SecurityContext for the pgchecker container
   securityContext:
     allowPrivilegeEscalation: false
-    runAsUser: 1000
-    runAsGroup: 1000
+    runAsUser: 2000
+    runAsGroup: 2000
     runAsNonRoot: true
     capabilities:
       drop:
@@ -506,13 +507,20 @@ postgresql:
       cpu: "250m"
       memory: "256Mi"
 
+metrics:
+  enabled: false
+  port: "9000"
+
 serviceMonitor:
   # If `true`, a ServiceMonitor resource for the prometheus-operator is created
   enabled: false
   # Optionally sets a target namespace in which to deploy the ServiceMonitor resource
-  namespace: opal
+  namespace: monitoring
   # Optionally sets a namespace for the ServiceMonitor
-  namespaceSelector: {}
+  namespaceSelector: |
+    matchNames:
+      - {{ tpl .Values.namespace $ }}
+
   # Annotations for the ServiceMonitor
   annotations: {}
   # Additional labels for the ServiceMonitor
@@ -524,7 +532,7 @@ serviceMonitor:
   # The path at which metrics are served
   path: /metrics
   # The Service port at which metrics are served
-  port: http
+  port: http-internal
   # added by Big Bang to support Istio mTLS
   scheme: ""
   tlsConfig: {}
@@ -533,7 +541,7 @@ extraServiceMonitor:
   # If `true`, a ServiceMonitor resource for the prometheus-operator is created
   enabled: false
   # Optionally sets a target namespace in which to deploy the ServiceMonitor resource
-  namespace: opal
+  namespace: {}
   # Optionally sets a namespace for the ServiceMonitor
   namespaceSelector: {}
   # Annotations for the ServiceMonitor

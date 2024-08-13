@@ -1,0 +1,20 @@
+{{- if .Values.metrics.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "keycloak.fullname" . }}-metrics
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "keycloak.labels" . | nindent 4 }}
+    app.kubernetes.io/component: metrics
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+    - name: http-internal
+      port: {{ .Values.metrics.port | default "9000" }}
+      targetPort: http-internal
+      protocol: TCP
+  selector:
+    {{- include "keycloak.selectorLabels" . | nindent 4}}
+{{- end }}

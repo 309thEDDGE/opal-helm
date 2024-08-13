@@ -1,3 +1,4 @@
+{{- $values := . }}
 {{- range $key, $serviceMonitor := dict "metrics" .Values.serviceMonitor "extra" .Values.extraServiceMonitor }}
 {{- with $serviceMonitor }}
 {{- if .enabled }}
@@ -6,10 +7,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: {{ include "keycloak.fullname" $ }}-{{ $key }}
-  namespace: {{ .Values.namespace }}
-  {{- with .namespace }}
-  namespace: {{ . }}
-  {{- end }}
+  namespace: {{ .namespace }}
   {{- with .annotations }}
   annotations:
     {{- range $key, $value := . }}
@@ -24,12 +22,12 @@ metadata:
 spec:
   {{- with .namespaceSelector }}
   namespaceSelector:
-  {{- toYaml . | nindent 4 }}
+  {{- tpl . $ | nindent 4 }}
   {{- end }}
   selector:
     matchLabels:
       {{- include "keycloak.selectorLabels" $ | nindent 6 }}
-      app.kubernetes.io/component: http
+      app.kubernetes.io/component: metrics
   endpoints:
     - port: {{ .port }}
       path: {{ .path }}
