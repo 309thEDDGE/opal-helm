@@ -140,7 +140,7 @@ serviceMonitor:
   # Timeout for scraping
   scrapeTimeout: 10s
   # The path at which metrics are served
-  path: /
+  path: /metrics
   # The Service port at which metrics are served
   port: metrics
   # added by Big Bang to support Istio mTLS
