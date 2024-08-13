@@ -17,4 +17,5 @@ spec:
       protocol: TCP
   selector:
     {{- include "jupyterhub.selectorLabels" . | nindent 4 }}
+    component: proxy
 {{- end }}
