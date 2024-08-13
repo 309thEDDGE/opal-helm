@@ -2,16 +2,14 @@ apiVersion: v1
 kind: Service
 metadata:
   namespace: {{ .Values.namespace }}
-  name: proxy-api
+  name: {{ include "jupyterhub.fullname" . }}-proxy-api
   labels:
-    component: proxy
+    app.kubernetes.io/component: proxy
 spec:
   selector:
     {{- include "jupyterhub.selectorLabels" . | nindent 4 }}
-    component: proxy
+    app.kubernetes.io/component: proxy
   ports:
     - protocol: TCP
       port: {{ .Values.serviceApi.port }}
-      targetPort: {{.Values.serviceApi.targetPort}}
-
-
+      targetPort: {{.Values.serviceApi.targetPort }}

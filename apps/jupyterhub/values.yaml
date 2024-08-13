@@ -52,7 +52,7 @@ serviceAccount:
   annotations: {}
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
-  name: hub
+  name: ""
 
 podAnnotations: {}
 
@@ -69,12 +69,10 @@ securityContext:
   # runAsUser: 1000
 
 serviceApi:
-  name: proxy-api
   port: 8001
   targetPort: 8001
 
 servicePublic:
-  name: proxy-public
   type: NodePort
   ports:
     - name: http

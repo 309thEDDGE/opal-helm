@@ -5,7 +5,7 @@ metadata:
   namespace: {{ .Values.namespace }}
   name: {{ include "jupyterhub.fullname" . }}-metrics
   labels:
-    {{- include "jupyterhub.labels" . | nindent 4}}
+    {{- include "jupyterhub.labels" . | nindent 4 }}
     app.kubernetes.io/component: metrics
 spec:
   type: ClusterIP
@@ -17,5 +17,5 @@ spec:
       protocol: TCP
   selector:
     {{- include "jupyterhub.selectorLabels" . | nindent 4 }}
-    component: proxy
+    app.kubernetes.io/component: proxy
 {{- end }}

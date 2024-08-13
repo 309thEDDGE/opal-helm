@@ -18,6 +18,7 @@ metadata:
   {{- end }}
   labels:
   {{- include "jupyterhub.labels" $ | nindent 4 }}
+  app.kubernetes.io/component: metrics
   {{- range $key, $value := .labels }}
   {{- printf "%s: %s" $key (tpl $value $ | quote) | nindent 4 }}
   {{- end }}

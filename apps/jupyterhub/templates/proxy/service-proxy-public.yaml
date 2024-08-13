@@ -2,12 +2,13 @@ apiVersion: v1
 kind: Service
 metadata:
   namespace: {{ .Values.namespace }}
-  name: {{ .Values.servicePublic.name }}
+  name: {{ include "jupyterhub.fullname" . }}-proxy-public
   labels:
-    component: proxy
+    {{- include "jupyterhub.labels" . | nindent 4 }}
+    app.kubernetes.io/component: proxy
 spec:
   selector:
     {{- include "jupyterhub.selectorLabels" . | nindent 4 }}
-    component: proxy
-  ports: {{ toYaml .Values.servicePublic.ports | nindent 4}}
-  type: {{ .Values.servicePublic.type}}
+    app.kubernetes.io/component: proxy
+  ports: {{ toYaml .Values.servicePublic.ports | nindent 4 }}
+  type: {{ .Values.servicePublic.type }}
