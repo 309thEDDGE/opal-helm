@@ -64,8 +64,8 @@ spec:
               value: {{ .Values.namespace }}
             - name: SINGLE_USER_STORAGE_CAPACITY
               value: {{ .Values.resources.singleuser_storage | default "1Gi" }}
-#            - name: PROXY_ADDRESS_FORWARDING
-#              value: "true"
+            - name: PROXY_ADDRESS_FORWARDING
+              value: "true"
             - name: MONGODB_USERNAME
               value: "rootuser"
             - name: MONGODB_HOST
