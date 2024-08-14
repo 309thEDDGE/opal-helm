@@ -18,9 +18,9 @@ spec:
       labels:
         {{- include "jupyterhub.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: jupyter
-        hub.jupyter.org/network-access-proxy-api: "true"
-        hub.jupyter.org/network-access-proxy-http: "true"
-        hub.jupyter.org/network-access-singleuser: "true"
+        #hub.jupyter.org/network-access-proxy-api: "true"
+        #hub.jupyter.org/network-access-proxy-http: "true"
+        #hub.jupyter.org/network-access-singleuser: "true"
     spec:
       {{- with .Values.nodeSelector }}
       nodeSelector:
