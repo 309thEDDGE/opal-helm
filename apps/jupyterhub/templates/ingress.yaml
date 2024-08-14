@@ -1,11 +1,9 @@
-{{- $values := . -}}
-
-{{if .Values.ingress.enabled}}
+{{- if .Values.ingress.enabled }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   namespace: {{ .Values.namespace }}
-  name: {{ include "jupyterhub.fullname" .}}
+  name: {{ include "jupyterhub.ingress.fullname" .}}
   {{- with .Values.ingress.annotations }}
   annotations:
     {{- range $key, $value := . }}
@@ -15,7 +13,7 @@ metadata:
 spec:
   rules:
   {{- with .Values.ingress.rules }}
-    - host: {{ tpl .host $ | default (include "ingresses.jhub" $values) | quote }}
+    - host: {{ tpl .host $ | default (include "ingresses.jhub" $) | quote }}
       http: 
         paths: 
         {{- range .http.paths }}
@@ -23,9 +21,9 @@ spec:
             pathType: {{ .pathType }}
             backend:
               service:
-                name: {{ .backend.service.name }}
+                name: {{ include "jupyterhub.proxy-public.fullname" $ }}
                 port: 
-                  number: {{ .backend.service.port.number}}
+                  name: http
         {{- end }}
   {{- end }}
 {{- end }}

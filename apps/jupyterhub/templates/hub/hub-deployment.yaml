@@ -3,7 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   namespace: {{ .Values.namespace }}
-  name: {{ include "jupyterhub.fullname" . }}-hub
+  name: {{ include "jupyterhub.hub.fullname" . }}
   labels:
     {{- include "jupyterhub.labels" . | nindent 4 }}
     app.kubernetes.io/component: jupyter
@@ -30,7 +30,7 @@ spec:
       tolerations:
         {{- . | toYaml | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "jupyterhub.fullname" . }}
+      serviceAccountName: {{ include "jupyterhub.hub-serviceaccount.fullname" . }}
       {{- with .Values.imagePullSecrets }}
       {{- if not .existingSecret }}
       imagePullSecrets:
@@ -49,7 +49,7 @@ spec:
             - >-
               source /opt/conda/bin/activate &&
               conda activate jupyterhub &&
-              jupyterhub -f /home/jovyan/jupyterhub_config.py
+              jupyterhub -f /usr/local/etc/jupyterhub/jupyterhub_config.py
               {{- if .Values.debug.enabled }}
               --debug
               {{- end }}
@@ -133,9 +133,14 @@ spec:
             runAsUser: 1000
             runAsGroup: 100
           volumeMounts:
-            - name: jupyterhub-config-py-mnt
-              mountPath: /home/jovyan/jupyterhub_config.py
+            - name: jupyterhub-config-mnt
+              mountPath: /usr/local/etc/jupyterhub/jupyterhub_config.py
               subPath: jupyterhub_config.py
+            - name: jupyterhub-config-mnt
+              mountPath: /usr/local/etc/jupyterhub/config_utilities.py
+              subPath: config_utilities.py
+            - name: jupyterhub-config-mnt
+              mountPath: /user/local/etc/jupyterhub/config
         {{- if .Values.gitSync.enabled }}
         - image: "{{ .Values.gitSync.image.repository }}:{{ .Values.gitSync.image.tag }}"
           name: opal-repo-sync
@@ -211,9 +216,9 @@ spec:
         fsGroup: 100
 {{- end }}
       volumes:
-      - name: jupyterhub-config-py-mnt
+      - name: jupyterhub-config-mnt
         configMap:
-          name: jupyterhub-config-py
+          name: jupyterhub-config
       - name: metaflow-datastore-mnt
         persistentVolumeClaim:
           claimName: metaflow-datastore

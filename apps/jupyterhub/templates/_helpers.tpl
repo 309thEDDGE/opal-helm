@@ -51,17 +51,6 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
-Create the name of the service account to use
-*/}}
-{{- define "jupyterhub.serviceAccountName" -}}
-{{- if .Values.serviceAccount.create }}
-{{- default (include "jupyterhub.fullname" .) .Values.serviceAccount.name }}
-{{- else }}
-{{- default "default" .Values.serviceAccount.name }}
-{{- end }}
-{{- end }}
-
-{{/*
     Returns given number of random Hex characters.
     - randNumeric 4 | atoi generates a random number in [0, 10^4)
       This is a range range evenly divisble by 16, but even if off by one,
@@ -93,10 +82,6 @@ Create the name of the service account to use
 {{- $secretName = printf "%s-oauth" (include "jupyterhub.fullname" .) }}
 {{- $secretName }}
 {{- end}}
-
-{{- define "render-url" -}}
-{{- tpl .value .context }}
-{{- end }}
 
 {{- define "domains.base" -}}
 {{- $base := .Values.baseDns -}}
