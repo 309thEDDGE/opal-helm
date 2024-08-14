@@ -10,5 +10,7 @@ spec:
   selector:
     {{- include "jupyterhub.selectorLabels" . | nindent 4 }}
     app.kubernetes.io/component: proxy
-  ports: {{ toYaml .Values.servicePublic.ports | nindent 4 }}
-  type: {{ .Values.servicePublic.type }}
+  {{- with .Values.servicePublic }}
+  ports: {{ toYaml .ports | nindent 4 }}
+  type: {{ .type }}
+  {{- end }}

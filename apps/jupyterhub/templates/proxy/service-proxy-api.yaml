@@ -9,7 +9,10 @@ spec:
   selector:
     {{- include "jupyterhub.selectorLabels" . | nindent 4 }}
     app.kubernetes.io/component: proxy
+  {{- with .Values.serviceApi }}
   ports:
-    - protocol: TCP
-      port: {{ .Values.serviceApi.port }}
-      targetPort: {{.Values.serviceApi.targetPort }}
+    - name: {{ .name }}
+      protocol: {{ .protocol }}
+      port: {{ .port }}
+      targetPort: {{ .targetPort }}
+  {{- end }}

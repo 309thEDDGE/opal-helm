@@ -69,8 +69,10 @@ securityContext:
   # runAsUser: 1000
 
 serviceApi:
+  name: api
+  protocol: TCP
   port: 8001
-  targetPort: 8001
+  targetPort: api
 
 servicePublic:
   type: NodePort
@@ -85,7 +87,7 @@ servicePublic:
 
 metrics:
   enabled: true
-  port: 8081
+  port: 8086
 
 ingress:
   enabled: true

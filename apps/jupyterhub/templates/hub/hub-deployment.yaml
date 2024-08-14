@@ -55,6 +55,7 @@ spec:
               {{- end }}
           ports:
             - containerPort: 8081
+              name: http
           env:
             - name: PYTHONUNBUFFERED
               value: "1"
