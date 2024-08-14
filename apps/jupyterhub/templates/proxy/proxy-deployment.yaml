@@ -31,6 +31,8 @@ spec:
         - name: chp
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- $hubNameAsEnv := include "jupyterhub.hub.fullname" . | upper | replace "-" "_" }}
+          {{- $hubhost := printf "http://%s:$(%s_SERVICE_PORT)" (include "jupyterhub.hub.fullname" .) $hubNameAsEnv }}
           command: ["bash", "-c"]
           args:
             - >-
@@ -41,8 +43,8 @@ spec:
               --port=8000
               --api-ip=
               --api-port=8001
-              --default-target=http://$(HUB_SERVICE_HOST):$(HUB_SERVICE_PORT)
-              --error-target=http://$(HUB_SERVICE_HOST):$(HUB_SERVICE_PORT)/hub/error
+              --default-target={{ $hubHost }}
+              --error-target={{ $hubHost }}/hub/error
               {{- if .Values.debug.enabled }}
               --log-level=debug
               {{- end }}
