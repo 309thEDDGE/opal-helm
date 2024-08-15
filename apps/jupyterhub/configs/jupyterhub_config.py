@@ -44,7 +44,7 @@ c.JupyterHub.tornado_settings = {
     "slow_spawn_timeout:": 0,
 }
 c.JupyterHub.ip = get_name("proxy-public")
-c.JupyterHub.port = get_name_env("proxy-public", "_SERVICE_PORT")
+c.JupyterHub.port = int(get_name_env("proxy-public", "_SERVICE_PORT"))
 
 # # Gives spawned containers access to the API of the hub
 #c.Jupyterhub.hub_bind_url = 'http://0.0.0.0:8081'
