@@ -141,6 +141,8 @@ spec:
               subPath: config_utilities.py
             - name: jupyterhub-config-mnt
               mountPath: /user/local/etc/jupyterhub/config
+            - name: values-mnt
+              mountPath: /usr/local/etc/jupyterhub/secret/
         {{- if .Values.gitSync.enabled }}
         - image: "{{ .Values.gitSync.image.repository }}:{{ .Values.gitSync.image.tag }}"
           name: opal-repo-sync
@@ -222,6 +224,9 @@ spec:
       - name: metaflow-datastore-mnt
         persistentVolumeClaim:
           claimName: metaflow-datastore
+      - name: values-mnt
+        secret:
+          secretName: {{ include "jupyterhub.hub.fullname" . }}-values
 {{- if .Values.gitSync.enabled }}
       - name: opal-sync-mnt
         persistentVolumeClaim:
@@ -232,8 +237,8 @@ spec:
       - name: ddapi-sync-mnt
         persistentVolumeClaim:
           claimName: ddapi-sync-pvc
-{{- end }}
       - name: git-creds-mnt
         secret:
           secretName: {{ .Values.gitSync.gitSecret.secretName }}
           defaultMode: 0400
+{{- end }}
