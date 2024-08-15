@@ -100,8 +100,8 @@ spec:
               value: {{ .opalBannerColor }}
             - name: OPAL_BANNER_TEXT
               value: {{ .opalBannerText }}
-            - name: KEYCLOAK_JUPYTERHUB_USERNAME_KEY
-              value: {{ .keycloakJupyterhubUsernameKey }}
+            - name: KEYCLOAK_JUPYTERHUB_USERNAME_CLAIM
+              value: {{ .keycloakJupyterhubUsernameClaim }}
           {{- end }}
             {{- if .Values.env.daskGatewayServiceName }}
             - name: DASK_GATEWAY_ENDPOINT

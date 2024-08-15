@@ -120,7 +120,7 @@ env:
   pythonPath: "/python-packages/:$PYTHONPATH"
   opalBannerColor: "Purple"
   opalBannerText: "Default OPAL Banner"
-  keycloakJupyterhubUsernameKey: "preferred_username"
+  keycloakJupyterhubUsernameClaim: "preferred_username"
   daskGatewayServiceName: ""
   helmReleaseName: true
 

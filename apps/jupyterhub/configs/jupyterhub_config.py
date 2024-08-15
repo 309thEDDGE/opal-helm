@@ -282,7 +282,7 @@ keycloak_jupyterhub_oauth_callback_url = os.environ['KEYCLOAK_JUPYTERHUB_OAUTH_C
 keycloak_jupyterhub_authorize_url = os.environ['KEYCLOAK_JUPYTERHUB_AUTHORIZE_URL']
 keycloak_opal_api_url = os.environ['KEYCLOAK_OPAL_API_URL']
 keycloak_jupyterhub_userdata_url = os.environ['KEYCLOAK_JUPYTERHUB_USERDATA_URL']
-keycloak_jupyterhub_username_key = os.environ['KEYCLOAK_JUPYTERHUB_USERNAME_KEY']
+keycloak_jupyterhub_username_claim = os.environ['KEYCLOAK_JUPYTERHUB_USERNAME_CLAIM']
 
 c.GenericOAuthenticator.login_service = 'keycloak'
 c.GenericOAuthenticator.userdata_params = {"state": "state"}
@@ -292,7 +292,7 @@ c.GenericOAuthenticator.tls_verify = False
 c.GenericOAuthenticator.oauth_callback_url = keycloak_jupyterhub_oauth_callback_url
 c.GenericOAuthenticator.authorize_url = keycloak_jupyterhub_authorize_url
 c.GenericOAuthenticator.token_url = keycloak_opal_api_url
-c.GenericOAuthenticator.username_key = keycloak_jupyterhub_username_key
+c.GenericOAuthenticator.username_claim = keycloak_jupyterhub_username_claim
 c.GenericOAuthenticator.userdata_url = keycloak_jupyterhub_userdata_url
 c.GenericOAuthenticator.enable_auth_state = True
 c.GenericOAuthenticator.refresh_pre_spawn = True
@@ -324,11 +324,11 @@ c.KubeSpawner.environment.setdefault("DASK_GATEWAY_PUBLIC_ADDRESS", f"/services/
 c.KubeSpawner.environment.setdefault("DASK_GATEWAY_AUTH_TYPE", "jupyterhub")
 
 # Cdsdashboards stuff
-from cdsdashboards.app import CDS_TEMPLATE_PATHS
-from cdsdashboards.hubextension import cds_extra_handlers
+#from cdsdashboards.app import CDS_TEMPLATE_PATHS
+#from cdsdashboards.hubextension import cds_extra_handlers
 
 c.DockerSpawner.name_template = "{prefix}-{username}-{servername}"
-c.JupyterHub.template_paths = CDS_TEMPLATE_PATHS
-c.JupyterHub.extra_handlers = cds_extra_handlers
+#c.JupyterHub.template_paths = CDS_TEMPLATE_PATHS
+#c.JupyterHub.extra_handlers = cds_extra_handlers
 c.JupyterHub.allow_named_servers = True
-c.CDSDashboardsConfig.builder_class = 'cdsdashboards.builder.dockerbuilder.DockerBuilder'
+#c.CDSDashboardsConfig.builder_class = 'cdsdashboards.builder.dockerbuilder.DockerBuilder'
