@@ -140,7 +140,7 @@ spec:
               mountPath: /usr/local/etc/jupyterhub/config_utilities.py
               subPath: config_utilities.py
             - name: jupyterhub-config-mnt
-              mountPath: /user/local/etc/jupyterhub/config
+              mountPath: /usr/local/etc/jupyterhub/config
             - name: values-mnt
               mountPath: /usr/local/etc/jupyterhub/secret/
         {{- if .Values.gitSync.enabled }}
