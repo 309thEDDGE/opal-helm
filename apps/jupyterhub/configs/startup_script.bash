@@ -69,6 +69,7 @@ log_to_file "Fill in metaflow config file"
 
 # 11
 # need this for accessing servers running in individual singleusers
+# This will likely fail without an internet connection
 conda install -c conda-forge jupyter-server-proxy -y
 
 # Start the singleuser server (has to be last)

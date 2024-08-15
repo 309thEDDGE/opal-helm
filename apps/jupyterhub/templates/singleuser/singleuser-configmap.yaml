@@ -2,9 +2,29 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   namespace: {{ .Values.namespace }}
-  name: jupyterhub-local-channel
+  name: {{ include "jupyterhub.singleuser.fullname" . }}
 data:
-  local_channel_env.yaml: |
+  {{- (.Files.Glob "configs/*.tar").AsConfig | nindent 2 }}
+  startup_script.bash: |-
+    {{- .Files.Get "configs/startup_script.bash" | nindent 6 }}
+  jupyter_server_config.py: |-
+    {{- .Files.Get "configs/jupyter_server_config.py" | nindent 6 }}
+  jupyter_notebook_config.py: |-
+    {{- .Files.Get "configs/jupyter_notebook_config.py" | nindent 6 }}
+  .condarc.toplevel: |
+    anaconda_upload: false
+    channels:
+      - nodefaults
+    channel_priority: strict
+    ssl_verify: false
+  .condarc.user: |
+    anaconda_upload: false
+    channels:
+      - http://{{ .Release.Name }}-nginx.{{ .Values.namespace }}.svc.cluster.local:8080/condapkg/
+      - nodefaults
+    channel_priority: strict
+    ssl_verify: false
+  conda_channel.yaml: |
     name: singleuser
     channels:
       - http://{{ .Release.Name }}-nginx.{{ .Values.namespace }}.svc.cluster.local:8080/condapkg/

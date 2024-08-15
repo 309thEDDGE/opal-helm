@@ -220,7 +220,7 @@ spec:
       volumes:
       - name: jupyterhub-config-mnt
         configMap:
-          name: jupyterhub-config
+          name: {{ include "jupyterhub.fullname" . }}
       - name: metaflow-datastore-mnt
         persistentVolumeClaim:
           claimName: metaflow-datastore

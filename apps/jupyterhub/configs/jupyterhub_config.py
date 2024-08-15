@@ -122,35 +122,15 @@ c.KubeSpawner.storage_capacity = os.environ['SINGLE_USER_STORAGE_CAPACITY']
 # Add volumes to singleuser pods
 c.KubeSpawner.volumes = [
     {
-        'name': "config-tar",
-        "configMap": {
-            "name": "jupyterhub-config"
-        }
-    },
-    {
         'name': "home-jovyan-mnt",
         "persistentVolumeClaim": {
             "claimName": pvc_name_template
         }
     },
     {
-        'name': "startup-script",
+        'name': f'{get_name("singleuser")}',
         "configMap": {
-            "name": "jupyterhub-startup-script",
-            "defaultMode": 0o755 # octal permission number
-        }
-    },
-    {
-        'name': "jupyter-notebook-config",
-        "configMap": {
-            "name": "jupyter-notebook-config-py",
-            "defaultMode": 0o755 # octal permission number
-        }
-    },
-    {
-        'name': "jupyter-server-config",
-        "configMap": {
-            "name": "jupyter-server-config-py",
+            "name": "singleuser-config",
             "defaultMode": 0o755 # octal permission number
         }
     },
@@ -177,24 +157,6 @@ c.KubeSpawner.volumes = [
         'persistentVolumeClaim': {
             'claimName': 'weave-sync-pvc'
         }
-    },
-    {
-        'name': "toplevel-condarc",
-        "configMap": {
-            "name": "jupyterhub-toplevel-condarc"
-        }
-    },
-    {
-        'name': "condarc",
-        "configMap": {
-            "name": "jupyterhub-condarc"
-        }
-    },
-    {
-        'name': "local-channel-mnt",
-        "configMap": {
-            "name": "jupyterhub-local-channel"
-        }
     }
 ]
 
@@ -202,7 +164,7 @@ c.KubeSpawner.volume_mounts = [
     {
         'mountPath': '/tmp/tars/jhub-conf.tar',
         'subPath': "jupyterhub-conf-dir.tar",
-        'name': "config-tar"
+        'name': "singleuser-config"
     },
     {
         'mountPath': '/home/jovyan',
@@ -211,17 +173,17 @@ c.KubeSpawner.volume_mounts = [
     {
         'mountPath': '/tmp/startup_script.bash',
         "subPath": "startup_script.bash",
-        "name": "startup-script"
+        "name": "singleuser-config"
     },
     {
         'mountPath': '/home/jovyan/.jupyter/jupyter_notebook_config.py',
         "subPath": "jupyter_notebook_config.py",
-        "name": "jupyter-notebook-config"
+        "name": "singleuser-config"
     },
     {
         'mountPath': '/etc/jupyter/jupyter_server_config.py',
         "subPath": "jupyter_server_config.py",
-        "name": "jupyter-server-config"
+        "name": "singleuser-config"
     },
     {
         'mountPath': metaflow_mount_path,
@@ -245,18 +207,18 @@ c.KubeSpawner.volume_mounts = [
     },
     {
         'mountPath': '/opt/conda/.condarc',
-        'name': 'toplevel-condarc',
-        'subPath': '.condarc'
+        'subPath': '.condarc.toplevel',
+        'name': 'singleuser-config'
     },
     {
         'mountPath': '/opt/conf/.condarc',
-        'name': 'condarc',
-        'subPath': '.condarc'
+        'subPath': '.condarc.user',
+        'name': 'singleuser-config'
     },
     {
-        'mountPath': '/opt/conf/local_channel_env.yaml',
-        'name': 'local-channel-mnt',
-        'subPath': 'local_channel_env.yaml'
+        'mountPath': '/opt/conf/conda_channel.yaml',
+        'subPath': 'conda_channel.yaml',
+        'name': 'singleuser-config'
     }
 ]
 
