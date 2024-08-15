@@ -48,14 +48,15 @@ c.JupyterHub.port = int(get_name_env("proxy-public", "_SERVICE_PORT"))
 
 # # Gives spawned containers access to the API of the hub
 c.JupyterHub.hub_ip = "0.0.0.0"
-c.JupyterHub.hub_connect_url = f'http://{get_name("hub")}:{get_name_env("hub","_SERVICE_PORT")}'
+#c.JupyterHub.hub_connect_url = f'http://{get_name("hub")}:{get_name_env("hub","_SERVICE_PORT")}'
+c.JupyterHub.hub_connect_ip = get_name("hub")
+c.JupyterHub.hub_connect_port = int(get_name_env("hub","_SERVICE_PORT"))
 
 
 # set the user's server image
 #c.KubeSpawner.image_pull_policy = "Never"
 c.KubeSpawner.image_pull_policy = "IfNotPresent"
 c.KubeSpawner.image_pull_secrets = ["regcred"]
-# c.KubeSpawner.image = "registry.il2.dso.mil/skicamp/project-opal/tip:f970c010"
 c.KubeSpawner.image = os.environ["SINGLE_USER_IMAGE"]
 # wait a bit longer for spawn
 c.KubeSpawner.http_timeout = 60 * 5

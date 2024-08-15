@@ -20,8 +20,6 @@ spec:
       labels:
         {{- include "jupyterhub.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: proxy
-        #hub.jupyer.org/network-access-hub: "true"
-        #hub.jupyer.org/network-access-singleuser: "true"
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
