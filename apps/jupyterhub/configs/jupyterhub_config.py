@@ -1,29 +1,52 @@
+# get helm values
+c = get_config()
+
 import os
 from oauthenticator.generic import GenericOAuthenticator
 import requests
-# import re
-# import sys
+import re
+import sys
 
-# from tornado.httpclient import AsyncHTTPClient
-# from kubernetes import client
-# from jupyterhub.utils import url_path_join
+from tornado.httpclient import AsyncHTTPClient
+from kubernetes_asyncio import client
+from jupyterhub.utils import url_path_join
+
+configuration_directory = os.path.dirname(os.path.realpath(__file__))
+sys.path.insert(0, configuration_directory)
+
+from config_utilities import (
+    get_config,
+    get_name,
+    get_name_env,
+    get_secret_value,
+    set_config_if_not_none,
+)
+
+# helm values usually use camelCase, this works around that
+# shamelessly ripped from zero-to-jupyterhub configs
+def camelCaseify(s):
+    return re.sub(r"_([a-z])", lambda m: m.group(1).upper(), s)
+
+AsyncHTTPClient.configure("tornado.curl_httpclient.CurlAsyncHTTPClient")
 
 c.JupyterHub.spawner_class = 'kubespawner.KubeSpawner'
 
 # Connect to a proxy running in a different pod
-c.ConfigurableHTTPProxy.api_url = 'http://{}:{}'.format(os.environ['PROXY_API_SERVICE_HOST'], int(os.environ['PROXY_API_SERVICE_PORT']))
+c.ConfigurableHTTPProxy.api_url = f'http://{get_name("proxy-api")}:{get_name_env("proxy-api", "_SERVICE_PORT")}'
 c.ConfigurableHTTPProxy.should_start = False
+
+# Leave singleuser running if hub shuts down
+c.JupyterHub.cleanup_servers = False
 
 # proxy routing
 c.JupyterHub.last_activity_interval = 60
-c.JupyterHub.ip = os.environ['PROXY_PUBLIC_SERVICE_HOST']
-c.JupyterHub.port = int(os.environ['PROXY_PUBLIC_SERVICE_PORT'])
+c.JupyterHub.tornado_settings = {
+    "slow_spawn_timeout:": 0,
+}
 
 # the hub should listen on all interfaces, so the proxy can access it
 c.JupyterHub.hub_ip = '0.0.0.0'
 
-# Leave singleuser running if hub shuts down
-c.Jupyterhub.cleanup_servers = False
 
 # set the user's server image
 #c.KubeSpawner.image_pull_policy = "Never"
