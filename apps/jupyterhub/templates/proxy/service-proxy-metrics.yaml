@@ -12,7 +12,7 @@ spec:
   clusterIP: None
   ports:
     - name: metrics
-      port: {{ .Values.metrics.port | default "8081" }}
+      port: {{ .Values.metrics.port | default "8086" }}
       targetPort: metrics
       protocol: TCP
   selector:

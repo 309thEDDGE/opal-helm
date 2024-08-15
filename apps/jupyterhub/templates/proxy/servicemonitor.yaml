@@ -7,9 +7,6 @@ kind: ServiceMonitor
 metadata:
   name: {{ include "jupyterhub.fullname" $ }}-servicemonitor
   namespace: {{ $.Values.namespace }}
-  {{- with .namespace }}
-  namespace: {{ . }}
-  {{- end }}
   {{- with .annotations }}
   annotations:
     {{- range $key, $value := . }}
@@ -18,14 +15,13 @@ metadata:
   {{- end }}
   labels:
     {{- include "jupyterhub.labels" $ | nindent 4 }}
-    app.kubernetes.io/component: metrics
     {{- range $key, $value := .labels }}
     {{- printf "%s: %s" $key (tpl $value $ | quote) | nindent 4 }}
     {{- end }}
 spec:
   {{- with .namespaceSelector }}
   namespaceSelector:
-  {{- toYaml . | nindent 4 }}
+  {{- tpl . $ | nindent 4 }}
   {{- end }}
   selector:
     matchLabels:
