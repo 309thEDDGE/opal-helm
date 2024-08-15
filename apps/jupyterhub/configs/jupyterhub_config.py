@@ -226,7 +226,7 @@ c.KubeSpawner.volume_mounts = [
 c.KubeSpawner.cmd = "/tmp/startup_script.bash"
 
 # # Gives spawned containers access to the API of the hub
-c.Jupyterhub.hub_bind_url = f'http://:8081'
+c.Jupyterhub.hub_bind_url = 'http://:8081'
 c.JupyterHub.hub_connect_url = f'http://{get_name("hub"):{get_name_env("hub","_SERVICE_PORT")}}'
 
 # Authentication
