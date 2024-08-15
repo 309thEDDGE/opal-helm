@@ -44,8 +44,9 @@ c.JupyterHub.tornado_settings = {
     "slow_spawn_timeout:": 0,
 }
 
-# the hub should listen on all interfaces, so the proxy can access it
-c.JupyterHub.hub_ip = '0.0.0.0'
+# # Gives spawned containers access to the API of the hub
+c.Jupyterhub.hub_bind_url = 'http://:8081'
+c.JupyterHub.hub_connect_url = f'http://{get_name("hub")}:{get_name_env("hub","_SERVICE_PORT")}'
 
 
 # set the user's server image
@@ -224,10 +225,6 @@ c.KubeSpawner.volume_mounts = [
 
 # set the startup bash script
 c.KubeSpawner.cmd = "/tmp/startup_script.bash"
-
-# # Gives spawned containers access to the API of the hub
-c.Jupyterhub.hub_bind_url = 'http://:8081'
-c.JupyterHub.hub_connect_url = f'http://{get_name("hub"):{get_name_env("hub","_SERVICE_PORT")}}'
 
 # Authentication
 def get_minio_creds(keycloak_access_token):
