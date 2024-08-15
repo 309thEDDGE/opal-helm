@@ -47,7 +47,7 @@ c.JupyterHub.ip = get_name("proxy-public")
 c.JupyterHub.port = int(get_name_env("proxy-public", "_SERVICE_PORT"))
 
 # # Gives spawned containers access to the API of the hub
-#c.Jupyterhub.hub_bind_url = 'http://0.0.0.0:8081'
+c.JupyterHub.hub_ip = "0.0.0.0"
 c.JupyterHub.hub_connect_url = f'http://{get_name("hub")}:{get_name_env("hub","_SERVICE_PORT")}'
 
 
