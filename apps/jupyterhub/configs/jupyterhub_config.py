@@ -226,9 +226,8 @@ c.KubeSpawner.volume_mounts = [
 c.KubeSpawner.cmd = "/tmp/startup_script.bash"
 
 # # Gives spawned containers access to the API of the hub
-
-c.JupyterHub.hub_connect_ip = os.environ['HUB_SERVICE_HOST']
-c.JupyterHub.hub_connect_port = int(os.environ['HUB_SERVICE_PORT'])
+c.Jupyterhub.hub_bind_url = f'http://:8081'
+c.JupyterHub.hub_connect_url = f'http://{get_name("hub"):{get_name_env("hub","_SERVICE_PORT")}}'
 
 # Authentication
 def get_minio_creds(keycloak_access_token):
