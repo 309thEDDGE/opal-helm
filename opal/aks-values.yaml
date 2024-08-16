@@ -227,6 +227,10 @@ jupyterhub:
     namespace: *opalNS
     baseDns: *baseDns
     domainExtension: *domainExtension
+    metrics:
+      enabled: true
+    serviceMonitor:
+      enabled: true
     gitSync:
       enabled: true
       # Leave this empty, only fill it in the opal-setup chart values

@@ -116,6 +116,10 @@ appValues:
         enabled: true
       serviceMonitor:
         enabled: true
+      metrics:
+        enabled: true
+      serviceMonitor:
+        enabled: true
       resources:
         useAzureFile: *useAzure
       gitSync:
