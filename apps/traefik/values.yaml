@@ -15,10 +15,11 @@ domainExtension: ""
 replicas: 1
 
 image:
+  registry: registry1.dso.mil/ironbank/opensource/traefik
   # The Traefik image repository
-  repository: registry1.dso.mil/ironbank/opensource/traefik/traefik
+  repository: traefik
   # Overrides the Traefik image tag whose default is the chart appVersion
-  tag: "v2.10.4"
+  tag: "v3.0.4"
   # The Traefik image pull policy
   pullPolicy: IfNotPresent
 
@@ -118,6 +119,10 @@ service:
   # Session affinity config
   sessionAffinityConfig: {}
 
+metrics:
+  enabled: false
+  port: 8082
+
 ingress:
   # If `true`, an Ingress is created
   enabled: false
@@ -159,14 +164,15 @@ networkPolicy:
   # See https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.18/#networkpolicypeer-v1-networking-k8s-io
   extraFrom: []
 
-
 serviceMonitor:
   # If `true`, a ServiceMonitor resource for the prometheus-operator is created
-  enabled: false
+  enabled: true
   # Optionally sets a target namespace in which to deploy the ServiceMonitor resource
-  namespace: ""
+  namespace: "monitoring"
   # Optionally sets a namespace for the ServiceMonitor
-  namespaceSelector: {}
+  namespaceSelector: |
+    matchNames:
+      - {{ .Values.namespace }}
   # Annotations for the ServiceMonitor
   annotations: {}
   # Additional labels for the ServiceMonitor
@@ -178,60 +184,10 @@ serviceMonitor:
   # The path at which metrics are served
   path: /metrics
   # The Service port at which metrics are served
-  port: http
+  port: metrics
   # added by Big Bang to support Istio mTLS
   scheme: ""
   tlsConfig: {}
-
-extraServiceMonitor:
-  # If `true`, a ServiceMonitor resource for the prometheus-operator is created
-  enabled: false
-  # Optionally sets a target namespace in which to deploy the ServiceMonitor resource
-  namespace: ""
-  # Optionally sets a namespace for the ServiceMonitor
-  namespaceSelector: {}
-  # Annotations for the ServiceMonitor
-  annotations: {}
-  # Additional labels for the ServiceMonitor
-  labels: {}
-  # Interval at which Prometheus scrapes metrics
-  interval: 10s
-  # Timeout for scraping
-  scrapeTimeout: 10s
-  # The path at which metrics are served
-  path: /auth/realms/master/metrics
-  # The Service port at which metrics are served
-  port: http
-
-prometheusRule:
-  # If `true`, a PrometheusRule resource for the prometheus-operator is created
-  enabled: false
-  # Annotations for the PrometheusRule
-  annotations: {}
-  # Additional labels for the PrometheusRule
-  labels: {}
-  # List of rules for Prometheus
-  rules: []
-  # - alert: traefik-IngressHigh5xxRate
-  #   annotations:
-  #     message: The percentage of 5xx errors for traefik over the last 5 minutes is over 1%.
-  #   expr: |
-  #     (
-  #       sum(
-  #         rate(
-  #           nginx_ingress_controller_response_duration_seconds_count{exported_namespace="mynamespace",ingress="mynamespace-traefik",status=~"5[0-9]{2}"}[1m]
-  #         )
-  #       )
-  #       /
-  #       sum(
-  #         rate(
-  #           nginx_ingress_controller_response_duration_seconds_count{exported_namespace="mynamespace",ingress="mynamespace-traefik"}[1m]
-  #         )
-  #       )
-  #     ) * 100 > 1
-  #   for: 5m
-  #   labels:
-  #     severity: warning
 
 autoscaling:
   # If `true`, an autoscaling/v2beta2 HorizontalPodAutoscaler resource is created (requires Kubernetes 1.18 or above)

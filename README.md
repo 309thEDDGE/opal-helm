@@ -16,6 +16,8 @@
     - [Helm install OPAL](#helm-install-opal)
     - [Patching argoCD](#patching-argocd)
     - [Important URLs](#important-urls)
+  - [Dask Gateway](#dask-gateway)
+    - [Node Assignment](#node-assignment)
   - [Mongodb](#mongodb)
     - [Mongodb documentation](#mongodb-documentation)
     - [Mongodb configuration and user creation](#mongodb-configuration-and-user-creation)
@@ -142,8 +144,8 @@ In order for the product to work properly you will also need to run a minikube t
 After the status of all opal pods are running and the keycloak-setup pod is complete, open a browser to access the services.
 
 ### Patching argoCD
-if there is a reason to update any of the helm values while argoCD is running, there will have to be a patch applied to make sure the changes take place
->$kubectl patch Application/keycloak \ --type json \ --patch='[ { "op": "remove", "path": "/metadata/finalizers" } ]' -n argocd
+Applications will occasionally fail to sync following an update, there will have to be a patch applied to make sure the changes take place
+> $kubectl patch Application/<failing application> \ --type json \ --patch='[ { "op": "remove", "path": "/metadata/finalizers" } ]' -n argocd
 
 ### Important URLs
 **Opal**
@@ -189,6 +191,64 @@ After Jupyterhub is running, you will also need to create the conda environment 
 
 ```conda env create -f local_channel_env.yaml```
 
+
+## Dask Gateway
+  
+### Node Assignment
+
+Dask gateway provides a means for users to farm out large compute tasks to scalable worker pools. By default, the kubernetes controller will schedule these workers onto any available node, potentially leading to degraded performance in user-facing services. This can be solved using kubernetes features called 'node affinity' and 'taints/tolerations', allowing us to have a separate nodepool that can only be utilized by dask's worker nodes. Some cluster-side configuration is required to make use of this functionality. The target nodes will need some sort of label to distinguish them from the rest of the cluster, as well as a taint to prevent other pods from being scheduled to these nodes. For the sake of this example, we'll use the following: 
+
+``` yaml
+labels:
+    workload:dask-worker
+```
+
+``` yaml
+taints:
+    worker=false:NoSchedule
+```
+
+These can either be added through nodepool options through your cloud provider's CLI/Web UI, or manually per-node using `kubectl`. As cloud providers can vary, the following examples will use `kubectl`
+
+To label nodes:
+`kubectl label nodes <node-name> workload=dask-worker`
+
+To taint nodes:
+`kubectl taint nodes <node-name> worker=false:NoSchedule`
+
+To add the required node affinity and tolerations to the worker pods, add the following to the `appValues` section of `daskGateway` in your values file:
+
+``` yaml
+gateway:
+  backend:
+    worker:
+      extraPodConfig:
+        nodeSelector:
+          workload: "dask-worker"
+        tolerations:
+          - key: "worker"
+            operator: "Equal"
+            value: "false"
+            effect: NoSchedule
+
+```
+
+### Modifying Resource Limits
+
+Inorder to modify resource limits for dask gateway you will need to configure the values in the dask gateway helm chart values. Currently, by default they should be configured to allow the scheduler and workers 2 G of memory and one core a piece with the cluster total limits being 10 G of memory with 6 cores and 6 workers as a maximum. These values can be located at:
+- gateway
+  - extraConfig (This is where the cluster limits are defined)
+  - backend
+  
+    - scheduler
+    
+      - cores
+      - memory
+    
+    - worker
+    
+      - cores
+      - memory
 
 ## Mongodb
 Mongodb is a document database designed for ease of application development and scaling.  In the instance of OPAL, it is used in conjuction with pyMongo in a jupyterhub notebook to provide data analyst access to important collections within the database.
@@ -299,66 +359,3 @@ client = MongoClient('example.com',
                      authMechanism='SCRAM-SHA-256')
 
 By default mongosh excludes all db.auth() operations from the saved history
-
-## Dask Gateway
-
-### Using Dask and its Dashboard
-
-The first step in using dask is creating a Gateway and creating a cluster through it.
-This Can be done like this:
-
-```python
-from dask_gateway import Gateway
-gateway = Gateway(address=os.environ["DASK_GATEWAY_ADDRESS"], auth="jupyterhub")
-cluster = gateway.new_cluster()
-```
-
-Following that a client will need to be made like this:
-
-```python
-from dask.distributed import Client
-client = Client(cluster)
-client
-```
-
-This will output a URL that will give you access to the dask dashboard. However, you will need to modify the URL
-inorder for it to work.
-
-```text
-Original
-https://proxy-public/services/dask-gateway/clusters/opal.c9637057fccb41abb9adc9313fd2b6db/status
-Modified
-https://opal-k8s.10.96.30.9.nip.io/services/dask-gateway/clusters/opal.c9637057fccb41abb9adc9313fd2b6db/status
-```
-
-You can see that the
-```text
-proxy-public
-```
-has been replaced with
-```text
-opal-k8s.10.96.30.9.nip.io
-```
-
-### Modifying Resource Limits
-
-Inorder to modify resource limits for dask gateway you will need to configure the values in the dask gateway helm chart values. Currently, by default they should be configured to allow the scheduler and workers 2 G of memory and one core a piece with the cluster total limits being 10 G of memory with 6 cores and 6 workers as a maximum. These values can be located at:
-- gateway
-  - extraConfig (This is where the cluster limits are defined)
-  - backend
-  
-    - scheduler
-    
-      - cores
-      - memory
-    
-    - worker
-    
-      - cores
-      - memory
-
-## TODO
-add the regcred-init repo to opal-helm
-add the argoCD repo to opal-helm
-
-
