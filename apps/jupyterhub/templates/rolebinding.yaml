@@ -4,6 +4,7 @@ metadata:
   namespace: {{ .Values.namespace }}
   name: {{ include "jupyterhub.fullname" . }}
   labels:
+    {{- include "jupyterhub.labels" . }}
     app.kubernetes.io/component: jupyter
 subjects:
   - kind: ServiceAccount

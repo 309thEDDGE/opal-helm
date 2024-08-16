@@ -1,4 +1,3 @@
-{{- $values := . -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -72,15 +71,15 @@ spec:
               value: "12.0"
           {{- with .Values.env }}
             - name: KEYCLOAK_JUPYTERHUB_OAUTH_CALLBACK_URL
-              value: {{ tpl .keycloakJupyterhubOauthCallbackUrl $ | default (print (include "domains.jhub" $values) "/hub/oauth_callback") }}
+              value: {{ tpl .keycloakJupyterhubOauthCallbackUrl $ | default (print (include "domains.jhub" $) "/hub/oauth_callback") }}
             - name: KEYCLOAK_JUPYTERHUB_AUTHORIZE_URL
-              value: {{ tpl .keycloakJupyterhubAuthorizeUrl $ | default (print (include "domains.keycloak" $values) "/realms/master/protocol/openid-connect/auth") }}
+              value: {{ tpl .keycloakJupyterhubAuthorizeUrl $ | default (print (include "domains.keycloak" $) "/realms/master/protocol/openid-connect/auth") }}
             - name: KEYCLOAK_JUPYTERHUB_USERDATA_URL
-              value: {{ tpl .keycloakJupyterhubUserdataUrl $ | default (print (include "domains.keycloak" $values) "/realms/master/protocol/openid-connect/userinfo") }}
+              value: {{ tpl .keycloakJupyterhubUserdataUrl $ | default (print (include "domains.keycloak" $) "/realms/master/protocol/openid-connect/userinfo") }}
             - name: KEYCLOAK_OPAL_API_URL
-              value: {{ tpl .keycloakOpalApiUrl $ | default (print (include "domains.keycloak" $values) "/realms/master/protocol/openid-connect/token") }}
+              value: {{ tpl .keycloakOpalApiUrl $ | default (print (include "domains.keycloak" $) "/realms/master/protocol/openid-connect/token") }}
             - name: BASE_URL
-              value: {{ tpl .jupyterhubBaseUrl $ | default (include "domains.jhub" $values) }}
+              value: {{ tpl .jupyterhubBaseUrl $ | default (include "domains.jhub" $) }}
             - name: S3_ENDPOINT
               value: {{ tpl .s3EndpointUrl $ | default (print "http://" $.Release.Name "-minio-hl." ( $.Values.minioNS | default "minio-tenant" ) ".svc.cluster.local:9000") }}
             - name: MINIO_IDENTITY_OPENID_CLIENT_ID

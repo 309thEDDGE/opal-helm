@@ -48,7 +48,6 @@ c.JupyterHub.port = int(get_name_env("proxy-public", "_SERVICE_PORT"))
 
 # # Gives spawned containers access to the API of the hub
 c.JupyterHub.hub_ip = "0.0.0.0"
-#c.JupyterHub.hub_connect_url = f'http://{get_name("hub")}:{get_name_env("hub","_SERVICE_PORT")}'
 c.JupyterHub.hub_connect_ip = get_name("hub")
 c.JupyterHub.hub_connect_port = int(get_name_env("hub","_SERVICE_PORT"))
 
@@ -58,6 +57,7 @@ c.JupyterHub.hub_connect_port = int(get_name_env("hub","_SERVICE_PORT"))
 c.KubeSpawner.image_pull_policy = "IfNotPresent"
 c.KubeSpawner.image_pull_secrets = ["regcred"]
 c.KubeSpawner.image = os.environ["SINGLE_USER_IMAGE"]
+
 # wait a bit longer for spawn
 c.KubeSpawner.http_timeout = 60 * 5
 
@@ -119,8 +119,6 @@ else:
     c.KubeSpawner.storage_class = 'standard'
 
 c.KubeSpawner.storage_access_modes = ['ReadWriteOnce']
-#singleuser_storage = int(os.env['SINGLE_USER_STORAGE_CAPACITY'])
-#c.KubeSpawner.storage_capacity = '{}Gi'.format(singleuser_storage)
 c.KubeSpawner.storage_capacity = os.environ['SINGLE_USER_STORAGE_CAPACITY']
 
 # Add volumes to singleuser pods

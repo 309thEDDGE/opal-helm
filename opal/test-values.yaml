@@ -194,6 +194,7 @@ minioInstance:
         - name: metaflow-data
         - name: basket-data
         - name: airflow
+      #change these to reflect desired domain names
       env:
         minioIdentityOpenIDConfigURL: ""
         minioBrowserRedirectURL: ""

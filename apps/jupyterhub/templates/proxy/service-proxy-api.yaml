@@ -2,8 +2,9 @@ apiVersion: v1
 kind: Service
 metadata:
   namespace: {{ .Values.namespace }}
-  name: {{ include "jupyterhub.fullname" . }}-proxy-api
+  name: {{ include "jupyterhub.proxy-api.fullname" . }}
   labels:
+    {{- include "jupyterhub.labels" . | nindent 4 }}
     app.kubernetes.io/component: proxy
 spec:
   selector:

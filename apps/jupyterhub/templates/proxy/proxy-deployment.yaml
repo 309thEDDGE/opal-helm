@@ -1,4 +1,3 @@
-{{- $values := . -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -47,7 +46,7 @@ spec:
               --log-level=debug
               {{- end }}
               {{- if .Values.metrics.enabled }}
-              --metrics-port={{ .Values.metrics.port | default "8086" }}
+              --metrics-port=8086
               {{- end }}
           securityContext:
             allowPrivilegeEscalation: {{ .Values.securityContext.allowPrivilegeEscalation }}
@@ -60,7 +59,7 @@ spec:
             - containerPort: 8001
               name: api
             {{- if .Values.metrics.enabled }}
-            - containerPort: {{ .Values.metrics.port }}
+            - containerPort: 8086
               name: metrics
             {{- end }}
 ---
