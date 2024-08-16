@@ -64,6 +64,10 @@ keycloak:
     keycloakSetup:
       enabled: true
       existingSecret: *oauthSecret
+    metrics:
+      enabled: true
+    serviceMonitor:
+      enabled: true
   postgres:
     nameOverride: *keycloakPostgresName
     namespace: *opalNS
@@ -107,9 +111,13 @@ traefik:
   appValues:
     namespace: *opalNS
     image:
-      tag: "v2.10.4"
+      tag: "v3.0.4"
     service:
       loadBalancerIP: "10.96.30.9"
+    serviceMonitor:
+      enabled: true
+    metrics:
+      enabled: true
     tls:
       nameOverride: *tlsSecret
     ingress:
