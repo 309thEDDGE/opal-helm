@@ -44,8 +44,8 @@ cp -r /opt/data/weave /home/jovyan/
 log_to_file "Link directories to home"
 
 # 8
-cp /opt/conf/local_channel_env.yaml /home/jovyan/
-log_to_file "copy local_channel_env to home (allows for temporary user edits)"
+cp /opt/conf/conda_channel.yaml.yaml /home/jovyan/
+log_to_file "copy conda_channel to home (allows for temporary user edits)"
 
 # 9
 cp /opt/conf/.condarc /home/jovyan/
