@@ -8,7 +8,7 @@ metadata:
     app.kubernetes.io/component: jupyter
 subjects:
   - kind: ServiceAccount
-    name: {{ include "jupyterhub.fullname" . }}
+    name: {{ include "jupyterhub.hub-serviceaccount.fullname" . }}
 roleRef:
   kind: Role
   name: {{ include "jupyterhub.fullname" . }}
