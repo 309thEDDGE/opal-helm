@@ -1,35 +1,47 @@
-### Table of Contents
+<!-- the M-x command below will only work in emacs with the markdown module. Probably won't do anything in any other editors -->
+<!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
+**Table of Contents**
 
+- [Table of Contents](#table-of-contents)
 - [Purpose](#purpose)
-  - [Getting Started with Opal-helm Deployment](#getting-started-with-opal-helm-deployment)
-    - [ArgoCD](#argocd)
-  - [Deploying ArgoCD](#deploying-argocd)
-    - [Starting minikube](#starting-minikube)
-    - [Setting up ArgoCD regcred](#setting-up-argocd-regcred)
-    - [Install ArgoCD helm chart](#install-argocd-helm-chart)
-    - [Access the ArgoCD secret](#access-the-argocd-secret)
-    - [Add Repo to ArgoCD Dashboard](#add-repo-to-argocd-dashboard)
-  - [Deploying OPAL](#deploying-opal)
-    - [TLS certs](#tls-certs)
-    - [Add docker configuration JSON](#add-docker-configuration-json)
-    - [Prepare git credentials](#git-sync-setup)
-    - [Helm install OPAL](#helm-install-opal)
-    - [Patching argoCD](#patching-argocd)
-    - [Important URLs](#important-urls)
-  - [Dask Gateway](#dask-gateway)
-    - [Node Assignment](#node-assignment)
-  - [Mongodb](#mongodb)
-    - [Mongodb documentation](#mongodb-documentation)
-    - [Mongodb configuration and user creation](#mongodb-configuration-and-user-creation)
-    - [Log in as root](#log-in-as-root)
-    - [Create a userAdmin](#create-a-useradmin)
-    - [Create a Mongo Database](#create-a-mongo-database)
-    - [Insert test data into a Database](#insert-test-data-into-a-database)
-    - [Helpful Mongosh Commands](#helpful-mongosh-commands)
-    - [Create a Mongo User and authentication](#create-a-mongo-user-and-authentication)
-    - [MongoDB Built-in Roles](#mongodb-built-in-roles)
-    - [Signing in as a user with specific roles](#signing-in-as-a-user-with-specific-roles)
-  - [TODO](#todo)
+    - [Getting Started with Opal-helm Deployment](#getting-started-with-opal-helm-deployment)
+        - [ArgoCD](#argocd)
+    - [Deploying ArgoCD ](#deploying-argocd)
+        - [Starting minikube](#starting-minikube)
+        - [Setting up ArgoCD regcred](#setting-up-argocd-regcred)
+        - [Install ArgoCD helm chart](#install-argocd-helm-chart)
+        - [Access the ArgoCD secret](#access-the-argocd-secret)
+        - [Add Repo to ArgoCD Dashboard](#add-repo-to-argocd-dashboard)
+    - [Deploying OPAL](#deploying-opal)
+        - [TLS certs](#tls-certs)
+        - [Add docker configuration JSON](#add-docker-configuration-json)
+        - [Git Sync](#git-sync)
+        - [Helm install OPAL](#helm-install-opal)
+        - [Patching argoCD](#patching-argocd)
+        - [Important URLs](#important-urls)
+    - [Nginx](#nginx)
+        - [Nginx setup](#nginx-setup)
+    - [Dask Gateway](#dask-gateway)
+        - [Node Assignment](#node-assignment)
+        - [Modifying Resource Limits](#modifying-resource-limits)
+    - [Mongodb](#mongodb)
+        - [Mongodb documentation](#mongodb-documentation)
+        - [Mongodb configuration and user creation](#mongodb-configuration-and-user-creation)
+        - [Log in as root](#log-in-as-root)
+        - [Create a userAdmin](#create-a-useradmin)
+        - [Create a Mongo Database](#create-a-mongo-database)
+        - [Insert test data into a Database](#insert-test-data-into-a-database)
+        - [Helpful Mongosh Commands](#helpful-mongosh-commands)
+        - [Create a Mongo User and authentication](#create-a-mongo-user-and-authentication)
+        - [MongoDB Built-in Roles](#mongodb-built-in-roles)
+        - [Signing in as a user with specific roles](#signing-in-as-a-user-with-specific-roles)
+    - [Prometheus Integration](#prometheus-integration)
+        - [Install Prometheus](#install-prometheus)
+            - [Prerequisites](#prerequisites)
+            - [Installation](#installation)
+            - [Usage](#usage)
+
+<!-- markdown-toc end -->
 
 
 # Purpose
@@ -359,3 +371,63 @@ client = MongoClient('example.com',
                      authMechanism='SCRAM-SHA-256')
 
 By default mongosh excludes all db.auth() operations from the saved history
+
+## Prometheus Integration
+
+Prior to enabling any prometheus servicemonitors in OPAL, kube-prometheus-stack must be installed to the cluster
+
+### Install Prometheus
+
+#### Prerequisites
+
+In addition to the prerequisites for a full OPAL install:
+
+1. Clone https://github.com/309theddge/kube-prometheus
+2. Clone https://github.com/309theddge/k8s-utils
+
+#### Installation
+
+**Registry Credentials Setup**
+
+1. Ensure you are logged in to `registry1.dso.mil` through docker.
+2. Copy `~/.docker/config.json` into `k8s-utils/regcred-init`
+3. In `k8s-utils/regcred-init`, run `helm install metrics-regcred . -n monitoring --create-namespace`
+
+**Prometheus Install**
+
+The prometheus chart is preconfigured, so all you need to do is install it.
+1. In `kube-prometheus`, run `helm install metrics . -n monitoring`. This is a very large chart, so the install may take some time
+
+#### Usage
+
+Once prometheus has been installed, you will be able to access the prometheus and grafana dashboards.
+
+**Prometheus**
+
+- K9s
+    1. Type `:svc` and press enter
+    2. Type `/operated` and press enter
+    3. Scroll down to `prometheus-operated` and press shift-f. Ensure that `Container Port:` says `prometheus::9090`. If not, delete the line and enter `9090`
+    4. Move your cursor down to "OK" and press enter
+    5. You should now be able to visit `localhost:9090` in your browser and interact with the prometheus dashboard
+- kubectl
+    1. Run `kubectl port-forward svc/prometheus-operated 9090 -n monitoring` in your terminal
+    2. You should now be able to visit `localhost:9090` in your browser and interact with the prometheus dashboard
+
+**Grafana**
+
+- K9s
+    1. Type `:svc` and press enter
+    2. Type `/grafana` and press enter
+    3. Scroll down to `prometheus-grafana` and press shift-f. Ensure that `Container Port:` says `grafana::3000`. If not, delete the line and enter `3000`
+    4. Move your cursor down to "OK" and press enter
+    5. Type `:secret` and press enter
+    6. Type `/grafana` and press enter
+    7. Move your cursor to `prometheus-grafana` and press `x`
+    8. Make note of `admin-user` and `admin-password`
+    9. You should now be able to visit `localhost:3000` in your browser and log in to the dashboard with the username and password from the previous step
+- kubectl
+    1. Run `kubectl port-forward svc/prometheus-grafana 3000:80 -n monitoring` in your terminal
+    2. Run `kubectl -n monitoring get secret prometheus-grafana -o jsonpath="{.data.admin-user}" | base64 -d` in your terminal. Make note of the username printed
+    2. Run `kubectl -n monitoring get secret prometheus-grafana -o jsonpath="{.data.admin-password}" | base64 -d` in your terminal. Make note of the password printed
+    2. You should now be able to visit `localhost:3000` in your browser and log in to the grafana dashboard
