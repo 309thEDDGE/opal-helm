@@ -130,9 +130,9 @@ c.KubeSpawner.volumes = [
         }
     },
     {
-        'name': f'{get_name("singleuser")}',
+        'name': "singleuser-config",
         "configMap": {
-            "name": "singleuser-config",
+            "name": f'{get_name("singleuser")}',
             "defaultMode": 0o755 # octal permission number
         }
     },
