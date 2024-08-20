@@ -43,10 +43,7 @@ spec:
     {{- end }}
 {{- end }}
   rules:
-    -
-      {{- if $ingress.rules.host }}
-      host: {{ tpl $ingress.rules.host $ | quote }}
-      {{- end }}
+    - host: {{ tpl $ingress.rules.host $ | default (include "ingresses.keycloak" .) | quote }}
       http:
         paths:
           {{- range $ingress.rules.paths }}

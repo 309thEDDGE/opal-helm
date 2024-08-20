@@ -11,6 +11,10 @@ baseDns: ""
 
 namespace: opal
 
+minioNS: minio-tenant
+
+domainExtension: ""
+
 secrets:
   nameOverride: "token-env"
   oauth:
@@ -18,9 +22,12 @@ secrets:
     existingSecret: ""
     clientSecret: ""
 
+debug:
+  enabled: false
+
 image:
   repository: registry1.dso.mil/ironbank/opensource/metrostar/jupyterhub
-  tag: jupyterhub_v8
+  tag: jupyterhub_v11
   pullPolicy: IfNotPresent
   
 imagePullSecrets: 
@@ -45,7 +52,7 @@ serviceAccount:
   annotations: {}
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
-  name: hub
+  name: ""
 
 podAnnotations: {}
 
@@ -62,12 +69,12 @@ securityContext:
   # runAsUser: 1000
 
 serviceApi:
-  name: proxy-api
+  name: api
+  protocol: TCP
   port: 8001
-  targetPort: 8001
+  targetPort: api
 
 servicePublic:
-  name: proxy-public
   type: NodePort
   ports:
     - name: http
@@ -76,9 +83,12 @@ servicePublic:
       targetPort: 8000
     - name: https
       port: 443
-      targetPort: 443
-    - name: api
-      port: 8001
+      targetPort: 8443
+
+metrics:
+  enabled: true
+  port: 8086
+
 ingress:
   enabled: true
   className: ""
@@ -86,7 +96,7 @@ ingress:
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
     traefik.ingress.kubernetes.io/router.tls: "true"
   rules:
-    host: "opal-k8.{{ .Values.baseDns }}"
+    host: ""
     http:
       paths:
         - path: /
@@ -99,20 +109,46 @@ ingress:
   tls: []
 
 env:
-  keycloakJupyterhubOauthCallbackUrl: "https://opal-k8.{{ .Values.baseDns }}/hub/oauth_callback"
-  jupyterhubBaseUrl: "https://opal-k8.{{ .Values.baseDns }}"
-  s3Endpointurl: "https://minio-k8.{{ .Values.baseDns }}"
-  keycloakJupyterhubAuthorizeUrl: "https://keycloak-k8.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/auth"
-  keycloakJupyterhubUserdataUrl: "https://keycloak-k8.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/userinfo"
-  keycloakOpalApiUrl: "https://keycloak-k8.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/token"
+  keycloakJupyterhubOauthCallbackUrl: ""
+  jupyterhubBaseUrl: ""
+  s3EndpointUrl: ""
+  keycloakJupyterhubAuthorizeUrl: ""
+  keycloakJupyterhubUserdataUrl: ""
+  keycloakOpalApiUrl: ""
   openidClientId: opal-jupyterhub
   singleUserImage: "deploytime_singleuser"
   pythonPath: "/python-packages/:$PYTHONPATH"
   opalBannerColor: "Purple"
   opalBannerText: "Default OPAL Banner"
-  keycloakJupyterhubUsernameKey: "preferred_username"
+  keycloakJupyterhubUsernameClaim: "preferred_username"
   daskGatewayServiceName: ""
   helmReleaseName: true
+
+serviceMonitor:
+  # If `true`, a ServiceMonitor resource for the prometheus-operator is created
+  enabled: true
+  # Optionally sets a target namespace in which to deploy the ServiceMonitor resource
+  namespace: monitoring
+  # Optionally sets a namespace for the ServiceMonitor
+  namespaceSelector: |
+    matchNames:
+      - {{ .Values.namespace }}
+  # Annotations for the ServiceMonitor
+  annotations: {}
+  # Additional labels for the ServiceMonitor
+  labels: {}
+  # Interval at which Prometheus scrapes metrics
+  interval: 10s
+  # Timeout for scraping
+  scrapeTimeout: 10s
+  # The path at which metrics are served
+  path: /metrics
+  # The Service port at which metrics are served
+  port: metrics
+  # added by Big Bang to support Istio mTLS
+  scheme: ""
+  tlsConfig: {}
+
 
 resources:
   storage: 2Gi

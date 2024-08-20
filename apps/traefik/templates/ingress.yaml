@@ -1,6 +1,6 @@
-{{- $ingress := .Values.ingress -}}
 {{ if .Values.ingress.enabled }}
----
+{{- $ingress := .Values.ingress -}}
+{{- $values := . -}}
 {{- $apiV1 := false -}}
 {{- $apiVersion := "extensions/v1beta1" -}}
 {{- if and (.Capabilities.APIVersions.Has "networking.k8s.io/v1") (semverCompare ">= v1.19.0-0" .Capabilities.KubeVersion.Version) -}}
@@ -29,7 +29,7 @@ spec:
     {{- with $ingress.rules }}
     -
       {{- if .host }}
-      host: {{ tpl .host $ | quote }}
+      host: {{ tpl .host $ | default (include "inresses.traefik" $values) | quote }}
       {{- end }}
       http:
         paths:

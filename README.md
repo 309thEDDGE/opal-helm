@@ -250,6 +250,44 @@ Inorder to modify resource limits for dask gateway you will need to configure th
       - cores
       - memory
 
+### Using Dask and its Dashboard
+
+The first step in using dask is creating a Gateway and creating a cluster through it.
+This Can be done like this:
+
+```python
+from dask_gateway import Gateway
+gateway = Gateway(address=os.environ["DASK_GATEWAY_ADDRESS"], auth="jupyterhub")
+cluster = gateway.new_cluster()
+```
+
+Following that a client will need to be made like this:
+
+```python
+from dask.distributed import Client
+client = Client(cluster)
+client
+```
+
+This will output a URL that will give you access to the dask dashboard. However, you will need to modify the URL
+inorder for it to work.
+
+```text
+Original
+https://proxy-public/services/dask-gateway/clusters/opal.c9637057fccb41abb9adc9313fd2b6db/status
+Modified
+https://opal-k8s.10.96.30.9.nip.io/services/dask-gateway/clusters/opal.c9637057fccb41abb9adc9313fd2b6db/status
+```
+
+You can see that the
+```text
+proxy-public
+```
+has been replaced with
+```text
+opal-k8s.10.96.30.9.nip.io
+```
+
 ## Mongodb
 Mongodb is a document database designed for ease of application development and scaling.  In the instance of OPAL, it is used in conjuction with pyMongo in a jupyterhub notebook to provide data analyst access to important collections within the database.
 

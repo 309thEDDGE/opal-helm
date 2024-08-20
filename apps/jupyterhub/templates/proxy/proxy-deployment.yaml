@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: {{ .Values.namespace }}
+  name: {{ include "jupyterhub.proxy.fullname" . }}
+  labels:
+    {{- include "jupyterhub.labels" . | nindent 4 }}
+    app.kubernetes.io/component: proxy
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "jupyterhub.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: proxy
+  template:
+    metadata:
+      labels:
+        {{- include "jupyterhub.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: proxy
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        - name: {{ .existingSecret | default .name }}
+      {{- end }}
+      containers:
+        - name: chp
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- $hubNameAsEnv := include "jupyterhub.hub.fullname" . | upper | replace "-" "_" }}
+          {{- $hubHost := printf "http://%s:$(%s_SERVICE_PORT)" (include "jupyterhub.hub.fullname" .) $hubNameAsEnv }}
+          command: ["bash", "-c"]
+          args:
+            - >-
+              source /opt/conda/bin/activate &&
+              conda activate jupyterhub &&
+              configurable-http-proxy
+              --ip=
+              --port=8000
+              --api-ip=
+              --api-port=8001
+              --default-target={{ $hubHost }}
+              --error-target={{ $hubHost }}/hub/error
+              {{- if .Values.debug.enabled }}
+              --log-level=debug
+              {{- end }}
+              {{- if .Values.metrics.enabled }}
+              --metrics-port=8086
+              {{- end }}
+          securityContext:
+            allowPrivilegeEscalation: {{ .Values.securityContext.allowPrivilegeEscalation }}
+          envFrom:
+            - secretRef:
+                name: {{( include "get.tokenName" . )}}
+          ports:
+            - containerPort: 8000
+              name: http
+            - containerPort: 8001
+              name: api
+            {{- if .Values.metrics.enabled }}
+            - containerPort: 8086
+              name: metrics
+            {{- end }}
+---

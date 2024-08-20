@@ -1,36 +1,63 @@
+# get helm values
+c = get_config()
+
 import os
 from oauthenticator.generic import GenericOAuthenticator
 import requests
-# import re
-# import sys
+import re
+import sys
 
-# from tornado.httpclient import AsyncHTTPClient
-# from kubernetes import client
-# from jupyterhub.utils import url_path_join
+from tornado.httpclient import AsyncHTTPClient
+from kubernetes_asyncio import client
+from jupyterhub.utils import url_path_join
+
+configuration_directory = os.path.dirname(os.path.realpath(__file__))
+sys.path.insert(0, configuration_directory)
+
+from config_utilities import (
+    get_config,
+    get_name,
+    get_name_env,
+    get_secret_value,
+    set_config_if_not_none,
+)
+
+# helm values usually use camelCase, this works around that
+# shamelessly ripped from zero-to-jupyterhub configs
+def camelCaseify(s):
+    return re.sub(r"_([a-z])", lambda m: m.group(1).upper(), s)
+
+AsyncHTTPClient.configure("tornado.curl_httpclient.CurlAsyncHTTPClient")
 
 c.JupyterHub.spawner_class = 'kubespawner.KubeSpawner'
 
 # Connect to a proxy running in a different pod
-c.ConfigurableHTTPProxy.api_url = 'http://{}:{}'.format(os.environ['PROXY_API_SERVICE_HOST'], int(os.environ['PROXY_API_SERVICE_PORT']))
+c.ConfigurableHTTPProxy.api_url = f'http://{get_name("proxy-api")}:{get_name_env("proxy-api", "_SERVICE_PORT")}'
 c.ConfigurableHTTPProxy.should_start = False
+
+# Leave singleuser running if hub shuts down
+c.JupyterHub.cleanup_servers = False
 
 # proxy routing
 c.JupyterHub.last_activity_interval = 60
-c.JupyterHub.ip = os.environ['PROXY_PUBLIC_SERVICE_HOST']
-c.JupyterHub.port = int(os.environ['PROXY_PUBLIC_SERVICE_PORT'])
+c.JupyterHub.tornado_settings = {
+    "slow_spawn_timeout:": 0,
+}
+c.JupyterHub.ip = get_name("proxy-public")
+c.JupyterHub.port = int(get_name_env("proxy-public", "_SERVICE_PORT"))
 
-# the hub should listen on all interfaces, so the proxy can access it
-c.JupyterHub.hub_ip = '0.0.0.0'
+# # Gives spawned containers access to the API of the hub
+c.JupyterHub.hub_ip = "0.0.0.0"
+c.JupyterHub.hub_connect_ip = get_name("hub")
+c.JupyterHub.hub_connect_port = int(get_name_env("hub","_SERVICE_PORT"))
 
-# Leave singleuser running if hub shuts down
-c.Jupyterhub.cleanup_servers = False
 
 # set the user's server image
 #c.KubeSpawner.image_pull_policy = "Never"
 c.KubeSpawner.image_pull_policy = "IfNotPresent"
 c.KubeSpawner.image_pull_secrets = ["regcred"]
-# c.KubeSpawner.image = "registry.il2.dso.mil/skicamp/project-opal/tip:f970c010"
 c.KubeSpawner.image = os.environ["SINGLE_USER_IMAGE"]
+
 # wait a bit longer for spawn
 c.KubeSpawner.http_timeout = 60 * 5
 
@@ -92,18 +119,10 @@ else:
     c.KubeSpawner.storage_class = 'standard'
 
 c.KubeSpawner.storage_access_modes = ['ReadWriteOnce']
-#singleuser_storage = int(os.env['SINGLE_USER_STORAGE_CAPACITY'])
-#c.KubeSpawner.storage_capacity = '{}Gi'.format(singleuser_storage)
 c.KubeSpawner.storage_capacity = os.environ['SINGLE_USER_STORAGE_CAPACITY']
 
 # Add volumes to singleuser pods
 c.KubeSpawner.volumes = [
-    {
-        'name': "config-tar",
-        "configMap": {
-            "name": "jupyterhub-config"
-        }
-    },
     {
         'name': "home-jovyan-mnt",
         "persistentVolumeClaim": {
@@ -111,23 +130,9 @@ c.KubeSpawner.volumes = [
         }
     },
     {
-        'name': "startup-script",
+        'name': "singleuser-config",
         "configMap": {
-            "name": "jupyterhub-startup-script",
-            "defaultMode": 0o755 # octal permission number
-        }
-    },
-    {
-        'name': "jupyter-notebook-config",
-        "configMap": {
-            "name": "jupyter-notebook-config-py",
-            "defaultMode": 0o755 # octal permission number
-        }
-    },
-    {
-        'name': "jupyter-server-config",
-        "configMap": {
-            "name": "jupyter-server-config-py",
+            "name": f'{get_name("singleuser")}',
             "defaultMode": 0o755 # octal permission number
         }
     },
@@ -154,24 +159,6 @@ c.KubeSpawner.volumes = [
         'persistentVolumeClaim': {
             'claimName': 'weave-sync-pvc'
         }
-    },
-    {
-        'name': "toplevel-condarc",
-        "configMap": {
-            "name": "jupyterhub-toplevel-condarc"
-        }
-    },
-    {
-        'name': "condarc",
-        "configMap": {
-            "name": "jupyterhub-condarc"
-        }
-    },
-    {
-        'name': "local-channel-mnt",
-        "configMap": {
-            "name": "jupyterhub-local-channel"
-        }
     }
 ]
 
@@ -179,7 +166,7 @@ c.KubeSpawner.volume_mounts = [
     {
         'mountPath': '/tmp/tars/jhub-conf.tar',
         'subPath': "jupyterhub-conf-dir.tar",
-        'name': "config-tar"
+        'name': "singleuser-config"
     },
     {
         'mountPath': '/home/jovyan',
@@ -188,17 +175,17 @@ c.KubeSpawner.volume_mounts = [
     {
         'mountPath': '/tmp/startup_script.bash',
         "subPath": "startup_script.bash",
-        "name": "startup-script"
+        "name": "singleuser-config"
     },
     {
         'mountPath': '/home/jovyan/.jupyter/jupyter_notebook_config.py',
         "subPath": "jupyter_notebook_config.py",
-        "name": "jupyter-notebook-config"
+        "name": "singleuser-config"
     },
     {
         'mountPath': '/etc/jupyter/jupyter_server_config.py',
         "subPath": "jupyter_server_config.py",
-        "name": "jupyter-server-config"
+        "name": "singleuser-config"
     },
     {
         'mountPath': metaflow_mount_path,
@@ -222,28 +209,23 @@ c.KubeSpawner.volume_mounts = [
     },
     {
         'mountPath': '/opt/conda/.condarc',
-        'name': 'toplevel-condarc',
-        'subPath': '.condarc'
+        'subPath': '.condarc.toplevel',
+        'name': 'singleuser-config'
     },
     {
         'mountPath': '/opt/conf/.condarc',
-        'name': 'condarc',
-        'subPath': '.condarc'
+        'subPath': '.condarc.user',
+        'name': 'singleuser-config'
     },
     {
-        'mountPath': '/opt/conf/local_channel_env.yaml',
-        'name': 'local-channel-mnt',
-        'subPath': 'local_channel_env.yaml'
+        'mountPath': '/opt/conf/conda_channel.yaml',
+        'subPath': 'conda_channel.yaml',
+        'name': 'singleuser-config'
     }
 ]
 
 # set the startup bash script
 c.KubeSpawner.cmd = "/tmp/startup_script.bash"
-
-# # Gives spawned containers access to the API of the hub
-
-c.JupyterHub.hub_connect_ip = os.environ['HUB_SERVICE_HOST']
-c.JupyterHub.hub_connect_port = int(os.environ['HUB_SERVICE_PORT'])
 
 # Authentication
 def get_minio_creds(keycloak_access_token):
@@ -301,17 +283,17 @@ keycloak_jupyterhub_oauth_callback_url = os.environ['KEYCLOAK_JUPYTERHUB_OAUTH_C
 keycloak_jupyterhub_authorize_url = os.environ['KEYCLOAK_JUPYTERHUB_AUTHORIZE_URL']
 keycloak_opal_api_url = os.environ['KEYCLOAK_OPAL_API_URL']
 keycloak_jupyterhub_userdata_url = os.environ['KEYCLOAK_JUPYTERHUB_USERDATA_URL']
-keycloak_jupyterhub_username_key = os.environ['KEYCLOAK_JUPYTERHUB_USERNAME_KEY']
+keycloak_jupyterhub_username_claim = os.environ['KEYCLOAK_JUPYTERHUB_USERNAME_CLAIM']
 
 c.GenericOAuthenticator.login_service = 'keycloak'
 c.GenericOAuthenticator.userdata_params = {"state": "state"}
 c.GenericOAuthenticator.client_id = keycloak_jupyterhub_client_id
 c.GenericOAuthenticator.client_secret = keycloak_jupyterhub_client_secret
-c.GenericOAuthenticator.tls_verify = False
+c.GenericOAuthenticator.validate_server_cert = False
 c.GenericOAuthenticator.oauth_callback_url = keycloak_jupyterhub_oauth_callback_url
 c.GenericOAuthenticator.authorize_url = keycloak_jupyterhub_authorize_url
 c.GenericOAuthenticator.token_url = keycloak_opal_api_url
-c.GenericOAuthenticator.username_key = keycloak_jupyterhub_username_key
+c.GenericOAuthenticator.username_claim = keycloak_jupyterhub_username_claim
 c.GenericOAuthenticator.userdata_url = keycloak_jupyterhub_userdata_url
 c.GenericOAuthenticator.enable_auth_state = True
 c.GenericOAuthenticator.refresh_pre_spawn = True
@@ -343,11 +325,11 @@ c.KubeSpawner.environment.setdefault("DASK_GATEWAY_PUBLIC_ADDRESS", f"/services/
 c.KubeSpawner.environment.setdefault("DASK_GATEWAY_AUTH_TYPE", "jupyterhub")
 
 # Cdsdashboards stuff
-from cdsdashboards.app import CDS_TEMPLATE_PATHS
-from cdsdashboards.hubextension import cds_extra_handlers
+#from cdsdashboards.app import CDS_TEMPLATE_PATHS
+#from cdsdashboards.hubextension import cds_extra_handlers
 
 c.DockerSpawner.name_template = "{prefix}-{username}-{servername}"
-c.JupyterHub.template_paths = CDS_TEMPLATE_PATHS
-c.JupyterHub.extra_handlers = cds_extra_handlers
+#c.JupyterHub.template_paths = CDS_TEMPLATE_PATHS
+#c.JupyterHub.extra_handlers = cds_extra_handlers
 c.JupyterHub.allow_named_servers = True
-c.CDSDashboardsConfig.builder_class = 'cdsdashboards.builder.dockerbuilder.DockerBuilder'
+#c.CDSDashboardsConfig.builder_class = 'cdsdashboards.builder.dockerbuilder.DockerBuilder'

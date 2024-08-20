@@ -7,6 +7,10 @@ nameOverride: ""
 # Namespace to install traefik
 namespace: "opal"
 
+# domain info for ingress
+baseDns: ""
+domainExtension: ""
+
 # The number of replicas to create (has no effect if autoscaling enabled)
 replicas: 1
 

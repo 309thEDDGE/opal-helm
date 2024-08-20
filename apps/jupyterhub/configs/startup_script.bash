@@ -44,8 +44,8 @@ cp -r /opt/data/weave /home/jovyan/
 log_to_file "Link directories to home"
 
 # 8
-cp /opt/conf/local_channel_env.yaml /home/jovyan/
-log_to_file "copy local_channel_env to home (allows for temporary user edits)"
+cp /opt/conf/conda_channel.yaml /home/jovyan/
+log_to_file "copy conda_channel to home (allows for temporary user edits)"
 
 # 9
 cp /opt/conf/.condarc /home/jovyan/
@@ -69,6 +69,7 @@ log_to_file "Fill in metaflow config file"
 
 # 11
 # need this for accessing servers running in individual singleusers
+# This will likely fail without an internet connection
 conda install -c conda-forge jupyter-server-proxy -y
 
 # Start the singleuser server (has to be last)

@@ -71,13 +71,21 @@ jobs:
           cd ${GITHUB_WORKSPACE}/opal-setup
           helm dependency build . > /dev/null
           helm template $RANDOM . > setup.yaml
-          grep -n "opal-setup" setup.yaml
+          if (grep -n "opal-setup" app.yaml)
+          then
+            # need to make grep work backwards
+            exit 1
+          fi
       - name: check for string 'opal-setup' in rendered opal manifests
         run: |
           cd ${GITHUB_WORKSPACE}/opal
           helm dependency build . > /dev/null
           helm template $RANDOM . > opal.yaml
-          grep -n "opal-setup" opal.yaml
+          if (grep -n "opal-setup" opal.yaml)
+          then
+            # need to make grep work backwards
+            exit 1
+          fi
       - name: check for string 'opal-setup' in rendered app manifests
         run: |
           cd ${GITHUB_WORKSPACE}/apps
@@ -87,7 +95,7 @@ jobs:
             printf "$dir\n"
             helm dependency build . > /dev/null
             helm template $RANDOM . > app.yaml
-            if (grep -n "opal-setup" app.yaml)
+            if (grep -n "opal-setup" opal.yaml)
             then
               # need to make grep work backwards
               exit 1

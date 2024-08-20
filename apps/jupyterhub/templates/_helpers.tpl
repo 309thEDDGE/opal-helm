@@ -51,17 +51,6 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
-Create the name of the service account to use
-*/}}
-{{- define "jupyterhub.serviceAccountName" -}}
-{{- if .Values.serviceAccount.create }}
-{{- default (include "jupyterhub.fullname" .) .Values.serviceAccount.name }}
-{{- else }}
-{{- default "default" .Values.serviceAccount.name }}
-{{- end }}
-{{- end }}
-
-{{/*
     Returns given number of random Hex characters.
     - randNumeric 4 | atoi generates a random number in [0, 10^4)
       This is a range range evenly divisble by 16, but even if off by one,
@@ -94,6 +83,29 @@ Create the name of the service account to use
 {{- $secretName }}
 {{- end}}
 
-{{- define "render-url" -}}
-{{- tpl .value .context }}
-{{- end }}
+{{- define "domains.base" -}}
+{{- $base := .Values.baseDns -}}
+{{- if not (hasPrefix "." $base) -}}
+{{- $base = print "." $base -}}
+{{- end -}}
+{{- if .Values.domainExtension -}}
+{{- $base = print "-" .Values.domainExtension $base -}}
+{{- end -}}
+{{- print $base -}}
+{{- end -}}
+
+{{- define "domains.minio" -}}
+{{- printf "%s%s" "https://minio" (include "domains.base" .) -}}
+{{- end -}}
+
+{{- define "domains.keycloak" -}}
+{{- printf "%s%s" "https://keycloak" (include "domains.base" .) -}}
+{{- end -}}
+
+{{- define "domains.jhub" -}}
+{{- printf "%s%s" "https://opal" (include "domains.base" .) -}}
+{{- end -}}
+
+{{- define "ingresses.jhub" -}}
+{{- printf "%s%s" "opal" (include "domains.base" .) -}}
+{{- end -}}

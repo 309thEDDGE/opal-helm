@@ -2,9 +2,10 @@
 ## Note: to enable upgrade of minio instance, then values file has a number of values that will be
 ## deprecated in the future. Deprecation candidates will have an annotation in comments regarding the timeframe for deprecation.
 
-domain: minio
 
 baseDns: ""
+
+domainExtension: ""
 
 # When true, upgradeTenants enables use of the V4.* Minio Operator CRD for creation of tenants is enabled.
 # The default will be made TRUE in a future release.
@@ -245,16 +246,11 @@ tenant:
   serviceMetadata: { }
   ## Add environment variables to be set in MinIO container (https://github.com/minio/minio/tree/master/docs/config)
   env:
-    - name: MINIO_IDENTITY_OPENID_CONFIG_URL
-      value: "https://keycloak-k8.{{ .Values.baseDns }}/auth/realms/master/.well-known/openid-configuration"
-    - name: MINIO_BROWSER_REDIRECT_URL
-      value: "https://minio-k8.{{ .Values.baseDns }}/oauth_callback"
-    - name: MINIO_IDENTITY_OPENID_CLIENT_ID
-      value: opal-jupyterhub
-    - name: MINIO_IDENTITY_OPENID_CLAIM_NAME
-      value: policy
-    - name: MINIO_IDENTITY_OPENID_REDIRECT_URI
-      value: "https://minio-k8.{{ .Values.baseDns }}/oauth_callback"
+    minioIdentityOpenIDConfigURL: ""
+    minioBrowserRedirectURL: ""
+    minioIdentityOpenIDRedirectURI: ""
+    minioIdentityOpenIDClientID: opal-jupyterhub
+    minioIdentityOpenIDClaimName: policy
   ## PriorityClassName indicates the Pod priority and hence importance of a Pod relative to other Pods.
   ## This is applied to MinIO pods only.
   ## Refer Kubernetes documentation for details https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/#priorityclass/
@@ -450,7 +446,7 @@ ingress:
       traefik.ingress.kubernetes.io/router.tls: "true"
     }
     tls: [ ]
-    host: "minio-k8s.{{ .Values.baseDns }}"
+    host: ""
     path: /
     pathType: Prefix
 
@@ -464,12 +460,12 @@ bbtests:
       - name: cypress_secretkey
         valueFrom:
           secretKeyRef:
-            name: "{{ .Values.secrets.name }}"
+            name: ""
             key: secretkey
       - name: cypress_accesskey
         valueFrom:
           secretKeyRef:
-            name: "{{ .Values.secrets.name }}"
+            name: ""
             key: accesskey
   scripts:
     image: registry1.dso.mil/ironbank/opensource/minio/mc:RELEASE.2023-06-19T19-31-19Z
@@ -480,10 +476,10 @@ bbtests:
       - name: SECRET_KEY
         valueFrom:
           secretKeyRef:
-            name: "{{ .Values.secrets.name }}"
+            name: ""
             key: secretkey
       - name: ACCESS_KEY
         valueFrom:
           secretKeyRef:
-            name: "{{ .Values.secrets.name }}"
+            name: ""
             key: accesskey

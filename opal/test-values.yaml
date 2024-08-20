@@ -18,7 +18,8 @@ namespaces:
   - &opalNS opal
   - &minioNS minio-tenant
 
-tokenEnv: &tokenEnv "token-env"
+baseDns: &baseDns ".10.96.30.9.nip.io"
+domainExtension: &domainExtension "k8s"
 
 source:
   url: ""
@@ -44,6 +45,8 @@ keycloak:
   enabled: true
   appValues:
     namespace: *opalNS
+    baseDns: *baseDns
+    domainExtension: *domainExtension
     secrets:
       env:
         stringData:
@@ -53,7 +56,7 @@ keycloak:
     ingress:
       enabled: true
       rules:
-        host: "keycloak-k8s.10.96.30.9.nip.io"
+        host: ""
     postgresql:
       enabled: false
       useExternal: true
@@ -118,9 +121,9 @@ traefik:
     tls:
       nameOverride: *tlsSecret
     ingress:
-      enabled: true
+      enabled: false
       rules:
-        host: "traefik-k8s.10.96.30.9.nip.io"
+        host: ""
 
 minioOperator:
   enabled: true
@@ -150,7 +153,8 @@ minioInstance:
     namespace: ""
     oauth:
       existingSecret: *oauthSecret
-    baseDns: "10.96.30.9.nip.io"
+    baseDns: *baseDns
+    domainExtension: *domainExtension
     secrets:
       # both fields need to be filled in
       name: "minio-creds-secret"
@@ -198,22 +202,13 @@ minioInstance:
         - name: metaflow-data
         - name: basket-data
         - name: airflow
+      #change these to reflect desired domain names
       env:
-        - name: MINIO_IDENTITY_OPENID_CONFIG_URL
-          value: "https://keycloak-k8s.{{ .Values.baseDns }}/realms/master/.well-known/openid-configuration"
-        - name: MINIO_BROWSER_REDIRECT_URL
-          value: "https://minio-k8s.{{ .Values.baseDns }}"
-        - name: MINIO_IDENTITY_OPENID_CLIENT_ID
-          value: opal-jupyterhub
-        - name: MINIO_IDENTITY_OPENID_CLAIM_NAME
-          value: 'policy'
-        - name: MINIO_IDENTITY_OPENID_REDIRECT_URI
-          value: "https://minio-k8s.{{ .Values.baseDns }}/oauth_callback"
-        - name: MINIO_PROMETHEUS_AUTH_TYPE
-          value: public
-        - name: MINIO_PROMETHEUS_URL
-          value: "http://prometheus-kube-prometheus-prometheus.monitoring.svc.cluster.local:9090"
-      ## List of secret names to use for generating MinIO users during tenant provisioning
+        minioIdentityOpenIDConfigURL: ""
+        minioBrowserRedirectURL: ""
+        minioIdentityOpenIDRedirectURI: ""
+        minioIdentityOpenIDClientID: opal-jupyterhub
+        minioIdentityOpenIDClaimName: policy
       users: [ ]
     ingress:
       api:
@@ -221,7 +216,7 @@ minioInstance:
         host: ""
       console:
         enabled: true
-        host: "minio-k8s.{{ .Values.baseDns }}"
+        host: ""
 nginx:
   enabled: true
   appValues:
@@ -230,7 +225,12 @@ jupyterhub:
   enabled: true
   appValues:
     namespace: *opalNS
-    baseDns: "10.96.30.9.nip.io"
+    baseDns: *baseDns
+    domainExtension: *domainExtension
+    metrics:
+      enabled: true
+    serviceMonitor:
+      enabled: true
     gitSync:
       enabled: true
       # Leave this empty, only fill it in the opal-setup chart values
@@ -241,25 +241,24 @@ jupyterhub:
       oauth:
         existingSecret: *oauthSecret
     image:
-      tag: jupyterhub_v8
+      tag: jupyterhub_v11
     imagePullSecrets:
       existingSecret: regcred
     env:
       singleUserImage: "jupyterhub/singleuser"
       #singleUserImage: "registry1.dso.mil/ironbank/opensource/metrostar/singleuser:core_singleuser_v2"
       opalBannerColor: "green"
-      opalBannerText: "Unclassified (local development)"
-      #change this based on minio's target namespace, and the name of the helm release
-      s3Endpointurl: "http://opal-setup-minio-hl.minio-tenant.svc.cluster.local:9000"
-      keycloakJupyterhubOauthCallbackUrl: "https://opal-k8s.{{ .Values.baseDns }}/hub/oauth_callback"
-      jupyterhubBaseUrl: "https://opal-k8s.{{ .Values.baseDns }}"
-      keycloakJupyterhubAuthorizeUrl: "https://keycloak-k8s.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/auth"
-      keycloakJupyterhubUserdataUrl: "https://keycloak-k8s.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/userinfo"
-      keycloakOpalApiUrl: "https://keycloak-k8s.{{ .Values.baseDns }}/realms/master/protocol/openid-connect/token"
+      opalBannerText: "Unclassified"
+      s3Endpointurl: ""
+      keycloakJupyterhubOauthCallbackUrl: ""
+      jupyterhubBaseUrl: ""
+      keycloakJupyterhubAuthorizeUrl: ""
+      keycloakJupyterhubUserdataUrl: ""
+      keycloakOpalApiUrl: ""
     ingress:
       enabled: true
       rules:
-        host: "opal-k8s.{{ .Values.baseDns }}"
+        host: ""
     # metaflow datastore size
     resources:
       useAzureFile: false

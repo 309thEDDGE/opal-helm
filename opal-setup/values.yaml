@@ -15,6 +15,9 @@ imagePullSecrets:
     - *opalNS
     - *minioNS
 
+baseDns: &baseDns "10.96.30.9.nip.io"
+domainExtension: &domainExtension ""
+
 useAzureFile: &useAzure false
 
 gitSyncSecret:
@@ -63,9 +66,10 @@ appValues:
   keycloak:
     namespace: *opalNS
     enabled: true
-    # bootstrapper admin credentials. User should be disabled after post-install setup
     appValues:
       namespace: *opalNS
+      baseDns: *baseDns
+      domainExtension: *domainExtension
       secrets:
         env:
           stringData:
@@ -91,6 +95,8 @@ appValues:
     secrets:
       accessKey: opal-administrator
     appValues:
+      baseDns: *baseDns
+      domainExtension: *domainExtension
       tenant:
         namespace: *minioNS
       oauth:
@@ -104,6 +110,16 @@ appValues:
     enabled: true
     appValues:
       namespace: *opalNS
+      baseDns: *baseDns
+      domainExtension: *domainExtension
+      metrics:
+        enabled: true
+      serviceMonitor:
+        enabled: true
+      metrics:
+        enabled: true
+      serviceMonitor:
+        enabled: true
       resources:
         useAzureFile: *useAzure
       gitSync:

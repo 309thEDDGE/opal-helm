@@ -120,3 +120,30 @@ Note: the Minio operator has a fixed name of "minio" for the service it creates.
 {{- define "render-url" -}}
 {{- tpl .value .context }}
 {{- end }}
+
+{{- define "domains.base" -}}
+{{- $base := .Values.baseDns -}}
+{{- if not (hasPrefix "." $base) -}}
+{{- $base = print "." $base -}}
+{{- end -}}
+{{- if .Values.domainExtension -}}
+{{- $base = print "-" .Values.domainExtension $base -}}
+{{- end -}}
+{{- print $base -}}
+{{- end -}}
+
+{{- define "domains.minio" -}}
+{{- printf "%s%s" "https://minio" (include "domains.base" .) -}}
+{{- end -}}
+
+{{- define "domains.keycloak" -}}
+{{- printf "%s%s" "https://keycloak" (include "domains.base" .) -}}
+{{- end -}}
+
+{{- define "domains.jhub" -}}
+{{- printf "%s%s" "https://opal" (include "domains.base" .) -}}
+{{- end -}}
+
+{{- define "ingresses.minio" -}}
+{{- printf "%s%s" "minio" (include "domains.base" .) -}}
+{{- end -}}

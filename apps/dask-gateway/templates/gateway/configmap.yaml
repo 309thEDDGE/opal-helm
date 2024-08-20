@@ -97,7 +97,7 @@ data:
         api_url = get_property("gateway.auth.jupyterhub.apiUrl")
         if api_url is None:
             try:
-                api_url = "http://{HUB_SERVICE_HOST}:{HUB_SERVICE_PORT}/hub/api".format(**os.environ)
+                api_url = "http://{{ .Release.Name }}-jupyterhub-proxy-api.svc.cluster.local:8001/hub/api"
             except Exception:
                 raise ValueError(
                     "Failed to infer JupyterHub API url from environment, "
