@@ -226,6 +226,11 @@ nginx:
   enabled: true
   appValues:
     namespace: *opalNS
+    baseDns: *baseDns
+    condaChannelImage:
+      registry: registry1.dso.mil
+      repository: ironbank/opensource/metrostar/pytorch
+      tag: cuda_v5
 jupyterhub:
   enabled: true
   appValues:
