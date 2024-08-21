@@ -208,5 +208,5 @@ spec:
       - name: git-creds-mnt
         secret:
           secretName: {{ .Values.gitSync.gitSecret.secretName }}
-          defaultMode: 0400
+          defaultMode: 0440
 {{- end }}
