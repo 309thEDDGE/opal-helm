@@ -184,32 +184,32 @@ spec:
             #runAsUser: 65533 # git-sync-user
             runAsUser: 1000 #jovyan
             runAsGroup: 100
-        - image: "{{ .Values.gitSync.image.repository }}:{{ .Values.gitSync.image.tag }}"
-          name: ddapi-repo-sync
-          args:
-            - "--repo=https://github.com/309theddge/data-discovery-api.git"
-            - "--depth=1"
-            - "--max-failures=-1"
-            - "--group-write"
-            - "--username={{ .Values.gitSync.username }}"
-            - "--password-file=/etc/git-secret/token"
-            - "--root=/repos"
-            - "--link=/repos/data-discovery-api"
-            - "--period=120s"
-          volumeMounts:
-            - name: git-creds-mnt
-              mountPath: /etc/git-secret
-              readOnly: true
-            - name: ddapi-sync-mnt
-              mountPath: /repos
-              readOnly: false
-          securityContext:
-            #runAsUser: 65533 # git-sync-user
-            runAsUser: 1000 #jovyan
-            runAsGroup: 100
-      securityContext:
-        runAsNonRoot: true
-        fsGroup: 100
+#        - image: "{{ .Values.gitSync.image.repository }}:{{ .Values.gitSync.image.tag }}"
+#          name: ddapi-repo-sync
+#          args:
+#            - "--repo=https://github.com/309theddge/data-discovery-api.git"
+#            - "--depth=1"
+#            - "--max-failures=-1"
+#            - "--group-write"
+#            - "--username={{ .Values.gitSync.username }}"
+#            - "--password-file=/etc/git-secret/token"
+#            - "--root=/repos"
+#            - "--link=/repos/data-discovery-api"
+#            - "--period=120s"
+#          volumeMounts:
+#            - name: git-creds-mnt
+#              mountPath: /etc/git-secret
+#              readOnly: true
+#            - name: ddapi-sync-mnt
+#              mountPath: /repos
+#              readOnly: false
+#          securityContext:
+#            #runAsUser: 65533 # git-sync-user
+#            runAsUser: 1000 #jovyan
+#            runAsGroup: 100
+#      securityContext:
+#        runAsNonRoot: true
+#        fsGroup: 100
 {{- end }}
       volumes:
       - name: jupyterhub-config-mnt

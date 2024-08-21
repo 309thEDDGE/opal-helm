@@ -35,9 +35,9 @@ log_to_file "Initialize banner extension"
 cp -r /opt/data/opal /home/jovyan/
 log_to_file "Link directories to home"
 
-# 6
-cp -r /opt/data/data-discovery-api /home/jovyan/
-log_to_file "Link directories to home"
+## 6
+#cp -r /opt/data/data-discovery-api /home/jovyan/
+#log_to_file "Link directories to home"
 
 # 7
 cp -r /opt/data/weave /home/jovyan/

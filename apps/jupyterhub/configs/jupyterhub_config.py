@@ -148,12 +148,12 @@ c.KubeSpawner.volumes = [
             'claimName': 'opal-sync-pvc'
         }
     },
-    {
-        'name': 'ddapi-sync-mnt',
-        'persistentVolumeClaim': {
-            'claimName': 'ddapi-sync-pvc'
-        }
-    },
+#    {
+#        'name': 'ddapi-sync-mnt',
+#        'persistentVolumeClaim': {
+#            'claimName': 'ddapi-sync-pvc'
+#        }
+#    },
     {
         'name': 'weave-sync-mnt',
         'persistentVolumeClaim': {
@@ -197,11 +197,11 @@ c.KubeSpawner.volume_mounts = [
         "subPath": "opal",
         'name': 'opal-sync-mnt'
     },
-    {
-        'mountPath': '/opt/data/data-discovery-api',
-        "subPath": "data-discovery-api",
-        'name': 'ddapi-sync-mnt'
-    },
+#    {
+#        'mountPath': '/opt/data/data-discovery-api',
+#        "subPath": "data-discovery-api",
+#        'name': 'ddapi-sync-mnt'
+#    },
     {
         'mountPath': '/opt/data/weave',
         "subPath": "weave",
