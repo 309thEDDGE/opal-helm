@@ -36,10 +36,10 @@
         - [Mongodb configuration and user creation](#mongodb-configuration-and-user-creation)
         - [Log in as root](#log-in-as-root)
         - [Create a userAdmin](#create-a-useradmin)
+        - [Create a Mongo User and authentication](#create-a-mongo-user-and-authentication)
         - [Create a Mongo Database](#create-a-mongo-database)
         - [Insert test data into a Database](#insert-test-data-into-a-database)
         - [Helpful Mongosh Commands](#helpful-mongosh-commands)
-        - [Create a Mongo User and authentication](#create-a-mongo-user-and-authentication)
         - [MongoDB Built-in Roles](#mongodb-built-in-roles)
         - [Signing in as a user with specific roles](#signing-in-as-a-user-with-specific-roles)
     - [Prometheus Integration](#prometheus-integration)
@@ -67,7 +67,7 @@ This repo contains all the deployment helm charts and configuration files for de
     - https://k9scli.io/topics/install/
 - Helm
     - https://helm.sh/docs/intro/install/
-- a valid authentication token for `registry1.dso.mil`
+- A valid authentication token for `registry1.dso.mil`
 - Clone https://github.com/309theddge/opal-helm
 
 #### Additional Prerequisites for Local Deployment
@@ -80,6 +80,7 @@ This repo contains all the deployment helm charts and configuration files for de
 - Clone https://github.com/309theddge/argo
 
 #### Optional Extras
+
 - Prometheus Stack
     - https://github.com/309theddge/kube-prometheus
 
@@ -105,7 +106,7 @@ The opal team uses Argo CD to ensure OPAL deployments are always up-to-date
 
 ##### Setting up ArgoCD regcred
 
-change directory to the regcred-init directory and run the following command:
+`cd` into `k8s-utils/regcred-init` and run the following command:
 
 ``` bash
 helm install argo-regcred . --create-namespace -n argocd
@@ -113,17 +114,16 @@ helm install argo-regcred . --create-namespace -n argocd
 
 ##### Install ArgoCD helm chart
 
-now that the argoCD values are configured properly for a local deployment, helm install the argocd from the parent directory of ArgoCD repository
+Now that the registry credentials have been configured, `cd` into the `argo` repository cloned previously, and install the helm chart:
 
 ``` bash
-cd argo/chart
 helm install argo . -n argocd
 ```
 
 
 ##### Access the ArgoCD secret
 
-To access the password for the argocd login you will need to run the following command:
+To retrieve the argoCD admin password:
 
 ``` bash
 kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
@@ -137,7 +137,7 @@ Alternatively, using `K9s`:
 
 ##### Accessing the ArgoCD Dashboard
 
-In order to get argoCD dashboard working before applications are added, you need to start a port-forward service with kubectl:
+To connect to the argoCD dashboard, you will need to port-forward the argocd-server service:
 
 ``` bash
 kubectl port-forward service/argo-argocd-server -n argocd 8080:443
@@ -150,25 +150,24 @@ Alternatively, using `K9s`:
 5. Ensure `Container Port` says `server::8080`. If not, delete the line and set it to `8080`
 6. Move your cursor down to `OK` and press enter
 
+Access the argoCD dashboard by visiting `localhost:8080` in your browser.
 
-Access the argoCD interface by opening a browser and navigating to the following:
+To log in, enter the following:
 
-> localhost:8080
+Username: 
+> admin
 
-This should take you to the login page for argoCD
-
->username: **admin**
->password: output from the last section (remove the trailing '%' symbol if present)
+Password: 
+> output from the last section (remove the trailing '%' symbol if present)
 
 **The following step is optional in internet-facing deployments as the opal-helm repository is public**
 
 Once logged in, go to `Settings`->`Repositories`->`Connect Repo`
 Change the connection method to `VIA HTTPS`
 
-
 Fill out the following fields:
 Repository URL:
->https://github.com/309thEDDGE/opal-helm.git
+> https://github.com/309thEDDGE/opal-helm.git
 
 Username:
 > enter github user name
@@ -181,6 +180,7 @@ Click the `Connect` button at the top of the page to save the connection
 If configured correctly, the connection status will show as *Successful*
 
 ## Deploying OPAL
+
 With argoCD running and configured, the opal helm chart can now be installed.
 
 ### TLS Certificates
@@ -199,8 +199,8 @@ Ensure your certificates cover the following subdomains at a bare minimum:
 
 We have provided a tool for generating local selfsigned certificates that cover all opal subdomains. To generate these certificates:
 
-1. `cd` into `k8s-utils/cert-gen`
-2. Run `bash gen_selfsigned_certs.bash`. This will create the files `tls.crt` and `tls.key`
+`cd` into `k8s-utils/cert-gen`
+Run `bash gen_selfsigned_certs.bash`. This will create the files `tls.crt` and `tls.key`
 
 #### Install Certificates
 
@@ -373,22 +373,20 @@ gateway:
 
 ### Modifying Resource Limits
 
-Inorder to modify resource limits for dask gateway you will need to configure the values in the dask gateway helm chart values. Currently, by default they should be configured to allow the scheduler and workers 2 G of memory and one core a piece with the cluster total limits being 10 G of memory with 6 cores and 6 workers as a maximum. These values can be located at:
+In order to modify resource limits for dask gateway you will need to configure the values in the dask gateway helm chart values. Currently, by default they should be configured to allow the scheduler and workers 2 G of memory and one core a piece with the cluster total limits being 10 G of memory with 6 cores and 6 workers as a maximum. These values can be located at:
+
 - gateway
   - extraConfig (This is where the cluster limits are defined)
   - backend
-  
     - scheduler
-    
       - cores
       - memory
-    
     - worker
-    
       - cores
       - memory
 
 ## Mongodb
+
 Mongodb is a document database designed for ease of application development and scaling.  In the instance of OPAL, it is used in conjuction with pyMongo in a jupyterhub notebook to provide data analyst access to important collections within the database.
 
 ### Mongodb documentation
@@ -409,67 +407,102 @@ To get the root password run:
 
 To connect to your database, and create a MongoDB client container:
 
->kubectl run --namespace opal mongo-db-mongodb-client --rm --tty -i --restart='Never' --env="MONGODB_ROOT_PASSWORD=$MONGODB_ROOT_PASSWORD" --image registry1.dso.mil/ironbank/bitnami/mongodb:5.0.9 --command -- bash
+``` bash
+kubectl run --namespace opal mongo-db-mongodb-client --rm --tty -i --restart='Never' --env="MONGODB_ROOT_PASSWORD=$MONGODB_ROOT_PASSWORD" --image registry1.dso.mil/ironbank/bitnami/mongodb:5.0.9 --command -- bash
+```
 
 The terminal should change showing that the container is running
 
 To connect to your database from outside the cluster execute the following commands:
->kubectl port-forward --namespace opal svc/mongo-db-mongodb 27017:27017 &
+
+``` bash
+kubectl port-forward --namespace opal svc/mongo-db-mongodb 27017:27017 &
 mongosh --host 127.0.0.1 --authenticationDatabase admin -p $MONGODB_ROOT_PASSWORD
+```
 
 ### Log in as root
+
 The default root user name is : *rootuser*
 Then, run the following command:
->$ mongosh admin --host "opal-setup-mongodb" --authenticationDatabase admin -u rootuser
+
+``` bash
+mongosh admin --host "opal-setup-mongodb" --authenticationDatabase admin -u rootuser
+```
 
 This will prompt a password that is found in the previous section.
 
 ### Create a userAdmin
+
 It is best practice to create a user administrator in order to create database users. 
 
->>db.createUser(
+```
+db.createUser(
   {
     user: "user_name_admin",
     pwd:  passwordPrompt(),   // or cleartext password
     roles: [ { role: "userAdmin", db: "admin" } ]
   }
 )
-
-### Create a Mongo Database
-After logging into the container as root, If this is a fresh OPAL deployment you will need to log in as root in a  adding users.
-
-To create a database simple run this command in the terminal:
-> use database_name
-
-This will create and empty database that will not be visible to any user until some data has been submitted
-
-### Insert test data into a Database
-For purposes of this documentation use the following entry in the command line to place some data in 
-
-### Helpful Mongosh Commands
-show dbs  // *shows all available databases the user can access, if the user is root it will also display local and admin*
-
->db // *prints the current database*
-
->use <database_name> // *switch database*
-
->show collections // *shows all collections from the current database*
-
->load("myScripts.js") // *runs a JavaScript file for data entry
-
->db.<name_of_collection>.find() // *shows all data in a specific collection
+```
 
 ### Create a Mongo User and authentication
 
 By deafault SCRAM-SHA-256 is enabled as the authentication mechanism supported by a cluster configured for authentication with MongoDB 4.0 and later.  Authentication requires a username, password, and a database name.  The default database name is "admin"
 
->db.createUser(
+```
+db.createUser(
   {
     user: "user_name",
     pwd:  passwordPrompt(),   // or cleartext password
     roles: [ { role: "readWrite", db: "name_of_database" } ]
   }
 )
+```
+
+### Create a Mongo Database
+
+To create a database simple run this command in the terminal:
+
+``` 
+use simple_db
+```
+
+This will create and empty database that will not be visible to any user until some data has been submitted
+
+### Insert test data into a Database
+
+For purposes of this example use the following entry in the command line to place some data in the sample database
+
+```
+db.movies.insertOne(
+  {
+    title: "Back to the Future",
+    genres: [ "Time Travel", "Adventure" ],
+    runtime: 116,
+    rated: "PG",
+    year: 1985,
+    directors: [ "Robert Zemeckis" ],
+    cast: [ "Michael J. Fox", "Christopher Lloyd", "Lea Thompson" ],
+    type: "movie"
+  }
+)
+```
+
+### Helpful Mongosh Commands
+
+```
+show dbs  // *shows all available databases the user can access, if the user is root it will also display local and admin*
+
+db // *prints the current database*
+
+use <database_name> // *switch database*
+
+show collections // *shows all collections from the current database*
+
+load("myScripts.js") // *runs a JavaScript file for data entry
+
+db.<name_of_collection>.find() // *shows all data in a specific collection
+```
 
 ### MongoDB Built-in Roles
 
@@ -489,12 +522,14 @@ Mongo grants acces to data and commands through roles.  These roles are built-in
 ### Signing in as a user with specific roles
 To be able to securly enter a database you will need to login with the user credentials and authentication method, this can be done with the following command in pymongo:
 
->from pymongo import MongoClient
+``` python
+from pymongo import MongoClient
 client = MongoClient('example.com',
                      username='user',
                      password='password',
                      authSource='the_database',
                      authMechanism='SCRAM-SHA-256')
+```
 
 By default mongosh excludes all db.auth() operations from the saved history
 
