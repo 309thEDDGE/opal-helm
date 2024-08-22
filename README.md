@@ -227,7 +227,7 @@ To use git-sync, place your token in opal-setup, and rename it to `git-creds`. I
 
 ### Install the OPAL helm chart
 
-Prior to installing OPAL, you will likely need to change your working branch in git. At the time of writing, the current production branch is `aks-comp-rebase-test`. If you are testing a specific branch or have configurations stored in another branch, use that instead. Additionally, ensure that the value of `targetRevision` in `opal-helm/opal-setup/values.yaml` is set to the correct branch, or you may run into unforeseen issues.
+Prior to installing OPAL, if you are testing a specific branch or have configurations stored in another branch, ensure that the value of `targetRevision` in `opal-helm/opal-setup/values.yaml` is set to the correct branch, or you may run into unforeseen issues.
 
 #### Configuring OPAL
 
