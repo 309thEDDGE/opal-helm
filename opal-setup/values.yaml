@@ -1,6 +1,6 @@
 # leave these empty to disable them in the rendered app yamls
-argoProject: &argoProj ""
-appPrefix: &appPrefix ""
+argoProject: &argoProj "test"
+appPrefix: &appPrefix "test"
 
 namespaces:
   - &minioNS minio-tenant
