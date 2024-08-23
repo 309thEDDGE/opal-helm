@@ -109,7 +109,7 @@ The opal team uses Argo CD to ensure OPAL deployments are always up-to-date
 `cd` into `k8s-utils/regcred-init` and run the following command:
 
 ``` bash
-helm install argo-regcred . --create-namespace -n argocd
+helm install argo-regcred . --create-namespace -n argocd -f argo-values.yaml
 ```
 
 ##### Install ArgoCD helm chart
@@ -262,7 +262,7 @@ If all expected files are present, navigate into `opal-setup`, and run the follo
 helm install opal-setup ./opal-setup
 ```
 
-> **NOTE:** if using minikube, also run `minikube tunnel` in a separate terminal. Failure to do so will cause installation to stall out on creation of the ingress controller
+> **NOTE:** if deploying locally using minikube, also run `minikube tunnel` in a separate terminal. Failure to do so will cause installation to stall out on creation of the ingress controller
 
 This process can take several minutes depending on your internet speeds, CPU, system memory, etc. Opening a watch list for the pods can be helpful in this step:
 
@@ -288,7 +288,7 @@ In a local deployment, the ingress points will default to:
 You may find you need to uninstall opal-setup to fix a failure in keycloak's initialization, or a number of other periodic bugs. This is not always a clean process, and will need to be forced by manually removing any problematic resources. This can be done using the following command:
 
 ``` bash
-kubectl patch Application/<failing application> \ --type json \ --patch='[ { "op": "remove", "path": "/metadata/finalizers" } ]' -n argocd
+kubectl patch Application/<failing application> --type json --patch='[ { "op": "remove", "path": "/metadata/finalizers" } ]' -n argocd
 ```
 
 Failed applications can be found by running `kubectl get apps -n argocd`. They will often appear to be stuck in the `progressing` state.
@@ -552,7 +552,7 @@ In addition to the prerequisites for a full OPAL install:
 
 1. Ensure you are logged in to `registry1.dso.mil` through docker.
 2. Copy `~/.docker/config.json` into `k8s-utils/regcred-init`
-3. In `k8s-utils/regcred-init`, run `helm install metrics-regcred . -n monitoring --create-namespace`
+3. In `k8s-utils/regcred-init`, run `helm install metrics-regcred . -n monitoring -f prometheus-values.yaml --create-namespace`
 
 **Prometheus Install**
 
