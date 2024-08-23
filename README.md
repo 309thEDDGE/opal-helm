@@ -551,7 +551,7 @@ In addition to the prerequisites for a full OPAL install:
 **Registry Credentials Setup**
 
 1. Ensure you are logged in to `registry1.dso.mil` through docker.
-2. Copy `~/.docker/config.json` into `k8s-utils/regcred-init`
+2. Copy `~/.docker/config.json` into `k8s-utils/regcred-init`, rename to `dockerconfig.json`
 3. In `k8s-utils/regcred-init`, run `helm install metrics-regcred . -n monitoring -f prometheus-values.yaml --create-namespace`
 
 **Prometheus Install**
