@@ -70,6 +70,10 @@ appValues:
       namespace: *opalNS
       baseDns: *baseDns
       domainExtension: *domainExtension
+      metrics:
+        enabled: false
+      serviceMonitor:
+        enabled: false
       secrets:
         env:
           stringData:
@@ -82,6 +86,10 @@ appValues:
     enabled: true
     appValues:
       namespace: *opalNS
+      metrics:
+        enabled: false
+      serviceMonitor:
+        enabled: false
   minioOperator:
     enabled: true
     appValues:
@@ -113,13 +121,9 @@ appValues:
       baseDns: *baseDns
       domainExtension: *domainExtension
       metrics:
-        enabled: true
+        enabled: false
       serviceMonitor:
-        enabled: true
-      metrics:
-        enabled: true
-      serviceMonitor:
-        enabled: true
+        enabled: false
       resources:
         useAzureFile: *useAzure
       gitSync:
