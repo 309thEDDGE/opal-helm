@@ -25,7 +25,11 @@
         - [Install the OPAL helm chart](#install-the-opal-helm-chart)
             - [Configuring OPAL](#configuring-opal)
             - [Installation](#installation)
+        - [First Login](#first-login)
+            - [Set Permissions](#set-permissions)
         - [Troubleshooting](#troubleshooting)
+            - [Failed Initialization or Pods Not Stopping After Uninstallation](#failed-initialization-or-pods-not-stopping-after-uninstallation)
+            - [Jupyterhub Gives Error `500` When Launching Server](#jupyterhub-gives-error-500-when-launching-server)
     - [Nginx](#nginx)
         - [Nginx setup](#nginx-setup)
     - [Dask Gateway](#dask-gateway)
@@ -282,9 +286,45 @@ In a local deployment, the ingress points will default to:
 - minio.10.96.30.9.nip.io
 - keycloak.10.96.30.9.nip.io
 
+> **NOTE:** Older versions of the helm chart may append a `-k8s` to the service names in the ingress points. To confirm your configured ingresses, run `kubectl get ing -A` in your terminal.
+
+### First Login
+
+Before accessing OPAL, you'll need to set up some permissions in Keycloak. First, get the Keycloak admin password:
+
+``` bash
+kubectl get secret -n opal opal-setup-keycloak-env -o jsonpath='{.data.KEYCLOAK_ADMIN_PASSWORD}' | base64 --decode
+```
+
+Alternatively, using `K9s`:
+1. Press `0` to ensure all namespaces are visible
+2. Type `:secret` and press enter
+3. Type `/keycloak-env` and press enter
+4. Move your cursor down to `opal-setup-keycloak-env` and press `x`
+5. Copy the value of `KEYCLOAK_ADMIN_PASSWORD`
+
+Access Keycloak through the configured ingress point.
+
+To log in, enter the following:
+
+Username: 
+> admin
+
+Password: 
+> output from the last section (remove the trailing '%' symbol if present)
+
+#### Set Permissions
+
+Once logged in, go to `Users` in the left column. Select the `admin` user, and go to the `groups` tab. Click `Join Group`, then select both `jupyterhub_admins` and `jupyterhub_staff`.
+
+Go to `Groups` in the left column. Select `jupyterhub_staff`, and go to the `Attributes` tab. Click `Add attributes`, and set `Key` to `policy` and `Value` to `consoleAdmin`.
+
+You should now be able to access OPAL/Jupyterhub in your browser.
+
 
 ### Troubleshooting
 
+#### Failed Initialization or Pods Not Stopping After Uninstallation
 You may find you need to uninstall opal-setup to fix a failure in keycloak's initialization, or a number of other periodic bugs. This is not always a clean process, and will need to be forced by manually removing any problematic resources. This can be done using the following command:
 
 ``` bash
@@ -292,6 +332,20 @@ kubectl patch Application/<failing application> --type json --patch='[ { "op": "
 ```
 
 Failed applications can be found by running `kubectl get apps -n argocd`. They will often appear to be stuck in the `progressing` state.
+
+#### Jupyterhub Gives Error `500` When Launching Server
+
+This can be caused by a couple of issues.
+
+Most commonly, this indicates that the `policy` attribute was not set correctly in Keycloak. See the `Set Permissions` section above.
+
+Another cause commonly seen after stopping/restarting Minikube is MinIO failing to connect to Keycloak. The simplest way to resolve this is in `K9s`. 
+1. Type `:pods` and press enter
+2. Move your cursor down to the `<deployment name>-minio-ss-0-\*` pods. 
+> **NOTE:** if this helm chart was installed as `opal-setup`, this will look like `opal-setup-minio-ss-0-\*`
+3. For each pod, press `ctrl-k j`. This will need to be done quickly.
+
+
 
 ## Nginx
 
