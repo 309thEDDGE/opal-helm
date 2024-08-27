@@ -118,9 +118,10 @@ helm install argo-regcred . --create-namespace -n argocd -f argo-values.yaml
 
 ##### Install ArgoCD helm chart
 
-Now that the registry credentials have been configured, `cd` into the `argo` repository cloned previously, and install the helm chart:
+Now that the registry credentials have been configured, navigate into the `argo` repository cloned previously, and install the helm chart:
 
 ``` bash
+cd charts
 helm install argo . -n argocd
 ```
 
@@ -246,7 +247,7 @@ Values stored in this directory should contain only values safe to store in vers
 
 #### Installation
 
-Before starting, ensure `opal-setup` directory follows the below structure. If any files are missing, refer to the previous steps
+Before starting, navigate into the `opal-helm` repository and ensure the `opal-setup` directory follows the below structure. If any files are missing, refer to the previous steps.
 
 ```
 opal-setup
@@ -263,7 +264,7 @@ opal-setup
 
 If all expected files are present, navigate into `opal-setup`, and run the following:
 ``` bash
-helm install opal-setup ./opal-setup
+helm install opal-setup .
 ```
 
 > **NOTE:** if deploying locally using minikube, also run `minikube tunnel` in a separate terminal. Failure to do so will cause installation to stall out on creation of the ingress controller
