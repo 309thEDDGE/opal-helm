@@ -30,11 +30,13 @@
         - [Troubleshooting](#troubleshooting)
             - [Failed Initialization or Pods Not Stopping After Uninstallation](#failed-initialization-or-pods-not-stopping-after-uninstallation)
             - [Jupyterhub Gives Error `500` When Launching Server](#jupyterhub-gives-error-500-when-launching-server)
+            - [Keycloak fails to start with error: `FATAL: password authentication failed for user "keycloak"`](#keycloak-fails-to-start-with-error-fatal-password-authentication-failed-for-user-keycloak)
     - [Nginx](#nginx)
         - [Nginx setup](#nginx-setup)
     - [Dask Gateway](#dask-gateway)
         - [Node Assignment](#node-assignment)
         - [Modifying Resource Limits](#modifying-resource-limits)
+        - [Using Dask and its Dashboard](#using-dask-and-its-dashboard)
     - [Mongodb](#mongodb)
         - [Mongodb documentation](#mongodb-documentation)
         - [Mongodb configuration and user creation](#mongodb-configuration-and-user-creation)
@@ -346,7 +348,23 @@ Another cause commonly seen after stopping/restarting Minikube is MinIO failing 
 > **NOTE:** if this helm chart was installed as `opal-setup`, this will look like `opal-setup-minio-ss-0-\*`
 3. For each pod, press `ctrl-k j`. This will need to be done quickly.
 
+#### Keycloak fails to start with error: `FATAL: password authentication failed for user "keycloak"`
 
+This may occasionally occur upon reinstallation of opal-helm. It can often be fixed by uninstalling and reinstalling the helm chart, but can be done more quickly using `k9s`
+
+1. In `k9s`, press `0` to ensure all resources for all namespaces are visible
+2. Type `:secrets` and press enter
+3. Type `/keycloak-postgres` and press enter
+4. Move your cursor down to `<deployment name>-keycloak-postgres` and press `x`
+5. Copy the value of `postgresql-password`, and press escape
+6. Type `:pods` and press enter
+7. Type `/keycloak-postgres` and press enter
+8. Move your cursor down to `<deployment name>-keycloak-postgres-0` and press `s` to shell into the container
+9. Run `psql -U keycloak` in the postgres container
+10. Run `alter user keycloak with password '<postgresql-password>';`
+11. Exit the container. This can be done quickly by pressing `ctrl-d` twice. Press escape when back in the `k9s` ui.
+12. Type `/keycloak` and press enter
+13. Move your cursor down to `<deployment-name>-keycloak-0` and press `ctrl-k` to restart the pod. If the password was set correctly, keycloak should now start successfully.
 
 ## Nginx
 
