@@ -134,7 +134,6 @@ spec:
             - name: http-internal
               containerPort: {{ .Values.metrics.port | default "9000" }}
               protocol: TCP
-            {{- end }}
             {{- with .Values.extraPorts }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
