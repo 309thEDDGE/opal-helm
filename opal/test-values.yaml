@@ -65,9 +65,9 @@ keycloak:
       enabled: true
       existingSecret: *oauthSecret
     metrics:
-      enabled: true
+      enabled: false
     serviceMonitor:
-      enabled: true
+      enabled: false
   postgres:
     nameOverride: *keycloakPostgresName
     namespace: *opalNS
@@ -115,9 +115,9 @@ traefik:
     service:
       loadBalancerIP: "10.96.30.9"
     serviceMonitor:
-      enabled: true
+      enabled: false
     metrics:
-      enabled: true
+      enabled: false
     tls:
       nameOverride: *tlsSecret
     ingress:
@@ -166,7 +166,7 @@ minioInstance:
       imagePullSecrets:
         - *dockerSecret
       metrics:
-        enabled: true
+        enabled: false
         # Defaults to 'prometheus-operated'
         prometheusSvc: ""
         # Defaults to 'monitoring'
@@ -232,9 +232,9 @@ jupyterhub:
     baseDns: *baseDns
     domainExtension: *domainExtension
     metrics:
-      enabled: true
+      enabled: false
     serviceMonitor:
-      enabled: true
+      enabled: false
     gitSync:
       enabled: true
       # Leave this empty, only fill it in the opal-setup chart values
