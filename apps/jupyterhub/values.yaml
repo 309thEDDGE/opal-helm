@@ -86,7 +86,7 @@ servicePublic:
       targetPort: 8443
 
 metrics:
-  enabled: true
+  enabled: false
   port: 8086
 
 ingress:
@@ -126,7 +126,7 @@ env:
 
 serviceMonitor:
   # If `true`, a ServiceMonitor resource for the prometheus-operator is created
-  enabled: true
+  enabled: false
   # Optionally sets a target namespace in which to deploy the ServiceMonitor resource
   namespace: monitoring
   # Optionally sets a namespace for the ServiceMonitor

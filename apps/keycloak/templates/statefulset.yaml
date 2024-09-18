@@ -131,13 +131,9 @@ spec:
             - name: https
               containerPort: 8443
               protocol: TCP
-            {{- with .Values.metrics }}
-            {{- if .enabled }}
             - name: http-internal
-              containerPort: {{ .port | default "9000" }}
+              containerPort: {{ .Values.metrics.port | default "9000" }}
               protocol: TCP
-            {{- end }}
-            {{- end }}
             {{- with .Values.extraPorts }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
