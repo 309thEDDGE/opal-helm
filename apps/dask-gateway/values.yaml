@@ -32,12 +32,12 @@ gateway:
 
   # The image to use for the dask-gateway-server pod (api pod)
   image:
-    #name: ghcr.io/dask/dask-gateway-server
-    #tag: "2024.1.0"
-    #pullPolicy:
-    name: registry1.dso.mil/ironbank/opensource/309theddge/dask-gateway-api
-    tag: dask_gateway_api_v1
-    pullPolicy: IfNotPresent
+    name: ghcr.io/dask/dask-gateway-server
+    tag: "2024.1.0"
+    pullPolicy:
+    #name: registry1.dso.mil/ironbank/opensource/309theddge/dask-gateway-api
+    #tag: dask_gateway_api_v1
+    #pullPolicy: IfNotPresent
 
   # Add additional environment variables to the gateway pod
   # e.g.
