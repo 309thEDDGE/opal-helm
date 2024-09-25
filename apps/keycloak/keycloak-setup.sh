@@ -79,5 +79,18 @@ echo "created jupyterhub_admins and jupyterhub_staff groups"
 # Adds policy=consoleAdmin to the 'admin' user in keycloak, allowing login to minio
 #ADMIN_USER_ID=$(./kcadm.sh get users -r master -q username=admin | grep id | awk -F'"' '{print $4}')
 
+MINIO_ADMIN_ID=$(./kcadm.sh get users -r master -q username=$MINIO_TEST_USER | grep id | awk -F'"' '{print $4}')
+JUPYTERHUB_ADMINS_GROUP_ID=$(./kcadm.sh get groups -r master | grep jupyterhub_admins -B 1 | grep id | awk -F'"' '{print $4}')
+./kcadm.sh update users/$MINIO_ADMIN_ID/groups/$JUPYTERHUB_ADMINS_GROUP_ID -r master -s realm=master -s userId=$MINIO_ADMIN_ID -s groupId=$JUPYTERHUB_ADMINS_GROUP_ID -n
+
+JUPYTERHUB_STAFF_GROUP_ID=$(./kcadm.sh get groups -r master | grep jupyterhub_staff -B 1 | grep id | awk -F'"' '{print $4}')
+./kcadm.sh update users/$MINIO_ADMIN_ID/groups/$JUPYTERHUB_STAFF_GROUP_ID -r master -s realm=master -s userId=$MINIO_ADMIN_ID -s groupId=$JUPYTERHUB_STAFF_GROUP_ID -n
+
+# Adds policy=readwrite to staff_group
+./kcadm.sh update groups/$JUPYTERHUB_STAFF_GROUP_ID -s 'attributes.policy=["readwrite"]' -r master
+
+# Adds policy=consoleAdmin to the 'admin' user in keycloak, allowing login to minio
+#ADMIN_USER_ID=$(./kcadm.sh get users -r master -q username=admin | grep id | awk -F'"' '{print $4}')
+./kcadm.sh update users/$ADMIN_USER_ID -r master -s 'attributes.policy=consoleAdmin'
 #./kcadm.sh update users/$ADMIN_USER_ID -r master -s 'attributes.policy=consoleAdmin'
 echo "Done initializing keycloak"
