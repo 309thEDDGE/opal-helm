@@ -55,7 +55,7 @@ echo "Creating jhub-group-mapper in opal-jupyterhub client with $JUPYTERHUB_CLIE
 
 # Minio client creation
 
-# Minio client mapper creation
+Minio client mapper creation
 echo "Creating miniopolicyclaim mapper for opal-jupyterhub client with $JUPYTERHUB_CLIENT_ID"
 ./kcadm.sh create clients/$JUPYTERHUB_CLIENT_ID/protocol-mappers/models \
             -r master \
@@ -70,15 +70,16 @@ echo "Creating miniopolicyclaim mapper for opal-jupyterhub client with $JUPYTERH
             -s 'config."claim.name"=policy' \
             -s 'config."jsonType.label"=String'
 
+# Enable event logging for the master realm. Events expire after 14 days
+./kcadm.sh update events/config -r master -s eventsEnabled=true -s 'enabledEventTypes=[]' -s eventsExpiration=1209600
+
 # Create jupyterhub_admins and jupyterhub_staff groups
 echo "creating staff groups"
 ./kcadm.sh create groups -r master -s name=jupyterhub_admins
 ./kcadm.sh create groups -r master -s name=jupyterhub_staff
 echo "created jupyterhub_admins and jupyterhub_staff groups"
 
-# Adds policy=consoleAdmin to the 'admin' user in keycloak, allowing login to minio
-#ADMIN_USER_ID=$(./kcadm.sh get users -r master -q username=admin | grep id | awk -F'"' '{print $4}')
-
+# Adds admin user to jupyterhub_admins and jupyterhub_staff groups
 MINIO_ADMIN_ID=$(./kcadm.sh get users -r master -q username=$MINIO_TEST_USER | grep id | awk -F'"' '{print $4}')
 JUPYTERHUB_ADMINS_GROUP_ID=$(./kcadm.sh get groups -r master | grep jupyterhub_admins -B 1 | grep id | awk -F'"' '{print $4}')
 ./kcadm.sh update users/$MINIO_ADMIN_ID/groups/$JUPYTERHUB_ADMINS_GROUP_ID -r master -s realm=master -s userId=$MINIO_ADMIN_ID -s groupId=$JUPYTERHUB_ADMINS_GROUP_ID -n
@@ -88,9 +89,6 @@ JUPYTERHUB_STAFF_GROUP_ID=$(./kcadm.sh get groups -r master | grep jupyterhub_st
 
 # Adds policy=readwrite to staff_group
 ./kcadm.sh update groups/$JUPYTERHUB_STAFF_GROUP_ID -s 'attributes.policy=["readwrite"]' -r master
+./kcadm.sh update groups/$JUPYTERHUB_STAFF_GROUP_ID -s 'attributes.policy=["consoleAdmin"]' -r master
 
-# Adds policy=consoleAdmin to the 'admin' user in keycloak, allowing login to minio
-#ADMIN_USER_ID=$(./kcadm.sh get users -r master -q username=admin | grep id | awk -F'"' '{print $4}')
-./kcadm.sh update users/$ADMIN_USER_ID -r master -s 'attributes.policy=consoleAdmin'
-#./kcadm.sh update users/$ADMIN_USER_ID -r master -s 'attributes.policy=consoleAdmin'
 echo "Done initializing keycloak"
