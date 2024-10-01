@@ -72,7 +72,17 @@ echo "Creating miniopolicyclaim mapper for opal-jupyterhub client with $JUPYTERH
 
 # Enable event logging for the master realm. Events expire after 14 days
 ./kcadm.sh update events/config -r master -s eventsEnabled=true -s 'enabledEventTypes=[]' -s eventsExpiration=1209600
-
+# Minio Admin user creation
+echo "creating minio test user"
+./kcadm.sh create users \
+            -r master\
+            -s username=$MINIO_TEST_USER \
+            -s enabled=true \
+#echo "setting minio test user's password"
+./kcadm.sh set-password \
+            -r master \
+            --username $MINIO_TEST_USER \
+            --new-password $MINIO_TEST_USER_PASSWORD
 # Create jupyterhub_admins and jupyterhub_staff groups
 echo "creating staff groups"
 ./kcadm.sh create groups -r master -s name=jupyterhub_admins
