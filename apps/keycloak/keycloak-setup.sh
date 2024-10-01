@@ -55,7 +55,7 @@ echo "Creating jhub-group-mapper in opal-jupyterhub client with $JUPYTERHUB_CLIE
 
 # Minio client creation
 
-Minio client mapper creation
+#Minio client mapper creation
 echo "Creating miniopolicyclaim mapper for opal-jupyterhub client with $JUPYTERHUB_CLIENT_ID"
 ./kcadm.sh create clients/$JUPYTERHUB_CLIENT_ID/protocol-mappers/models \
             -r master \
@@ -72,7 +72,11 @@ echo "Creating miniopolicyclaim mapper for opal-jupyterhub client with $JUPYTERH
 
 # Enable event logging for the master realm. Events expire after 14 days
 ./kcadm.sh update events/config -r master -s eventsEnabled=true -s 'enabledEventTypes=[]' -s eventsExpiration=1209600
-
+echo "creating minio test user"
+./kcadm.sh create users \
+            -r master\
+            -s username=$MINIO_TEST_USER \
+            -s enabled=true \
 # Create jupyterhub_admins and jupyterhub_staff groups
 echo "creating staff groups"
 ./kcadm.sh create groups -r master -s name=jupyterhub_admins
