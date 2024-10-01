@@ -3,55 +3,57 @@
 **Table of Contents**
 
 - [OPAL-HELM](#opal-helm)
-    - [Getting Started with Opal-helm Deployment](#getting-started-with-opal-helm-deployment)
-        - [Prerequisites](#prerequisites)
-            - [Additional Prerequisites for Local Deployment](#additional-prerequisites-for-local-deployment)
-            - [Optional Extras](#optional-extras)
-        - [Local Installation](#local-installation)
-            - [Starting Minikube](#starting-minikube)
-            - [ArgoCD](#argocd)
-                - [Setting up ArgoCD regcred](#setting-up-argocd-regcred)
-                - [Install ArgoCD helm chart](#install-argocd-helm-chart)
-                - [Access the ArgoCD secret](#access-the-argocd-secret)
-                - [Accessing the ArgoCD Dashboard](#accessing-the-argocd-dashboard)
-    - [Deploying OPAL](#deploying-opal)
-        - [TLS Certificates](#tls-certificates)
-            - [For Live/Airgapped Environments:](#for-liveairgapped-environments)
-            - [For Local Deployments (must be internet-connected):](#for-local-deployments-must-be-internet-connected)
-            - [Install Certificates](#install-certificates)
-        - [Image Registry Authentication](#image-registry-authentication)
-            - [Install dockerconfig.json](#install-dockerconfigjson)
-        - [Git Sync](#git-sync)
-        - [Install the OPAL helm chart](#install-the-opal-helm-chart)
-            - [Configuring OPAL](#configuring-opal)
-            - [Installation](#installation)
-        - [First Login](#first-login)
-            - [Set Permissions](#set-permissions)
-        - [Troubleshooting](#troubleshooting)
-            - [Failed Initialization or Pods Not Stopping After Uninstallation](#failed-initialization-or-pods-not-stopping-after-uninstallation)
-            - [Jupyterhub Gives Error `500` When Launching Server](#jupyterhub-gives-error-500-when-launching-server)
-    - [Nginx](#nginx)
-        - [Nginx setup](#nginx-setup)
-    - [Dask Gateway](#dask-gateway)
-        - [Node Assignment](#node-assignment)
-        - [Modifying Resource Limits](#modifying-resource-limits)
-    - [Mongodb](#mongodb)
-        - [Mongodb documentation](#mongodb-documentation)
-        - [Mongodb configuration and user creation](#mongodb-configuration-and-user-creation)
-        - [Log in as root](#log-in-as-root)
-        - [Create a userAdmin](#create-a-useradmin)
-        - [Create a Mongo User and authentication](#create-a-mongo-user-and-authentication)
-        - [Create a Mongo Database](#create-a-mongo-database)
-        - [Insert test data into a Database](#insert-test-data-into-a-database)
-        - [Helpful Mongosh Commands](#helpful-mongosh-commands)
-        - [MongoDB Built-in Roles](#mongodb-built-in-roles)
-        - [Signing in as a user with specific roles](#signing-in-as-a-user-with-specific-roles)
-    - [Prometheus Integration](#prometheus-integration)
-        - [Install Prometheus](#install-prometheus)
-            - [Prerequisites](#prerequisites-1)
-            - [Installation](#installation-1)
-            - [Usage](#usage)
-            - [Enabling Services](#enabling-services)
+  - [Getting Started with Opal-helm Deployment](#getting-started-with-opal-helm-deployment)
+    - [Prerequisites](#prerequisites)
+      - [Additional Prerequisites for Local Deployment](#additional-prerequisites-for-local-deployment)
+      - [Optional Extras](#optional-extras)
+    - [Local Installation](#local-installation)
+      - [Starting Minikube](#starting-minikube)
+      - [ArgoCD](#argocd)
+        - [Setting up ArgoCD regcred](#setting-up-argocd-regcred)
+        - [Install ArgoCD helm chart](#install-argocd-helm-chart)
+        - [Access the ArgoCD secret](#access-the-argocd-secret)
+        - [Accessing the ArgoCD Dashboard](#accessing-the-argocd-dashboard)
+  - [Deploying OPAL](#deploying-opal)
+    - [TLS Certificates](#tls-certificates)
+      - [For Live/Airgapped Environments:](#for-liveairgapped-environments)
+      - [For Local Deployments (must be internet-connected):](#for-local-deployments-must-be-internet-connected)
+      - [Install Certificates](#install-certificates)
+    - [Image Registry Authentication](#image-registry-authentication)
+      - [Install dockerconfig.json](#install-dockerconfigjson)
+    - [Git Sync](#git-sync)
+    - [Install the OPAL helm chart](#install-the-opal-helm-chart)
+      - [Configuring OPAL](#configuring-opal)
+      - [Installation](#installation)
+    - [First Login](#first-login)
+      - [Set Permissions](#set-permissions)
+      - [Creating a new User](#creating-a-new-user)
+    - [Troubleshooting](#troubleshooting)
+      - [Failed Initialization or Pods Not Stopping After Uninstallation](#failed-initialization-or-pods-not-stopping-after-uninstallation)
+      - [Jupyterhub Gives Error `500` When Launching Server](#jupyterhub-gives-error-500-when-launching-server)
+  - [Nginx](#nginx)
+    - [Nginx setup](#nginx-setup)
+  - [Dask Gateway](#dask-gateway)
+    - [Node Assignment](#node-assignment)
+    - [Modifying Resource Limits](#modifying-resource-limits)
+    - [Using Dask and its Dashboard](#using-dask-and-its-dashboard)
+  - [Mongodb](#mongodb)
+    - [Mongodb documentation](#mongodb-documentation)
+    - [Mongodb configuration and user creation](#mongodb-configuration-and-user-creation)
+    - [Log in as root](#log-in-as-root)
+    - [Create a userAdmin](#create-a-useradmin)
+    - [Create a Mongo User and authentication](#create-a-mongo-user-and-authentication)
+    - [Create a Mongo Database](#create-a-mongo-database)
+    - [Insert test data into a Database](#insert-test-data-into-a-database)
+    - [Helpful Mongosh Commands](#helpful-mongosh-commands)
+    - [MongoDB Built-in Roles](#mongodb-built-in-roles)
+    - [Signing in as a user with specific roles](#signing-in-as-a-user-with-specific-roles)
+  - [Prometheus Integration](#prometheus-integration)
+    - [Install Prometheus](#install-prometheus)
+      - [Prerequisites](#prerequisites-1)
+      - [Installation](#installation-1)
+      - [Usage](#usage)
+      - [Enabling Services](#enabling-services)
 
 <!-- markdown-toc end -->
 
@@ -316,9 +318,25 @@ Password:
 
 #### Set Permissions
 
-Once logged in, go to `Users` in the left column. Select the `admin` user, and go to the `groups` tab. Click `Join Group`, then select both `jupyterhub_admins` and `jupyterhub_staff`.
+The  `admin` user, should already have keycloak permission and groups correctly assigned.  You must log into keycloak if you wish to create a new user.
 
-Go to `Groups` in the left column. Select `jupyterhub_staff`, and go to the `Attributes` tab. Click `Add attributes`, and set `Key` to `policy` and `Value` to `consoleAdmin`.
+#### Creating a new User
+
+To add a user, login to the keycloak url with these root credentials and perform the following:
+
+- Click `Administration Console` (you may automatically be redirected without this step)
+- Click `Users`
+- Click `Add User`
+- Create a username, click save.
+
+After the user is generated, the following steps are performed within the user configuration. If this is not automatically pulled up, it can be accessed by clicking `Users` on the left bar, searching for the username, and clicking the blue UID for the user:
+
+- To allow Minio access, click `Attributes` and add the key `policy` and the value `consoleAdmin`. For less permissive policies see [the minio documentation](https://docs.min.io/minio/baremetal/security/minio-identity-management/policy-based-access-control.html). Ensure `Add` and then `Save` are clicked, otherwise jupyterhub will show a `500: internal Server Error` when the user attempts login
+- Click `Groups`, then click `jupyterhub_staff`, then click `join` to allow the user to log into jupyterhub
+- Click `Credentials`, add a temporary password in the `Password` and `Password Comfirmation` fields
+- Send the username and temporary password to the user
+
+Go to `Groups` in the left column. Select `jupyterhub_staff`.
 
 You should now be able to access OPAL/Jupyterhub in your browser.
 
