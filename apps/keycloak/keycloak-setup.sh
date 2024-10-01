@@ -89,6 +89,6 @@ JUPYTERHUB_STAFF_GROUP_ID=$(./kcadm.sh get groups -r master | grep jupyterhub_st
 
 # Adds policy=readwrite to staff_group
 ./kcadm.sh update groups/$JUPYTERHUB_STAFF_GROUP_ID -s 'attributes.policy=["readwrite"]' -r master
-./kcadm.sh update groups/$JUPYTERHUB_STAFF_GROUP_ID -s 'attributes.policy=["consoleAdmin"]' -r master
+./kcadm.sh update groups/$JUPYTERHUB_ADMINS_GROUP_ID -s 'attributes.policy=["consoleAdmin"]' -r master
 
 echo "Done initializing keycloak"
